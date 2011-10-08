@@ -1,0 +1,7 @@
+*.suo
+*.csproj.user
+*.user
+*.cache
+[Oo]bj/
+[Bb]in/
+App_Data/
