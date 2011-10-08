@@ -20,5 +20,15 @@ namespace TransitWP7
         {
             InitializeComponent();
         }
+
+        private void swapText_Click(object sender, RoutedEventArgs e)
+        {
+            string temp = null;
+
+            //TODO: Is there an atomic swap?
+            temp = this.startingInput.Text;
+            this.startingInput.Text = this.endingInput.Text;
+            this.endingInput.Text = temp;
+        }
     }
 }

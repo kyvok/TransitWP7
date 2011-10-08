@@ -6,7 +6,7 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="696"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -21,17 +21,22 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28"></StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0"></Grid>
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,0,0,308" Name="startingInput" Text="(starting location)" VerticalAlignment="Center" Width="450"/>
+            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,233,0,346" Name="endingInput" Text="(ending location)" VerticalAlignment="Center" Width="450" />
+            <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="141,461,0,0" Name="button1" VerticalAlignment="Top" Width="160" />
+            <HyperlinkButton Content="leaving now" Height="30" HorizontalAlignment="Left" Margin="122,336,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" />
+            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,114,0,0" Name="textBlock1" Text="Starting Location" VerticalAlignment="Top" />
+            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,211,0,0" Name="textBlock2" Text="Ending Location" VerticalAlignment="Top" />
+            <HyperlinkButton Content="swap locations" Height="30" HorizontalAlignment="Left" Margin="268,114,0,0" Name="swapText" VerticalAlignment="Top" Width="200" Click="swapText_Click" />
+        </Grid>
     </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
+    <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
             <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
@@ -40,6 +45,6 @@
                 <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>
