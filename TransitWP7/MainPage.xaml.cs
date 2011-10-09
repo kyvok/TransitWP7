@@ -31,5 +31,10 @@ namespace TransitWP7
             this.startingInput.Text = this.endingInput.Text;
             this.endingInput.Text = temp;
         }
+
+        private void navigateButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/NavigateMapPage.xaml", UriKind.Relative));
+        }
     }
 }

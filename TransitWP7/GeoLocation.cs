@@ -29,20 +29,22 @@ namespace TransitWP7
         private GeoCoordinateWatcher current = null;
 
         private Accuracy accuracy = Accuracy.Low;
+        private double threshhold = 0;
 
+        public event EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>> PositionChanged = null;
+        
         private GeoLocation()
         {
             // initialize a low accuracy geowatcher
-            this.mediumGeowatcher = new GeoCoordinateWatcher();
-            this.mediumGeowatcher.MovementThreshold = 20; // movement threshold of 20 meters
+            this.lowGeowatcher = new GeoCoordinateWatcher();
+            this.lowGeowatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
 
-            // initialize a default accuracy geowatcher
+            // initialize a medium accuracy geowatcher
             this.mediumGeowatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default);
-            this.mediumGeowatcher.MovementThreshold = 20; // movement threshold of 20 meters
+            mediumGeowatcher.StatusChanged += new EventHandler<GeoPositionStatusChangedEventArgs>(this.watcher_StatusChanged);
 
             // initialize a high accuray geowatcher
             this.highGeowatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
-            highGeowatcher.MovementThreshold = 20; // movement threshold of 20 meters
             highGeowatcher.StatusChanged += new EventHandler<GeoPositionStatusChangedEventArgs>(this.watcher_StatusChanged);
 
             this.current = this.lowGeowatcher;
@@ -122,6 +124,10 @@ namespace TransitWP7
 
         private void RefreshWatchers()
         {
+            this.highGeowatcher.MovementThreshold = this.threshhold;
+            this.mediumGeowatcher.MovementThreshold = this.threshhold;
+            this.lowGeowatcher.MovementThreshold = this.threshhold;
+
             this.Shutdown();
             this.Initialize();
         }
@@ -141,6 +147,14 @@ namespace TransitWP7
                     this.RefreshWatchers();
                     break;
             }
+        }
+
+        // Event handler for the GeoCoordinateWatcher.PositionChanged event.
+        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        {
+            // TODO: only process events from the 'active' geocoordinatewatcher
+
+            this.PositionChanged(this, e);
         }
     }
 }
