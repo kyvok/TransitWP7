@@ -11,7 +11,7 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -28,10 +28,12 @@
             <TextBox Height="72" HorizontalAlignment="Left" Margin="6,0,0,308" Name="startingInput" Text="(starting location)" VerticalAlignment="Center" Width="450"/>
             <TextBox Height="72" HorizontalAlignment="Left" Margin="6,233,0,346" Name="endingInput" Text="(ending location)" VerticalAlignment="Center" Width="450" />
             <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="141,461,0,0" Name="navigateButton" VerticalAlignment="Top" Width="160" Click="navigateButton_Click" />
-            <HyperlinkButton Content="leaving now" Height="30" HorizontalAlignment="Left" Margin="122,336,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" />
+            <HyperlinkButton Content="leaving at" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
             <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,114,0,0" Name="textBlock1" Text="Starting Location" VerticalAlignment="Top" />
             <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,211,0,0" Name="textBlock2" Text="Ending Location" VerticalAlignment="Top" />
             <HyperlinkButton Content="swap locations" Height="30" HorizontalAlignment="Left" Margin="268,114,0,0" Name="swapText" VerticalAlignment="Top" Width="200" Click="swapText_Click" />
+            <toolkit:DatePicker HorizontalAlignment="Left" Margin="153,383,0,0" Name="datePicker1" VerticalAlignment="Top" />
+            <toolkit:TimePicker HorizontalAlignment="Left" Margin="299,383,0,0" Name="timePicker1" VerticalAlignment="Top" />
         </Grid>
     </Grid>
  
