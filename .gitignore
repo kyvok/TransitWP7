@@ -4,4 +4,5 @@
 *.cache
 [Oo]bj/
 [Bb]in/
-App_Data/
+[Aa]pp_Data/
+BingMapsKey*

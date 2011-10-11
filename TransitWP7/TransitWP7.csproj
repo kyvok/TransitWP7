@@ -58,11 +58,18 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Xml" />
     <Reference Include="mscorlib.extensions" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BingMapsRestApi\BingMapsKey.cs" />
+    <Compile Include="BingMapsRestApi\BingMapsQuery.cs" />
+    <Compile Include="BingMapsRestApi\BingMapsQueryAsyncCallback.cs" />
+    <Compile Include="BingMapsRestApi\BingMapsQueryResult.cs" />
+    <Compile Include="BingMapsRestApi\BingMapsUriParameters.cs" />
+    <Compile Include="BingMapsRestApi\BingMapsTypes.cs" />
     <Compile Include="GeoLocation.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -98,9 +105,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SplashScreenImage.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BingAPI\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
