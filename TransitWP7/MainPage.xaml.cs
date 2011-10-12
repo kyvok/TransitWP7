@@ -21,12 +21,15 @@ namespace TransitWP7
         {
             InitializeComponent();
 
+            /*
             BingMapsRestApi.BingMapsQuery.GetLocationInfo(new BingMapsRestApi.Point(47.64054, -122.12934), SampleCallbackForBingApiQuery);
             BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery("Starbucks", SampleCallbackForBingApiQuery);
             BingMapsRestApi.BingMapsQuery.GetLocationsFromQueryWithUserContext("Starbucks", new BingMapsRestApi.UserContextParameters(new BingMapsRestApi.Point(47.64054, -122.12934)), SampleCallbackForBingApiQuery);
             BingMapsRestApi.BingMapsQuery.GetTransitRouteFromPoints(new BingMapsRestApi.Point(47.623192, -122.326698), new BingMapsRestApi.Point(47.60223, -122.331039), SampleCallbackForBingApiQuery);
+            */
         }
 
+        /*
         private void SampleCallbackForBingApiQuery(BingMapsRestApi.BingMapsQueryResult result)
         {
             if (result.Error != null)
@@ -42,6 +45,7 @@ namespace TransitWP7
                     result.Result.ResourceSets[0].Resources[0].GetType().Name);
             }
         }
+        */
 
         private void swapText_Click(object sender, RoutedEventArgs e)
         {

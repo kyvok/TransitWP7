@@ -11,60 +11,75 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Controls.Maps;
 
 namespace TransitWP7
 {
     public partial class NavigateMapPage : PhoneApplicationPage
     {
-        private double latitude = 0;
-        private double longitude = 0;
+        GeoCoordinate currentLocation = null;
+        private GeoCoordinateWatcher highGeowatcher = null;
 
         public NavigateMapPage()
         {
             InitializeComponent();
-            GeoLocation.Instance.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-        }
+            // GeoLocation.Instance.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
 
-        private void lowButton_Click(object sender, RoutedEventArgs e)
-        {
-            GeoLocation.Instance.Accuracy = Accuracy.Low;
-        }
+            currentLocation = new GeoCoordinate(0, 0);
 
-        private void mediumButton_Click(object sender, RoutedEventArgs e)
-        {
-            GeoLocation.Instance.Accuracy = Accuracy.Medium;
-        }
+            // initialize gps data
+            this.highGeowatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
+            this.highGeowatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+            this.highGeowatcher.MovementThreshold = 20;
+            this.highGeowatcher.Start();
 
-        private void highButton_Click(object sender, RoutedEventArgs e)
-        {
-            GeoLocation.Instance.Accuracy = Accuracy.High;
+            // set the credentials correctly
+            Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider credProvider = new Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider(BingMapsRestApi.BingMapsKey.Key);
+            this.mainMap.CredentialsProvider = credProvider;
+
+            // TODO: figure out how to do this in xaml
+            // this.mainMap.Width = this.LayoutRoot.ColumnDefinitions[0].ActualWidth;
+            // this.mainMap.Height = this.LayoutRoot.RowDefinitions[0].ActualHeight;
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            // TODO: change this to databinding
-            this.latitudeValue.Text = e.Position.Location.Latitude.ToString();
-            this.longitudeValue.Text = e.Position.Location.Longitude.ToString();
+            // determine if we should continue tracking
+            if (Math.Abs(this.currentLocation.Latitude - this.mainMap.TargetCenter.Latitude) <= 0.0000000000001
+                && Math.Abs(this.currentLocation.Longitude - this.mainMap.TargetCenter.Longitude) <= 0.0000000000001)
+            {
+                this.mainMap.SetView(e.Position.Location, mainMap.ZoomLevel);
+            }
 
-            this.latitude = e.Position.Location.Latitude;
-            this.longitude = e.Position.Location.Longitude;
+            this.currentLocation = e.Position.Location;
+
+            // update my location
+            // TODO: switch this to databinding
+            this.meIndicator.Location = this.currentLocation;
+
+            // Poll bing maps about the location
+            BingMapsRestApi.BingMapsQuery.GetLocationInfo(new BingMapsRestApi.Point(this.currentLocation.Latitude, this.currentLocation.Longitude), LocationCallback);
         }
 
-        public string Latitude
+        private void LocationCallback(BingMapsRestApi.BingMapsQueryResult result)
         {
-            get
+            if (result.Error != null)
             {
-                return this.latitude.ToString();
+                Console.WriteLine("obtained an error!");
+                Console.WriteLine(result.Error.Message);
+            }
+            else
+            {
+                myLocation.Text = String.Format("Current location: {0}", 
+                    ((TransitWP7.BingMapsRestApi.Location)(result.Result.ResourceSets[0].Resources[0])).Name);
             }
         }
 
-        public string Longitude
+        private void LocateButton_Click(object sender, EventArgs e)
         {
-            get
-            {
-                return this.longitude.ToString();
-            }
+            // Recenter the map on current user location and preserve the zoom level
+            this.mainMap.SetView(this.currentLocation, mainMap.ZoomLevel);
         }
     }
 }
