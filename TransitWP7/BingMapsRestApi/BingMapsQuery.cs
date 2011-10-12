@@ -3,11 +3,9 @@
 namespace TransitWP7.BingMapsRestApi
 {
     using System;
-    using System.IO;
+    using System.Device.Location;
     using System.Net;
-    using System.Linq;
     using System.Text;
-    using System.Collections.Generic;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -15,54 +13,158 @@ namespace TransitWP7.BingMapsRestApi
     /// </summary>
     public static class BingMapsQuery
     {
-        // TODO: consider extension methods to transform WP7 Location object to BingMaps.Point, WP7 MapViewPort to BingMaps.BoundingBox, etc
-
-        private static OutputParameters DefaultOutputParameters = new OutputParameters(OutputFormat.Xml, suppressStatus: false);
+        private static OutputParameters DefaultOutputParameters = new OutputParameters(OutputFormat.Xml, suppressStatus: true);
         private static KeyParameter DefaultKeyParameter = new KeyParameter(BingMapsKey.Key);
         private static XmlSerializer BingMapsResponseSerializer = new XmlSerializer(typeof(Response));
 
         /// <summary>
         /// Takes a latitude/longitude location and query for the information related to this location.
         /// </summary>
-        /// <param name="point">Location on map</param>
-        /// <param name="callback">Callback that will use the response result</param>
-        public static void GetLocationInfo(Point point, Action<BingMapsQueryResult> callback)
+        /// <param name="point">Location on map.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        public static void GetLocationInfo(GeoCoordinate point, Action<BingMapsQueryResult> callback)
         {
-            GetLocationsFromQueryWithUserContext(point.ToString(), null, callback);
+            GetLocationInfo(point, callback, null);
         }
 
         /// <summary>
-        /// Takes a query string (address / business name / point / anything!) and query for possible locations.
+        /// Takes a latitude/longitude location and query for the information related to this location.
         /// </summary>
-        /// <param name="query">A query to submit</param>
-        /// /// <param name="callback">Callback that will use the response result</param>
+        /// <param name="point">Location on map.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        /// <param name="userState">An object to pass to the callback</param>
+        public static void GetLocationInfo(GeoCoordinate point, Action<BingMapsQueryResult> callback, object userState)
+        {
+            GetLocationsFromQuery(point.AsBingMapsPoint().ToString(), null, callback);
+        }
+
+        /// <summary>
+        /// Takes a query string and query for possible locations.
+        /// </summary>
+        /// <param name="query">A query to submit.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
         public static void GetLocationsFromQuery(string query, Action<BingMapsQueryResult> callback)
         {
-            GetLocationsFromQueryWithUserContext(query, null, callback);
+            GetLocationsFromQuery(query, callback, null);
         }
 
         /// <summary>
-        /// Takes a query string (address / business name / point / anything!) and query for possible locations using the provided user context.
+        /// Takes a query string and query for possible locations.
+        /// </summary>
+        /// <param name="query">A query to submit.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        /// <param name="userState">An object to pass to the callback.</param>
+        public static void GetLocationsFromQuery(string query, Action<BingMapsQueryResult> callback, object userState)
+        {
+            GetLocationsFromQuery(query, null, callback, userState);
+        }
+
+        /// <summary>
+        /// Takes a query string and query for possible locations using the provided user context.
+        /// </summary>
+        /// <param name="query">A query to submit.</param>
+        /// <param name="userContext">Information about the user context, like geographic coordinate and current map view port.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        public static void GetLocationsFromQuery(string query, UserContextParameters context, Action<BingMapsQueryResult> callback)
+        {
+            GetLocationsFromQuery(query, context, callback, null);
+        }
+
+        /// <summary>
+        /// Takes a query string and query for possible locations using the provided user context.
         /// </summary>
         /// <param name="query">A query to submit</param>
         /// <param name="userContext">Information about the user context, like geographic coordinate and current map view port.</param>
-        /// <param name="callback">Callback that will use the response result</param>
-        public static void GetLocationsFromQueryWithUserContext(string query, UserContextParameters userContext, Action<BingMapsQueryResult> callback)
+        /// <param name="callback">Callback that will use the response result.</param>
+        /// <param name="userState">An object to pass to the callback.</param>
+        public static void GetLocationsFromQuery(string query, UserContextParameters userContext, Action<BingMapsQueryResult> callback, object userState)
         {
-            Uri queryUri = ConstructQueryUri("Locations/" + query, userContext != null ? userContext.ToString() : String.Empty);
-            ExecuteQuery<IEnumerable<Location>>(queryUri, callback);
+            var queryUri = ConstructQueryUri(
+                "Locations/" + query,
+                userContext != null ? userContext.ToString() : String.Empty);
+            ExecuteQuery(queryUri, callback, userState);
         }
 
-        public static void GetTransitRouteFromPoints(Point start, Point end, Action<BingMapsQueryResult> callback)
+        /// <summary>
+        /// Takes a start and end points and query for possible transit routes.
+        /// </summary>
+        /// <param name="start">Start location.</param>
+        /// <param name="end">End location.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback)
         {
-            Uri queryUri = ConstructQueryUri("Routes/Transit", new TransitQueryParameters(start, end) { MaxSolutions = 5 }.ToString());
-            ExecuteQuery<IEnumerable<Route>>(queryUri, callback);
+            GetTransitRoute(start, end, callback, null);
         }
 
-        public static void GetWalkingRouteFromPoints(Point start, Point end, Action<BingMapsQueryResult> callback)
+        /// <summary>
+        /// Takes a start and end points and query for possible transit routes.
+        /// </summary>
+        /// <param name="start">Start location.</param>
+        /// <param name="end">End location.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        /// <param name="userState">An object to pass to the callback.</param>
+        public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback, object userState)
         {
-            Uri queryUri = ConstructQueryUri("Routes/Walking", new RouteQueryParameters(start, end).ToString());
-            ExecuteQuery<IEnumerable<Route>>(queryUri, callback);
+            var queryUri = ConstructQueryUri(
+                "Routes/Transit",
+                new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint()) { MaxSolutions = 5 }.ToString());
+            ExecuteQuery(queryUri, callback, userState);
+        }
+
+        /// <summary>
+        /// Takes a start and end points and query for possible transit routes.
+        /// </summary>
+        /// <param name="start">Start location.</param>
+        /// <param name="end">End location.</param>
+        /// <param name="time">A time or date that relates to the route query.</param>
+        /// <param name="timeType">The TimeType of the dateTime parameter.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, DateTime time, TimeType timeType, Action<BingMapsQueryResult> callback)
+        {
+            GetTransitRoute(start, end, time, timeType, callback, null);
+        }
+
+        /// <summary>
+        /// Takes a start and end points and query for possible transit routes.
+        /// </summary>
+        /// <param name="start">Start location.</param>
+        /// <param name="end">End location.</param>
+        /// <param name="time">A time or date that relates to the route query.</param>
+        /// <param name="timeType">The TimeType of the dateTime parameter.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        /// <param name="userState">An object to pass to the callback.</param>
+        public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, DateTime time, TimeType timeType, Action<BingMapsQueryResult> callback, object userState)
+        {
+            var queryUri = ConstructQueryUri(
+                "Routes/Transit",
+                new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint(), time, timeType) { MaxSolutions = 5 }.ToString());
+            ExecuteQuery(queryUri, callback, userState);
+        }
+
+        /// <summary>
+        /// Takes a start and end points and query for possible walking routes.
+        /// </summary>
+        /// <param name="start">Start location.</param>
+        /// <param name="end">End location.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        public static void GetWalkingRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback)
+        {
+            GetWalkingRoute(start, end, callback, null);
+        }
+
+        /// <summary>
+        /// Takes a start and end points and query for possible walking routes.
+        /// </summary>
+        /// <param name="start">Start location.</param>
+        /// <param name="end">End location.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        /// <param name="userState">An object to pass to the callback.</param>
+        public static void GetWalkingRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback, object userState)
+        {
+            var queryUri = ConstructQueryUri(
+                "Routes/Walking",
+                new RouteQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint()).ToString());
+            ExecuteQuery(queryUri, callback, userState);
         }
 
         /// <summary>
@@ -86,34 +188,56 @@ namespace TransitWP7.BingMapsRestApi
             return new Uri(uri.ToString());
         }
 
-        //TODO: change later to use HttpWebRequest instead of WebClient, because WebClient marshalls back to UI thread in WP7.
-        private static void ExecuteQuery<T>(Uri queryUri, Action<BingMapsQueryResult> callback)
+        private static void ExecuteQuery(Uri queryUri, Action<BingMapsQueryResult> callback, object userState)
         {
-            var client = new WebClient();
-            client.OpenReadCompleted += new OpenReadCompletedEventHandler(client_OpenReadCompleted);
-            client.OpenReadAsync(queryUri, new BingMapsQueryAsyncCallback(callback));
+            var httpRequest = WebRequest.Create(queryUri) as HttpWebRequest;
+            var context = new BingMapsRequestContext(httpRequest, new BingMapsQueryAsyncCallback(callback, userState));
+            httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
 
-        private static void client_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e)
+        private static void HttpRequestCompleted(IAsyncResult asyncResult)
         {
-            if (e.UserState is BingMapsQueryAsyncCallback)
+            var context = asyncResult.AsyncState as BingMapsRequestContext;
+            if (context.AsyncCallback == null)
             {
-                var callback = e.UserState as BingMapsQueryAsyncCallback;
-
-                if (e.Error != null)
-                {
-                    callback.Notify(e.Error);
-                }
-
-                Response response = (Response)BingMapsResponseSerializer.Deserialize(e.Result);
-
-                //TODO: check status code for errors here, or consider not suppressing status code
-
-                callback.Notify(response);
+                throw new InvalidOperationException("Unexpected exception, no BingMapsQueryAsyncCallback!");
             }
-            else
+
+            try
             {
-                //TODO: this is bad, throw
+                var httpResponse = context.HttpRequest.EndGetResponse(asyncResult);
+                var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+                if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
+                {
+                    StringBuilder exceptionMessage = new StringBuilder();
+                    exceptionMessage.AppendLine("One or more error were returned by the query:");
+                    foreach (string errorDetail in response.ErrorDetails)
+                    {
+                        exceptionMessage.Append("  ");
+                        exceptionMessage.AppendLine(errorDetail);
+                    }
+                    context.AsyncCallback.Notify(new Exception(exceptionMessage.ToString()));
+                }
+                else
+                {
+                    context.AsyncCallback.Notify(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                context.AsyncCallback.Notify(ex);
+            }
+        }
+
+        private class BingMapsRequestContext
+        {
+            public HttpWebRequest HttpRequest { get; private set; }
+            public BingMapsQueryAsyncCallback AsyncCallback { get; private set; }
+
+            public BingMapsRequestContext(HttpWebRequest httpRequest, BingMapsQueryAsyncCallback callback)
+            {
+                this.HttpRequest = httpRequest;
+                this.AsyncCallback = callback;
             }
         }
     }

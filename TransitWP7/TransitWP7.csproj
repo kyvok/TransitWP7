@@ -65,6 +65,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BingMapsExtensionMethods.cs" />
     <Compile Include="BingMapsRestApi\BingMapsKey.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQuery.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQueryAsyncCallback.cs" />

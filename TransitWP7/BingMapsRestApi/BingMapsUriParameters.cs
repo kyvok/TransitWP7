@@ -4,7 +4,9 @@ namespace TransitWP7.BingMapsRestApi
 {
     using System;
     using System.Collections.Generic;
+    using System.Device.Location;
     using System.Text;
+    using Microsoft.Phone.Controls.Maps;
 
     //TODO: this needs review
     public class LocationByPoint
@@ -190,22 +192,22 @@ namespace TransitWP7.BingMapsRestApi
     /// </summary>
     public class UserContextParameters
     {
-        public BoundingBox MapView { get; set; } //mv
-        public Point UserLocation { get; set; } //ul
+        public LocationRect MapView { get; set; } //mv
+        public GeoCoordinate UserLocation { get; set; } //ul
 
         public UserContextParameters() { }
 
-        public UserContextParameters(BoundingBox mapView)
+        public UserContextParameters(LocationRect mapView)
             : this(mapView, null)
         {
         }
 
-        public UserContextParameters(Point userLocation)
+        public UserContextParameters(GeoCoordinate userLocation)
             : this(null, userLocation)
         {
         }
 
-        public UserContextParameters(BoundingBox mapView, Point userLocation)
+        public UserContextParameters(LocationRect mapView, GeoCoordinate userLocation)
         {
             this.MapView = mapView;
             this.UserLocation = userLocation;
@@ -217,13 +219,13 @@ namespace TransitWP7.BingMapsRestApi
             if (this.MapView != null)
             {
                 builder.Append("&mv=");
-                builder.Append(this.MapView);
+                builder.Append(this.MapView.AsBingMapsBoundingBox());
             }
 
             if (this.UserLocation != null)
             {
                 builder.Append("&ul=");
-                builder.Append(this.UserLocation);
+                builder.Append(this.UserLocation.AsBingMapsPoint());
             }
 
             return builder.ToString();

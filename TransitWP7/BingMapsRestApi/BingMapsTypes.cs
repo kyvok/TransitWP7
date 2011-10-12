@@ -139,10 +139,10 @@ namespace TransitWP7.BingMapsRestApi
         public double TravelDuration { get; set; }
 
         [XmlElement("RouteLeg")]
-        public RouteLeg[] RouteLeg { get; set; }
+        public RouteLeg[] RouteLegs { get; set; }
 
         [XmlElement("RoutePath")]
-        public RoutePath[] RoutePath { get; set; }
+        public RoutePath[] RoutePaths { get; set; }
     }
 
     /// <summary>
@@ -160,7 +160,7 @@ namespace TransitWP7.BingMapsRestApi
         public Location EndLocation { get; set; }
 
         [XmlElement("ItineraryItem")]
-        public ItineraryItem[] ItineraryItem { get; set; }
+        public ItineraryItem[] ItineraryItems { get; set; }
 
         public System.DateTime StartTime { get; set; }
         public System.DateTime EndTime { get; set; }
