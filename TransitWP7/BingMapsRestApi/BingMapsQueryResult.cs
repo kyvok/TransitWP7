@@ -6,17 +6,46 @@ namespace TransitWP7.BingMapsRestApi
 
     public class BingMapsQueryResult
     {
-        public Exception Error { get; private set; }
-        public Response Result { get; private set; }
-
-        public BingMapsQueryResult(Response result)
+        public BingMapsQueryResult(Response response)
+            : this(response, null, null)
         {
-            this.Result = result;
         }
 
         public BingMapsQueryResult(Exception exception)
+            : this(null, exception, null)
         {
-            this.Error = exception;
         }
+
+        public BingMapsQueryResult(Response response, object userState)
+            : this(response, null, userState)
+        {
+        }
+
+        public BingMapsQueryResult(Exception exception, object userState)
+            : this(null, exception, userState)
+        {
+        }
+
+        private BingMapsQueryResult(Response response, Exception exception, object userState)
+        {
+            this.Response = response;
+            this.Error = exception;
+            this.UserState = userState;
+        }
+
+        /// <summary>
+        /// Gets a value indicating which exception occured if any.
+        /// </summary>
+        public Exception Error { get; private set; }
+
+        /// <summary>
+        /// Gets the Bing Maps Response object returned by this query.
+        /// </summary>
+        public Response Response { get; private set; }
+
+        /// <summary>
+        /// Gets the user state associated with this query.
+        /// </summary>
+        public object UserState { get; private set; }
     }
 }

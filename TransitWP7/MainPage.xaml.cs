@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Device.Location;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
+﻿//TODO: copyright info
 
 namespace TransitWP7
 {
+    using System;
+    using System.Windows;
+    using Microsoft.Phone.Controls;
+    using System.Device.Location;
+
     public partial class MainPage : PhoneApplicationPage
     {
         // Constructor
@@ -21,10 +14,22 @@ namespace TransitWP7
         {
             InitializeComponent();
 
-            BingMapsRestApi.BingMapsQuery.GetLocationInfo(new BingMapsRestApi.Point(47.64054, -122.12934), SampleCallbackForBingApiQuery);
-            BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery("Starbucks", SampleCallbackForBingApiQuery);
-            BingMapsRestApi.BingMapsQuery.GetLocationsFromQueryWithUserContext("Starbucks", new BingMapsRestApi.UserContextParameters(new BingMapsRestApi.Point(47.64054, -122.12934)), SampleCallbackForBingApiQuery);
-            BingMapsRestApi.BingMapsQuery.GetTransitRouteFromPoints(new BingMapsRestApi.Point(47.623192, -122.326698), new BingMapsRestApi.Point(47.60223, -122.331039), SampleCallbackForBingApiQuery);
+            BingMapsRestApi.BingMapsQuery.GetLocationInfo(
+                new GeoCoordinate(47.64054, -122.12934),
+                SampleCallbackForBingApiQuery);
+            BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
+                "Starbucks", 
+                SampleCallbackForBingApiQuery);
+            BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
+                "Starbucks",
+                new BingMapsRestApi.UserContextParameters(new GeoCoordinate(47.64054, -122.12934)),
+                SampleCallbackForBingApiQuery);
+            BingMapsRestApi.BingMapsQuery.GetTransitRoute(
+                new GeoCoordinate(47.623192, -122.326698),
+                new GeoCoordinate(47.60223, -122.331039),
+                DateTime.Now.AddHours(-6),
+                TransitWP7.BingMapsRestApi.TimeType.Departure,
+                SampleCallbackForBingApiQuery);
         }
 
         private void SampleCallbackForBingApiQuery(BingMapsRestApi.BingMapsQueryResult result)
@@ -38,8 +43,8 @@ namespace TransitWP7
             {
                 Console.WriteLine("obtained result!");
                 Console.WriteLine("Got {0} {1} results",
-                    result.Result.ResourceSets[0].Resources.Length,
-                    result.Result.ResourceSets[0].Resources[0].GetType().Name);
+                    result.Response.ResourceSets[0].Resources.Length,
+                    result.Response.ResourceSets[0].Resources[0].GetType().Name);
             }
         }
 
