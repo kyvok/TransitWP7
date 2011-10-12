@@ -59,7 +59,7 @@ namespace TransitWP7
             this.meIndicator.Location = this.currentLocation;
 
             // Poll bing maps about the location
-            BingMapsRestApi.BingMapsQuery.GetLocationInfo(new BingMapsRestApi.Point(this.currentLocation.Latitude, this.currentLocation.Longitude), LocationCallback);
+            BingMapsRestApi.BingMapsQuery.GetLocationInfo(this.currentLocation, LocationCallback);
         }
 
         private void LocationCallback(BingMapsRestApi.BingMapsQueryResult result)
@@ -71,8 +71,24 @@ namespace TransitWP7
             }
             else
             {
-                myLocation.Text = String.Format("Current location: {0}", 
-                    ((TransitWP7.BingMapsRestApi.Location)(result.Result.ResourceSets[0].Resources[0])).Name);
+                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
+                        switch(response.Confidence)
+                        {
+                            case BingMapsRestApi.ConfidenceLevel.High:
+                                myLocation.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case BingMapsRestApi.ConfidenceLevel.Medium:
+                                myLocation.Foreground = new SolidColorBrush(Colors.Yellow);
+                                break;
+                            case BingMapsRestApi.ConfidenceLevel.Low:
+                                myLocation.Foreground = new SolidColorBrush(Colors.Red);
+                                break;
+                        }
+                        myLocation.Text = String.Format("Current location: {0}",
+                            response.Name);
+                    });
             }
         }
 
