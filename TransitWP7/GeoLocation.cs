@@ -12,17 +12,47 @@ using System.Windows.Shapes;
 
 namespace TransitWP7
 {
+    /*
     public enum Accuracy
     {
         Low = 0,
         Medium = 1,
         High = 2
     }
+    */
 
     // singleton class for obtaining the current user location
     public sealed class GeoLocation
     {
         private static readonly GeoLocation instance = new GeoLocation();
+        private GeoCoordinateWatcher highGeowatcher = null;
+
+        private GeoLocation()
+        {
+            // initialize gps data
+            this.highGeowatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
+            this.highGeowatcher.MovementThreshold = 20;
+            this.highGeowatcher.Start();
+        }
+
+        public static GeoLocation Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
+        public GeoCoordinateWatcher GeoWatcher
+        {
+            get
+            {
+                return this.highGeowatcher;
+            }
+        }
+
+
+        /*
         private GeoCoordinateWatcher lowGeowatcher = null;
         private GeoCoordinateWatcher mediumGeowatcher = null;
         private GeoCoordinateWatcher highGeowatcher = null;
@@ -156,5 +186,7 @@ namespace TransitWP7
 
             this.PositionChanged(this, e);
         }
+    }
+    */
     }
 }

@@ -18,21 +18,15 @@ namespace TransitWP7
     public partial class NavigateMapPage : PhoneApplicationPage
     {
         GeoCoordinate currentLocation = null;
-        private GeoCoordinateWatcher highGeowatcher = null;
 
         public NavigateMapPage()
         {
             InitializeComponent();
-            // GeoLocation.Instance.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-
             currentLocation = new GeoCoordinate(0, 0);
 
             // initialize gps data
-            this.highGeowatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
-            this.highGeowatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-            this.highGeowatcher.MovementThreshold = 20;
-            this.highGeowatcher.Start();
-
+            GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+            
             // set the credentials correctly
             Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider credProvider = new Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider(BingMapsRestApi.BingMapsKey.Key);
             this.mainMap.CredentialsProvider = credProvider;

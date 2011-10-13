@@ -13,6 +13,7 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit">
 
+    <!-- TODO: Switch everything to be formatted nicer by grid -->
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
@@ -23,20 +24,28 @@
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28"></StackPanel>
 
+        <!-- TODO: highlight all text in box once selected -->
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,0,0,308" Name="startingInput" Text="(starting location)" VerticalAlignment="Center" Width="450"/>
-            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,233,0,346" Name="endingInput" Text="(ending location)" VerticalAlignment="Center" Width="450" />
-            <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="141,461,0,0" Name="navigateButton" VerticalAlignment="Top" Width="160" Click="navigateButton_Click" />
-            <HyperlinkButton Content="leaving at" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" />
+            <TextBox Height="72" Margin="6,0,47,308" Name="startingInput" Text="My Current Location" VerticalAlignment="Center" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus"/>
+            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,275,0,304" Name="endingInput" Text="Starbucks" VerticalAlignment="Center" Width="403" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" />
+            <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
+            <HyperlinkButton Content="leaving at" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
             <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,114,0,0" Name="textBlock1" Text="Starting Location" VerticalAlignment="Top" />
-            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,211,0,0" Name="textBlock2" Text="Ending Location" VerticalAlignment="Top" />
+            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,253,0,0" Name="textBlock2" Text="Ending Location" VerticalAlignment="Top" />
             <HyperlinkButton Content="swap locations" Height="30" HorizontalAlignment="Left" Margin="268,114,0,0" Name="swapText" VerticalAlignment="Top" Width="200" Click="swapText_Click" />
             <toolkit:DatePicker HorizontalAlignment="Left" Margin="153,383,0,0" Name="datePicker1" VerticalAlignment="Top" />
             <toolkit:TimePicker HorizontalAlignment="Left" Margin="299,383,0,0" Name="timePicker1" VerticalAlignment="Top" />
+            <Button Content="o" Height="72" HorizontalAlignment="Left" Margin="387,136,0,0" Name="findStart" VerticalAlignment="Top" Width="69" Click="findStart_Click" />
+            <Button Content="o" Height="72" HorizontalAlignment="Left" Margin="387,275,0,0" Name="findEnd" VerticalAlignment="Top" Width="69" Click="findEnd_Click" />
+            <TextBlock Height="49" HorizontalAlignment="Left" Margin="19,198,0,0" Name="startAddress" Text="" VerticalAlignment="Top" Width="379" />
+            <TextBlock Height="49" HorizontalAlignment="Left" Margin="19,336,0,0" Name="endAddress" Text="" VerticalAlignment="Top" Width="379" />
+            <Button Content="Now" Height="73" HorizontalAlignment="Left" Margin="153,440,0,0" Name="nowButton" VerticalAlignment="Top" Width="281" Click="nowButton_Click" />
+            <Button Content="Verify Addresses" Height="72" HorizontalAlignment="Left" Margin="6,519,0,0" Name="button1" VerticalAlignment="Top" Width="450" Click="button1_Click" />
         </Grid>
     </Grid>
  
+    
     <!--Sample code showing usage of ApplicationBar-->
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
