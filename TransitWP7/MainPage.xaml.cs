@@ -126,6 +126,9 @@ namespace TransitWP7
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
         {
+            //remove the old callback
+            GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+
             NavigationService.Navigate(new Uri("/NavigateMapPage.xaml", UriKind.Relative));
         }
 

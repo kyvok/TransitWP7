@@ -22,7 +22,8 @@ namespace TransitWP7
         public NavigateMapPage()
         {
             InitializeComponent();
-            currentLocation = new GeoCoordinate(0, 0);
+            this.currentLocation = GeoLocation.Instance.GeoWatcher.Position.Location;
+            this.mainMap.SetView(this.currentLocation, mainMap.ZoomLevel);
 
             // initialize gps data
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
