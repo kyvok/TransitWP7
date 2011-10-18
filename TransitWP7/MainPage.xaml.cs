@@ -7,6 +7,8 @@ namespace TransitWP7
     using Microsoft.Phone.Controls;
     using System.Device.Location;
     using System.Windows.Media;
+    using Microsoft.Phone.Shell;
+    using TransitWP7.BingSearchRestApi;
 
     public partial class MainPage : PhoneApplicationPage
     {
@@ -144,6 +146,12 @@ namespace TransitWP7
             brushTemp = this.startAddress.Foreground;
             this.startAddress.Foreground = this.endAddress.Foreground;
             this.endAddress.Foreground = brushTemp;
+
+            //swap the GPS locations
+            GeoCoordinate locationTemp = null;
+            locationTemp = this.startCoordinate;
+            this.startCoordinate = this.endCoordinate;
+            this.endCoordinate = locationTemp;
         }
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
@@ -249,28 +257,47 @@ namespace TransitWP7
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
+            // disable this button immediately to prevent multiple clicks
+            // this.button1.IsEnabled = false;
+
             // Let's resolve the addresses
+            bool resolveEndLocationLater = false;
 
             // resolve the starting address if necessary
             if (this.startAddress.Text == "")
             {
+                BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.startingInput.Text, this.currentLocation, StartingCallbackForBingApiQuery, null);
+                /*
                 BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
                     this.startingInput.Text,
                     new BingMapsRestApi.UserContextParameters(this.currentLocation),
                     StartingCallbackForBingApiQuery);
+                */
+
+                resolveEndLocationLater = true;
             }
 
             // resolve the ending address if necessary
             if (this.endAddress.Text == "")
             {
+                if (resolveEndLocationLater == false)
+                {
+                    BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.endingInput.Text, this.currentLocation, EndingCallbackForBingApiQuery, null);
+                }
+                else
+                {
+                    PhoneApplicationService.Current.State["resolveEndingLater"] = true;
+                }
+                /*
                 BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
                     this.endingInput.Text,
                     new BingMapsRestApi.UserContextParameters(this.currentLocation),
                     EndingCallbackForBingApiQuery);
+                */
             }
         }
 
-        private void StartingCallbackForBingApiQuery(BingMapsRestApi.BingMapsQueryResult result)
+        private void StartingCallbackForBingApiQuery(BingSearchRestApi.BingSearchQueryResult result)
         {
             if (result.Error != null)
             {
@@ -279,68 +306,142 @@ namespace TransitWP7
             }
             else
             {
-                // just use the first result
-                Console.WriteLine("obtained result!");
-                Console.WriteLine("Got {0} {1} results",
-                    result.Response.ResourceSets[0].Resources.Length,
-                    result.Response.ResourceSets[0].Resources[0].GetType().Name);
-            }
-
-            TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
-            this.startCoordinate = new GeoCoordinate(response.Point.Latitude, response.Point.Longitude);
-            System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-            {
-                switch (response.Confidence)
-                {
-                    case BingMapsRestApi.ConfidenceLevel.High:
-                        this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
-                        break;
-                    case BingMapsRestApi.ConfidenceLevel.Medium:
-                        this.startAddress.Foreground = new SolidColorBrush(Colors.Yellow);
-                        break;
-                    case BingMapsRestApi.ConfidenceLevel.Low:
-                        this.startAddress.Foreground = new SolidColorBrush(Colors.Red);
-                        break;
-                }
-                this.startAddress.Text = response.Address.FormattedAddress;
-            }
-            );
-        }
-
-        private void EndingCallbackForBingApiQuery(BingMapsRestApi.BingMapsQueryResult result)
-        {
-            if (result.Error != null)
-            {
-                Console.WriteLine("obtained an error!");
-                Console.WriteLine(result.Error.Message);
-            }
-            else
-            {
-                // just use the first result
-                Console.WriteLine("obtained result!");
-                Console.WriteLine("Got {0} {1} results",
-                    result.Response.ResourceSets[0].Resources.Length,
-                    result.Response.ResourceSets[0].Resources[0].GetType().Name);
-
-                TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
-                this.endCoordinate = new GeoCoordinate(response.Point.Latitude, response.Point.Longitude);
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-                    {
-                        switch (response.Confidence)
-                        {
-                            case BingMapsRestApi.ConfidenceLevel.High:
-                                this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
-                                break;
-                            case BingMapsRestApi.ConfidenceLevel.Medium:
-                                this.endAddress.Foreground = new SolidColorBrush(Colors.Yellow);
-                                break;
-                            case BingMapsRestApi.ConfidenceLevel.Low:
-                                this.endAddress.Foreground = new SolidColorBrush(Colors.Red);
-                                break;
-                        }
-                        this.endAddress.Text = response.Address.FormattedAddress;
-                    }
-                );
+                {
+                    UIStartingCallbackForBingApiQuery(result);
+                });
+            }
+        }
+
+        private void UIStartingCallbackForBingApiQuery(BingSearchRestApi.BingSearchQueryResult result)
+        {
+            // this is an ending result
+            PhoneApplicationService.Current.State["isStartResult"] = true;
+
+            // save the query name for later
+            PhoneApplicationService.Current.State["theQuery"] = this.startingInput.Text;
+
+            // save the result set
+            PhoneApplicationService.Current.State["theResultSet"] = result.Response.Phonebook.Results;
+            NavigationService.Navigate(new Uri("/ResultSelectionPage.xaml", UriKind.Relative));
+
+            //                // just use the first result
+            //    Console.WriteLine("obtained result!");
+            //    Console.WriteLine("Got {0} {1} results",
+            //        result.Response.ResourceSets[0].Resources.Length,
+            //        result.Response.ResourceSets[0].Resources[0].GetType().Name);
+            //}
+
+            //TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
+            //this.startCoordinate = new GeoCoordinate(response.Point.Latitude, response.Point.Longitude);
+            //System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+            //{
+            //    switch (response.Confidence)
+            //    {
+            //        case BingMapsRestApi.ConfidenceLevel.High:
+            //            this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
+            //            break;
+            //        case BingMapsRestApi.ConfidenceLevel.Medium:
+            //            this.startAddress.Foreground = new SolidColorBrush(Colors.Yellow);
+            //            break;
+            //        case BingMapsRestApi.ConfidenceLevel.Low:
+            //            this.startAddress.Foreground = new SolidColorBrush(Colors.Red);
+            //            break;
+            //    }
+            //    this.startAddress.Text = response.Address.FormattedAddress;
+            //}
+            //);
+        }
+
+        private void UIEndingCallbackForBingApiQuery(BingSearchRestApi.BingSearchQueryResult result)
+        {
+            // this is an ending result
+            PhoneApplicationService.Current.State["isStartResult"] = false;
+
+            // save the query name for later
+            PhoneApplicationService.Current.State["theQuery"] = this.endingInput.Text;
+
+            // save the result set
+            PhoneApplicationService.Current.State["theResultSet"] = result.Response.Phonebook.Results;
+            NavigationService.Navigate(new Uri("/ResultSelectionPage.xaml", UriKind.Relative));
+
+            // just use the first result
+            //Console.WriteLine("obtained result!");
+            //Console.WriteLine("Got {0} {1} results",
+            //    result.Response.ResourceSets[0].Resources.Length,
+            //    result.Response.ResourceSets[0].Resources[0].GetType().Name);
+
+            //TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
+            //this.endCoordinate = new GeoCoordinate(response.Point.Latitude, response.Point.Longitude);
+            //System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+            //    {
+            //        switch (response.Confidence)
+            //        {
+            //            case BingMapsRestApi.ConfidenceLevel.High:
+            //                this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
+            //                break;
+            //            case BingMapsRestApi.ConfidenceLevel.Medium:
+            //                this.endAddress.Foreground = new SolidColorBrush(Colors.Yellow);
+            //                break;
+            //            case BingMapsRestApi.ConfidenceLevel.Low:
+            //                this.endAddress.Foreground = new SolidColorBrush(Colors.Red);
+            //                break;
+            //        }
+            //        this.endAddress.Text = response.Address.FormattedAddress;
+            //    }
+            //);
+        }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            // determine if I came from the result selection page
+            if ((bool)PhoneApplicationService.Current.State.ContainsKey("isFromResultSelection"))
+            {
+                PhoneApplicationService.Current.State.Remove("isFromResultSelection");
+                this.ReturnFromResultSelection((bool)PhoneApplicationService.Current.State["isStartResult"]);
+
+                if ((bool)PhoneApplicationService.Current.State.ContainsKey("resolveEndingLater"))
+                {
+                    PhoneApplicationService.Current.State.Remove("resolveEndingLater");
+                    BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.endingInput.Text, this.currentLocation, EndingCallbackForBingApiQuery, null);
+                }
+            }
+        }
+
+        private void ReturnFromResultSelection(bool isStartResult)
+        {
+            PhonebookResult result = (PhonebookResult) PhoneApplicationService.Current.State["selectedResult"];
+            
+            // set some values here
+            if ((bool)PhoneApplicationService.Current.State["isStartResult"] == true)
+            {
+                this.startCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
+                this.startingInput.Text = result.Business;
+                this.startAddress.Text = result.Address;
+                this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
+            }
+            else
+            {
+                this.endCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
+                this.endingInput.Text = result.Business;
+                this.endAddress.Text = result.Address;
+                this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
+            }
+        }
+
+        private void EndingCallbackForBingApiQuery(BingSearchRestApi.BingSearchQueryResult result)
+        {
+            if (result.Error != null)
+            {
+                Console.WriteLine("obtained an error!");
+                Console.WriteLine(result.Error.Message);
+            }
+            else
+            {
+                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    UIEndingCallbackForBingApiQuery(result);
+                });
             }
         }
     }
