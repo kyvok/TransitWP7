@@ -96,7 +96,7 @@ namespace TransitWP7.BingMapsRestApi
         {
             var queryUri = ConstructQueryUri(
                 "Routes/Walking",
-                new RouteQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint()).ToString());
+                new RouteQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint()) { RoutePathOutput = RoutePathOutput.Points, Tolerances = new System.Collections.Generic.List<double> { 0.0000005 } }.ToString());
             ExecuteQuery(queryUri, callback, userState);
         }
 
