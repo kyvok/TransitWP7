@@ -61,7 +61,9 @@ namespace TransitWP7.BingMapsRestApi
 
         public override string ToString()
         {
-            return string.Format("{0},{1}", this.Latitude, this.Longitude);
+            return string.Format("{0},{1}",
+                this.Latitude.ToString("G9"),
+                this.Longitude.ToString("G9"));
         }
     }
 
@@ -89,7 +91,11 @@ namespace TransitWP7.BingMapsRestApi
 
         public override string ToString()
         {
-            return string.Format("{0},{1},{2},{3}", this.SouthLatitude, this.WestLongitude, this.NorthLatitude, this.EastLongitude);
+            return string.Format("{0},{1},{2},{3}",
+                this.SouthLatitude.ToString("G9"),
+                this.WestLongitude.ToString("G9"),
+                this.NorthLatitude.ToString("G9"),
+                this.EastLongitude.ToString("G9"));
         }
     }
 

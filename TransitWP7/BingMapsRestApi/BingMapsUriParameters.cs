@@ -12,7 +12,7 @@ namespace TransitWP7.BingMapsRestApi
     public class LocationByPoint
     {
         public Point Point { get; set; }
-        ////public List<EntityType> IncludeEntityTypes { get; set; } //TODO: this only supports a subset of the actual enum
+        public List<EntityType> IncludeEntityTypes { get; set; } //TODO: this only supports a subset of the actual enum
 
         public LocationByPoint(Point point)
         {
@@ -126,7 +126,7 @@ namespace TransitWP7.BingMapsRestApi
                         builder.Append(",");
                     }
 
-                    builder.Append(Tolerances[i]);
+                    builder.Append(Tolerances[i].ToString("G9"));
                     moreThanOne = true;
                 }
             }
