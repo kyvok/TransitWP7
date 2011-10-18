@@ -30,7 +30,7 @@ namespace TransitWP7
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
             
             // set the credentials correctly
-            Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider credProvider = new Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider(BingMapsRestApi.BingMapsKey.Key);
+            Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider credProvider = new Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.CredentialsProvider = credProvider;
 
             // TODO: figure out how to do this in xaml

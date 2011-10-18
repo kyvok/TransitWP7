@@ -21,9 +21,17 @@ namespace TransitWP7
         // Constructor
         public MainPage()
         {
+            //phonebook invlaid
+            //"http://api.bing.net/xml.aspx?AppId=0E33FAC75BCECF26B08D540030F357E235539409&Query=starbucks&Sources=Phonebooks"
+            //phonebook valid
+            //"http://api.bing.net/xml.aspx?AppId=0E33FAC75BCECF26B08D540030F357E235539409&Query=starbucks&Sources=Phonebooks"
+
             // TODO: refactor the location stuff
             InitializeComponent();
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+
+            BingSearchRestApi.BingSearchQuery.GetLocationInfo("starbucks", new GeoCoordinate(47.64054, -122.12934), SampleCallbackForPhonebookQuery, null);
+
             /*
             BingMapsRestApi.BingMapsQuery.GetLocationInfo(
                 new GeoCoordinate(47.64054, -122.12934),
@@ -42,6 +50,20 @@ namespace TransitWP7
                 TransitWP7.BingMapsRestApi.TimeType.Departure,
                 SampleCallbackForBingApiQuery);
              */
+        }
+
+        private void SampleCallbackForPhonebookQuery(BingSearchRestApi.BingSearchQueryResult result)
+        {
+            if (result.Error != null)
+            {
+                Console.WriteLine("obtained an error!");
+                Console.WriteLine(result.Error.Message);
+            }
+            else
+            {
+                Console.WriteLine("obtained result!");
+                Console.WriteLine("Got {0} results", result.Response.Phonebook.Total);
+            }
         }
 
         /*

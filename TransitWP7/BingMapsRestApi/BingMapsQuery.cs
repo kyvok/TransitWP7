@@ -14,7 +14,7 @@ namespace TransitWP7.BingMapsRestApi
     public static class BingMapsQuery
     {
         private static OutputParameters DefaultOutputParameters = new OutputParameters(OutputFormat.Xml, suppressStatus: true);
-        private static KeyParameter DefaultKeyParameter = new KeyParameter(BingMapsKey.Key);
+        private static KeyParameter DefaultKeyParameter = new KeyParameter(ApiKeys.BingMapsKey);
         private static XmlSerializer BingMapsResponseSerializer = new XmlSerializer(typeof(Response));
 
         /// <summary>
@@ -35,29 +35,31 @@ namespace TransitWP7.BingMapsRestApi
         /// <param name="userState">An object to pass to the callback</param>
         public static void GetLocationInfo(GeoCoordinate point, Action<BingMapsQueryResult> callback, object userState)
         {
-            GetLocationsFromQuery(point.AsBingMapsPoint().ToString(), null, callback);
+            var queryUri = ConstructQueryUri(
+                "Locations/" + point.AsBingMapsPoint().ToString(), null);
+            ExecuteQuery(queryUri, callback, userState);
         }
 
-        /// <summary>
-        /// Takes a query string and query for possible locations.
-        /// </summary>
-        /// <param name="query">A query to submit.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        public static void GetLocationsFromQuery(string query, Action<BingMapsQueryResult> callback)
-        {
-            GetLocationsFromQuery(query, callback, null);
-        }
+        ///// <summary>
+        ///// Takes a query string and query for possible locations.
+        ///// </summary>
+        ///// <param name="query">A query to submit.</param>
+        ///// <param name="callback">Callback that will use the response result.</param>
+        //public static void GetLocationsFromQuery(string query, Action<BingMapsQueryResult> callback)
+        //{
+        //    GetLocationsFromQuery(query, callback, null);
+        //}
 
-        /// <summary>
-        /// Takes a query string and query for possible locations.
-        /// </summary>
-        /// <param name="query">A query to submit.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        /// <param name="userState">An object to pass to the callback.</param>
-        public static void GetLocationsFromQuery(string query, Action<BingMapsQueryResult> callback, object userState)
-        {
-            GetLocationsFromQuery(query, null, callback, userState);
-        }
+        ///// <summary>
+        ///// Takes a query string and query for possible locations.
+        ///// </summary>
+        ///// <param name="query">A query to submit.</param>
+        ///// <param name="callback">Callback that will use the response result.</param>
+        ///// <param name="userState">An object to pass to the callback.</param>
+        //public static void GetLocationsFromQuery(string query, Action<BingMapsQueryResult> callback, object userState)
+        //{
+        //    GetLocationsFromQuery(query, null, callback, userState);
+        //}
 
         /// <summary>
         /// Takes a query string and query for possible locations using the provided user context.
@@ -80,8 +82,8 @@ namespace TransitWP7.BingMapsRestApi
         public static void GetLocationsFromQuery(string query, UserContextParameters userContext, Action<BingMapsQueryResult> callback, object userState)
         {
             var queryUri = ConstructQueryUri(
-                "Locations/" + query,
-                userContext != null ? userContext.ToString() : String.Empty);
+                "Locations",
+                "q=" + query + (userContext != null ? userContext.ToString() : String.Empty));
             ExecuteQuery(queryUri, callback, userState);
         }
 
