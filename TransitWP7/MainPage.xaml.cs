@@ -146,6 +146,12 @@ namespace TransitWP7
             brushTemp = this.startAddress.Foreground;
             this.startAddress.Foreground = this.endAddress.Foreground;
             this.endAddress.Foreground = brushTemp;
+
+            //swap the GPS locations
+            GeoCoordinate locationTemp = null;
+            locationTemp = this.startCoordinate;
+            this.startCoordinate = this.endCoordinate;
+            this.endCoordinate = locationTemp;
         }
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
@@ -255,6 +261,7 @@ namespace TransitWP7
             // this.button1.IsEnabled = false;
 
             // Let's resolve the addresses
+            bool resolveEndLocationLater = false;
 
             // resolve the starting address if necessary
             if (this.startAddress.Text == "")
@@ -266,12 +273,21 @@ namespace TransitWP7
                     new BingMapsRestApi.UserContextParameters(this.currentLocation),
                     StartingCallbackForBingApiQuery);
                 */
+
+                resolveEndLocationLater = true;
             }
 
             // resolve the ending address if necessary
             if (this.endAddress.Text == "")
             {
-                BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.endingInput.Text, this.currentLocation, EndingCallbackForBingApiQuery, null);
+                if (resolveEndLocationLater == false)
+                {
+                    BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.endingInput.Text, this.currentLocation, EndingCallbackForBingApiQuery, null);
+                }
+                else
+                {
+                    PhoneApplicationService.Current.State["resolveEndingLater"] = true;
+                }
                 /*
                 BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
                     this.endingInput.Text,
@@ -383,6 +399,12 @@ namespace TransitWP7
             {
                 PhoneApplicationService.Current.State.Remove("isFromResultSelection");
                 this.ReturnFromResultSelection((bool)PhoneApplicationService.Current.State["isStartResult"]);
+
+                if ((bool)PhoneApplicationService.Current.State.ContainsKey("resolveEndingLater"))
+                {
+                    PhoneApplicationService.Current.State.Remove("resolveEndingLater");
+                    BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.endingInput.Text, this.currentLocation, EndingCallbackForBingApiQuery, null);
+                }
             }
         }
 
