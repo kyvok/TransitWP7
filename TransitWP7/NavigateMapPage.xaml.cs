@@ -23,6 +23,7 @@ namespace TransitWP7
         {
             InitializeComponent();
             this.currentLocation = GeoLocation.Instance.GeoWatcher.Position.Location;
+            this.meIndicator.Location = this.currentLocation;
             this.mainMap.SetView(this.currentLocation, mainMap.ZoomLevel);
 
             // initialize gps data
