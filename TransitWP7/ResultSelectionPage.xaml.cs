@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using TransitWP7.BingSearchRestApi;
+﻿//TODO: copyright info
 
 namespace TransitWP7
 {
+    using System;
+    using Microsoft.Phone.Controls;
+    using Microsoft.Phone.Shell;
+    using TransitWP7.BingSearchRestApi;
+
     public partial class ResultSelectionPage : PhoneApplicationPage
     {
         PhonebookResult[] resultSet = null;
@@ -29,7 +21,7 @@ namespace TransitWP7
         {
             // check to see if we have a title
             object titleText = null;
-            if (PhoneApplicationService.Current.State.TryGetValue("theQuery",out titleText))
+            if (PhoneApplicationService.Current.State.TryGetValue("theQuery", out titleText))
             {
                 this.PageTitle.Text = (string)titleText;
             }
@@ -38,7 +30,7 @@ namespace TransitWP7
             // check to see if we have results
             if (PhoneApplicationService.Current.State.ContainsKey("theResultSet"))
             {
-                resultSet = (PhonebookResult []) PhoneApplicationService.Current.State["theResultSet"];
+                resultSet = (PhonebookResult[])PhoneApplicationService.Current.State["theResultSet"];
                 this.resultsList.ItemsSource = this.resultSet;
 
                 // automatically select first result

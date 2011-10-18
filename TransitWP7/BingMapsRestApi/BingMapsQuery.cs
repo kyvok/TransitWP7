@@ -22,16 +22,6 @@ namespace TransitWP7.BingMapsRestApi
         /// </summary>
         /// <param name="point">Location on map.</param>
         /// <param name="callback">Callback that will use the response result.</param>
-        public static void GetLocationInfo(GeoCoordinate point, Action<BingMapsQueryResult> callback)
-        {
-            GetLocationInfo(point, callback, null);
-        }
-
-        /// <summary>
-        /// Takes a latitude/longitude location and query for the information related to this location.
-        /// </summary>
-        /// <param name="point">Location on map.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
         /// <param name="userState">An object to pass to the callback</param>
         public static void GetLocationInfo(GeoCoordinate point, Action<BingMapsQueryResult> callback, object userState)
         {
@@ -39,27 +29,6 @@ namespace TransitWP7.BingMapsRestApi
                 "Locations/" + point.AsBingMapsPoint().ToString(), null);
             ExecuteQuery(queryUri, callback, userState);
         }
-
-        ///// <summary>
-        ///// Takes a query string and query for possible locations.
-        ///// </summary>
-        ///// <param name="query">A query to submit.</param>
-        ///// <param name="callback">Callback that will use the response result.</param>
-        //public static void GetLocationsFromQuery(string query, Action<BingMapsQueryResult> callback)
-        //{
-        //    GetLocationsFromQuery(query, callback, null);
-        //}
-
-        ///// <summary>
-        ///// Takes a query string and query for possible locations.
-        ///// </summary>
-        ///// <param name="query">A query to submit.</param>
-        ///// <param name="callback">Callback that will use the response result.</param>
-        ///// <param name="userState">An object to pass to the callback.</param>
-        //public static void GetLocationsFromQuery(string query, Action<BingMapsQueryResult> callback, object userState)
-        //{
-        //    GetLocationsFromQuery(query, null, callback, userState);
-        //}
 
         /// <summary>
         /// Takes a query string and query for possible locations using the provided user context.
@@ -93,37 +62,10 @@ namespace TransitWP7.BingMapsRestApi
         /// <param name="start">Start location.</param>
         /// <param name="end">End location.</param>
         /// <param name="callback">Callback that will use the response result.</param>
-        public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback)
-        {
-            GetTransitRoute(start, end, callback, null);
-        }
-
-        /// <summary>
-        /// Takes a start and end points and query for possible transit routes.
-        /// </summary>
-        /// <param name="start">Start location.</param>
-        /// <param name="end">End location.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
         /// <param name="userState">An object to pass to the callback.</param>
         public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback, object userState)
         {
-            var queryUri = ConstructQueryUri(
-                "Routes/Transit",
-                new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint()) { MaxSolutions = 5, RoutePathOutput=RoutePathOutput.Points }.ToString());
-            ExecuteQuery(queryUri, callback, userState);
-        }
-
-        /// <summary>
-        /// Takes a start and end points and query for possible transit routes.
-        /// </summary>
-        /// <param name="start">Start location.</param>
-        /// <param name="end">End location.</param>
-        /// <param name="time">A time or date that relates to the route query.</param>
-        /// <param name="timeType">The TimeType of the dateTime parameter.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, DateTime time, TimeType timeType, Action<BingMapsQueryResult> callback)
-        {
-            GetTransitRoute(start, end, time, timeType, callback, null);
+            GetTransitRoute(start, end, DateTime.Now, TimeType.Departure, callback, userState);
         }
 
         /// <summary>
@@ -141,17 +83,6 @@ namespace TransitWP7.BingMapsRestApi
                 "Routes/Transit",
                 new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint(), time, timeType) { MaxSolutions = 5, RoutePathOutput = RoutePathOutput.Points, Tolerances = new System.Collections.Generic.List<double> { 0.0000005 } }.ToString());
             ExecuteQuery(queryUri, callback, userState);
-        }
-
-        /// <summary>
-        /// Takes a start and end points and query for possible walking routes.
-        /// </summary>
-        /// <param name="start">Start location.</param>
-        /// <param name="end">End location.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        public static void GetWalkingRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback)
-        {
-            GetWalkingRoute(start, end, callback, null);
         }
 
         /// <summary>

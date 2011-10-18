@@ -25,6 +25,17 @@
         <my:Map Grid.Row="0" HorizontalAlignment="Stretch" Name="mainMap" VerticalAlignment="Stretch" ZoomLevel="15.0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <my:MapLayer>
                 <my:Pushpin Name="meIndicator"/>
+                <my:Pushpin Name="endLocPushpin" />
+                <my:Pushpin Name="startLocPushpin" Content="Calculating route..." />
+                <my:MapPolyline Name="routePath"
+                                StrokeLineJoin="Round"
+                                Stroke="Blue"
+                                StrokeThickness="4"
+                                StrokeStartLineCap="Round"
+                                StrokeEndLineCap="Round"
+                                Locations=""
+                                Opacity="0.7" />
+                                
             </my:MapLayer>
         </my:Map>
         <TextBlock Grid.Row="1" Text="Current Location: " Name="myLocation" TextWrapping="Wrap" />

@@ -3,10 +3,10 @@
 namespace TransitWP7
 {
     using System;
-    using System.Windows;
-    using Microsoft.Phone.Controls;
     using System.Device.Location;
+    using System.Windows;
     using System.Windows.Media;
+    using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
     using TransitWP7.BingSearchRestApi;
 
@@ -23,68 +23,10 @@ namespace TransitWP7
         // Constructor
         public MainPage()
         {
-            //phonebook invlaid
-            //"http://api.bing.net/xml.aspx?AppId=0E33FAC75BCECF26B08D540030F357E235539409&Query=starbucks&Sources=Phonebooks"
-            //phonebook valid
-            //"http://api.bing.net/xml.aspx?AppId=0E33FAC75BCECF26B08D540030F357E235539409&Query=starbucks&Sources=Phonebooks"
-
             // TODO: refactor the location stuff
             InitializeComponent();
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-
-            BingSearchRestApi.BingSearchQuery.GetLocationInfo("starbucks", new GeoCoordinate(47.64054, -122.12934), SampleCallbackForPhonebookQuery, null);
-
-            /*
-            BingMapsRestApi.BingMapsQuery.GetLocationInfo(
-                new GeoCoordinate(47.64054, -122.12934),
-                SampleCallbackForBingApiQuery);
-            BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
-                "Starbucks", 
-                SampleCallbackForBingApiQuery);
-            BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
-                "Starbucks",
-                new BingMapsRestApi.UserContextParameters(new GeoCoordinate(47.64054, -122.12934)),
-                SampleCallbackForBingApiQuery);
-            BingMapsRestApi.BingMapsQuery.GetTransitRoute(
-                new GeoCoordinate(47.623192, -122.326698),
-                new GeoCoordinate(47.60223, -122.331039),
-                DateTime.Now.AddHours(-6),
-                TransitWP7.BingMapsRestApi.TimeType.Departure,
-                SampleCallbackForBingApiQuery);
-             */
         }
-
-        private void SampleCallbackForPhonebookQuery(BingSearchRestApi.BingSearchQueryResult result)
-        {
-            if (result.Error != null)
-            {
-                Console.WriteLine("obtained an error!");
-                Console.WriteLine(result.Error.Message);
-            }
-            else
-            {
-                Console.WriteLine("obtained result!");
-                Console.WriteLine("Got {0} results", result.Response.Phonebook.Total);
-            }
-        }
-
-        /*
-        private void SampleCallbackForBingApiQuery(BingMapsRestApi.BingMapsQueryResult result)
-        {
-            if (result.Error != null)
-            {
-                Console.WriteLine("obtained an error!");
-                Console.WriteLine(result.Error.Message);
-            }
-            else
-            {
-                Console.WriteLine("obtained result!");
-                Console.WriteLine("Got {0} {1} results",
-                    result.Response.ResourceSets[0].Resources.Length,
-                    result.Response.ResourceSets[0].Resources[0].GetType().Name);
-            }
-        }
-        */
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
@@ -92,7 +34,7 @@ namespace TransitWP7
             this.currentLocation = e.Position.Location;
 
             // Poll bing maps about the location
-            BingMapsRestApi.BingMapsQuery.GetLocationInfo(this.currentLocation, LocationCallback);
+            BingMapsRestApi.BingMapsQuery.GetLocationInfo(this.currentLocation, LocationCallback, null);
         }
 
         private void LocationCallback(BingMapsRestApi.BingMapsQueryResult result)
@@ -158,6 +100,10 @@ namespace TransitWP7
         {
             //remove the old callback
             GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+
+            //HACK: replace this with an actual container object later
+            PhoneApplicationService.Current.State["startCoord"] = this.startCoordinate == null ? this.currentLocation : this.startCoordinate;
+            PhoneApplicationService.Current.State["endCoord"] = this.endCoordinate;
 
             NavigationService.Navigate(new Uri("/NavigateMapPage.xaml", UriKind.Relative));
         }
@@ -410,8 +356,8 @@ namespace TransitWP7
 
         private void ReturnFromResultSelection(bool isStartResult)
         {
-            PhonebookResult result = (PhonebookResult) PhoneApplicationService.Current.State["selectedResult"];
-            
+            PhonebookResult result = (PhonebookResult)PhoneApplicationService.Current.State["selectedResult"];
+
             // set some values here
             if ((bool)PhoneApplicationService.Current.State["isStartResult"] == true)
             {

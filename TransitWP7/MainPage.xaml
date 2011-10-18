@@ -11,7 +11,7 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit">
+    shell:SystemTray.IsVisible="True" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" xmlns:my="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI">
 
     <!-- TODO: Switch everything to be formatted nicer by grid -->
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -42,6 +42,7 @@
             <TextBlock Height="49" HorizontalAlignment="Left" Margin="19,336,0,0" Name="endAddress" Text="" VerticalAlignment="Top" Width="379" />
             <Button Content="Now" Height="73" HorizontalAlignment="Left" Margin="153,440,0,0" Name="nowButton" VerticalAlignment="Top" Width="281" Click="nowButton_Click" />
             <Button Content="Verify Addresses" Height="72" HorizontalAlignment="Left" Margin="6,519,0,0" Name="button1" VerticalAlignment="Top" Width="450" Click="button1_Click" />
+            <my:AdControl AdUnitId="Image300_50" ApplicationId="test_client" Height="50" HorizontalAlignment="Left" Name="adControl1" VerticalAlignment="Top" Width="300" Margin="79,0,0,0" />
         </Grid>
     </Grid>
  

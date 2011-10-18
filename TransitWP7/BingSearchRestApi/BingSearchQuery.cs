@@ -28,6 +28,7 @@ namespace TransitWP7.BingSearchRestApi
                 Query = query,
                 Latitude = userLocation.Latitude,
                 Longitude = userLocation.Longitude,
+                Radius = 80,
                 Sources = new SourceType[] { SourceType.PhoneBook },
                 AppId = ApiKeys.BingSearchKey
             };
