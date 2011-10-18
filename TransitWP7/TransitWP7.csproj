@@ -90,6 +90,9 @@
       <DependentUpon>NavigateMapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultSelectionPage.xaml.cs">
+      <DependentUpon>ResultSelectionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectMapLocation.xaml.cs">
       <DependentUpon>SelectMapLocation.xaml</DependentUpon>
     </Compile>
@@ -104,6 +107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NavigateMapPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResultSelectionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -130,8 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ApiKeys.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ApiKeys.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
