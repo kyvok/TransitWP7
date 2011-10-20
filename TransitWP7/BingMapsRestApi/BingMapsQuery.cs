@@ -33,17 +33,6 @@ namespace TransitWP7.BingMapsRestApi
         /// <summary>
         /// Takes a query string and query for possible locations using the provided user context.
         /// </summary>
-        /// <param name="query">A query to submit.</param>
-        /// <param name="userContext">Information about the user context, like geographic coordinate and current map view port.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        public static void GetLocationsFromQuery(string query, UserContextParameters context, Action<BingMapsQueryResult> callback)
-        {
-            GetLocationsFromQuery(query, context, callback, null);
-        }
-
-        /// <summary>
-        /// Takes a query string and query for possible locations using the provided user context.
-        /// </summary>
         /// <param name="query">A query to submit</param>
         /// <param name="userContext">Information about the user context, like geographic coordinate and current map view port.</param>
         /// <param name="callback">Callback that will use the response result.</param>

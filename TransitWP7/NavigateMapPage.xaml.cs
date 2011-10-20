@@ -32,16 +32,13 @@ namespace TransitWP7
             // this.mainMap.Width = this.LayoutRoot.ColumnDefinitions[0].ActualWidth;
             // this.mainMap.Height = this.LayoutRoot.RowDefinitions[0].ActualHeight;
 
-            //HACK: this needs to be retrieved from a shared object.
-            GeoCoordinate startCoord = (GeoCoordinate)PhoneApplicationService.Current.State["startCoord"];
-            GeoCoordinate endCoord = (GeoCoordinate)PhoneApplicationService.Current.State["endCoord"];
-            BingMapsRestApi.BingMapsQuery.GetTransitRoute(
-                startCoord,
-                endCoord,
-                DateTime.Now,
-                TransitWP7.BingMapsRestApi.TimeType.Departure,
+            ProxyQuery.GetTransitDirections(
+                TransitRequestContext.StartLocation,
+                TransitRequestContext.EndLocation,
+                DateTime.Now.AddHours(8),
+                TimeCondition.Departure,
                 TransitRouteCalculated,
-                new GeoCoordinate[] { startCoord, endCoord });
+                null);
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
@@ -61,10 +58,10 @@ namespace TransitWP7
             this.meIndicator.Location = this.currentLocation;
 
             // Poll bing maps about the location
-            BingMapsRestApi.BingMapsQuery.GetLocationInfo(this.currentLocation, LocationCallback, null);
+            ProxyQuery.GetLocationAddress(this.currentLocation, LocationCallback, null);
         }
 
-        private void LocationCallback(BingMapsRestApi.BingMapsQueryResult result)
+        private void LocationCallback(ProxyQueryResult result)
         {
             if (result.Error != null)
             {
@@ -75,21 +72,21 @@ namespace TransitWP7
             {
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                     {
-                        TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
+                        LocationDescription response = result.LocationDescriptions[0];
                         switch (response.Confidence)
                         {
-                            case BingMapsRestApi.ConfidenceLevel.High:
+                            case "High":
                                 myLocation.Foreground = new SolidColorBrush(Colors.Green);
                                 break;
-                            case BingMapsRestApi.ConfidenceLevel.Medium:
+                            case "Medium":
                                 myLocation.Foreground = new SolidColorBrush(Colors.Yellow);
                                 break;
-                            case BingMapsRestApi.ConfidenceLevel.Low:
+                            case "Low":
                                 myLocation.Foreground = new SolidColorBrush(Colors.Red);
                                 break;
                         }
                         myLocation.Text = String.Format("Current location: {0}",
-                            response.Name);
+                            response.DisplayName);
                     });
             }
         }
@@ -100,61 +97,36 @@ namespace TransitWP7
             this.mainMap.SetView(this.currentLocation, mainMap.ZoomLevel);
         }
 
-        private void TransitRouteCalculated(BingMapsRestApi.BingMapsQueryResult result)
+        private void TransitRouteCalculated(ProxyQueryResult result)
         {
             if (result.Error == null)
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    var oneRoute = ((TransitWP7.BingMapsRestApi.Route)(result.Response.ResourceSets[0].Resources[0]));
-                    var oneLeg = oneRoute.RouteLegs[0];
+                    var oneRoute = result.TransitDescriptions[0];
 
-                    startLocPushpin.Location = oneLeg.ActualStart.AsGeoCoordinate();
+                    startLocPushpin.Location = oneRoute.StartLocation;
                     startLocPushpin.Content = "Start!";
-                    endLocPushpin.Location = oneLeg.ActualEnd.AsGeoCoordinate();
+                    endLocPushpin.Location = oneRoute.EndLocation;
                     endLocPushpin.Content = "End!";
 
-                    foreach (var topLeg in oneLeg.ItineraryItems)
+                    foreach (var step in oneRoute.ItinerarySteps)
                     {
-                        if (topLeg.Instruction != null && topLeg.ManeuverPoint != null)
-                        {
-                            mainMap.Children.Add(new Pushpin() { Location = topLeg.ManeuverPoint.AsGeoCoordinate(), Content = topLeg.Instruction.Value });
-                        }
-
-                        if (topLeg.ChildItineraryItems != null)
-                        {
-                            foreach (var childLeg in oneLeg.ItineraryItems)
-                            {
-                                if (childLeg.Instruction != null && childLeg.ManeuverPoint != null)
-                                {
-                                    mainMap.Children.Add(new Pushpin() { Location = childLeg.ManeuverPoint.AsGeoCoordinate(), Content = childLeg.Instruction.Value });
-                                }
-                            }
-                        }
+                        mainMap.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = step.Instruction });
                     }
 
-                    var path = oneRoute.RoutePaths[0].Line;
-                    var pathIndices = oneRoute.RoutePaths[0].RoutePathGeneralization[0].PathIndices;
-
-                    foreach (var index in pathIndices)
+                    routePath.Locations.Clear();
+                    foreach (var gc in oneRoute.GetMapPolyline().Locations)
                     {
-                        routePath.Locations.Add(path[index].AsGeoCoordinate());
+                        routePath.Locations.Add(gc);
                     }
+                    
+                    mainMap.SetView(oneRoute.GetMapView());
                 });
             }
             else
             {
-                //TODO: Check what the error is, probably says Better to Walk. If so, calculate walking route.
-                //Calculating Walking directions if UserState is not null... super HACKY!
-                if (result.UserState != null)
-                {
-                    BingMapsRestApi.BingMapsQuery.GetWalkingRoute(
-                        ((GeoCoordinate[])(result.UserState))[0],
-                        ((GeoCoordinate[])(result.UserState))[1],
-                        TransitRouteCalculated,
-                        null);
-
-                }
+                //Show the Exception or something like that.
             }
         }
     }

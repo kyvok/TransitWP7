@@ -55,6 +55,7 @@
     <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="System.Device" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -72,6 +73,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProxyQuery.cs" />
+    <Compile Include="TransitRequestContext.cs" />
     <Compile Include="BingMapsExtensionMethods.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQuery.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQueryAsyncCallback.cs" />
@@ -130,11 +133,15 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\bus_hi.png" />
+    <Resource Include="Images\bus_lo.png" />
+    <Resource Include="Images\rail_hi.png" />
+    <Resource Include="Images\rail_lo.png" />
+    <Resource Include="Images\walk_hi.png" />
+    <Resource Include="Images\walk_lo.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="ApiKeys.resx">
       <LastGenOutput>ApiKeys.Designer.cs</LastGenOutput>

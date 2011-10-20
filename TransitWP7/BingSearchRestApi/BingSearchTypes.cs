@@ -19,6 +19,9 @@ namespace TransitWP7.BingSearchRestApi
         [XmlElement(Namespace = "http://schemas.microsoft.com/LiveSearch/2008/04/XML/phonebook")]
         public Phonebook Phonebook { get; set; }
 
+        [XmlElement(Namespace = "http://schemas.microsoft.com/LiveSearch/2008/04/XML/spell")]
+        public Spell Spell { get; set; }
+
         [XmlAttribute()]
         public string Version { get; set; }
 
@@ -74,6 +77,23 @@ namespace TransitWP7.BingSearchRestApi
 
         [XmlIgnore()]
         public bool ReviewCountSpecified { get; set; }
+    }
+
+    [DebuggerStepThrough()]
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.microsoft.com/LiveSearch/2008/04/XML/spell")]
+    public class Spell
+    {
+        public uint Total { get; set; }
+
+        [XmlArrayItem("SpellResult", IsNullable = false)]
+        public SpellResult[] Results { get; set; }
+    }
+
+    [DebuggerStepThrough()]
+    [XmlType(AnonymousType = true, Namespace = "http://schemas.microsoft.com/LiveSearch/2008/04/XML/spell")]
+    public class SpellResult
+    {
+        public string Value { get; set; }
     }
 
     [DebuggerStepThrough]

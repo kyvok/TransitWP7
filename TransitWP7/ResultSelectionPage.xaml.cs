@@ -5,11 +5,11 @@ namespace TransitWP7
     using System;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
-    using TransitWP7.BingSearchRestApi;
+    using System.Collections.Generic;
 
     public partial class ResultSelectionPage : PhoneApplicationPage
     {
-        PhonebookResult[] resultSet = null;
+        List<LocationDescription> resultSet = null;
         bool isStartResult = true;
 
         public ResultSelectionPage()
@@ -30,7 +30,7 @@ namespace TransitWP7
             // check to see if we have results
             if (PhoneApplicationService.Current.State.ContainsKey("theResultSet"))
             {
-                resultSet = (PhonebookResult[])PhoneApplicationService.Current.State["theResultSet"];
+                resultSet = (List<LocationDescription>)PhoneApplicationService.Current.State["theResultSet"];
                 this.resultsList.ItemsSource = this.resultSet;
 
                 // automatically select first result

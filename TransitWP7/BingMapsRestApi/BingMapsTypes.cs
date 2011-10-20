@@ -125,7 +125,7 @@ namespace TransitWP7.BingMapsRestApi
         public string Name { get; set; }
         public Point Point { get; set; }
         public BoundingBox BoundingBox { get; set; }
-        public string EntityType { get; set; } //TODO: enum?
+        public EntityType EntityType { get; set; }
         public Address Address { get; set; }
         public ConfidenceLevel Confidence { get; set; }
     }
@@ -189,10 +189,10 @@ namespace TransitWP7.BingMapsRestApi
         [XmlElement("Hint")]
         public string[] Hint { get; set; }
 
-        public string IconType { get; set; }  //TODO: enum?
+        public IconType IconType { get; set; }
         public Instruction Instruction { get; set; }
         public Point ManeuverPoint { get; set; }
-        public string SideOfStreet { get; set; } //TODO: enum?
+        public SideOfStreet SideOfStreet { get; set; }
         public string Sign { get; set; } //TODO: collection?
         public System.DateTime Time { get; set; }
         public string TollZone { get; set; }

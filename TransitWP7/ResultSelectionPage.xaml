@@ -31,7 +31,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <TextBlock Text="{Binding Business}" FontSize="40" FontStyle="Normal"/>
+                            <TextBlock Text="{Binding DisplayName}" FontSize="40" FontStyle="Normal"/>
                             <TextBlock Text="{Binding Address}" FontSize="20" FontStyle="Italic"/>
                         </StackPanel>
                     </DataTemplate>

@@ -30,7 +30,7 @@
             <TextBox Height="72" Margin="6,0,47,308" Name="startingInput" Text="My Current Location" VerticalAlignment="Center" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus"/>
             <TextBox Height="72" HorizontalAlignment="Left" Margin="6,275,0,304" Name="endingInput" Text="Starbucks" VerticalAlignment="Center" Width="403" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" />
             <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
-            <HyperlinkButton Content="leaving at" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
+            <HyperlinkButton Content="departing at" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
             <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,114,0,0" Name="textBlock1" Text="Starting Location" VerticalAlignment="Top" />
             <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,253,0,0" Name="textBlock2" Text="Ending Location" VerticalAlignment="Top" />
             <HyperlinkButton Content="swap locations" Height="30" HorizontalAlignment="Left" Margin="268,114,0,0" Name="swapText" VerticalAlignment="Top" Width="200" Click="swapText_Click" />

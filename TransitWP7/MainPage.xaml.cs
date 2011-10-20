@@ -8,19 +8,14 @@ namespace TransitWP7
     using System.Windows.Media;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
-    using TransitWP7.BingSearchRestApi;
 
     public partial class MainPage : PhoneApplicationPage
     {
-        private GeoCoordinate currentLocation;
         private string startLocationOnFocus = null;
         private Brush startAddressColorOnFocus = null;
-        private GeoCoordinate startCoordinate = null;
         private string endLocationOnFocus = null;
         private Brush endAddressColorOnFocus = null;
-        private GeoCoordinate endCoordinate = null;
 
-        // Constructor
         public MainPage()
         {
             // TODO: refactor the location stuff
@@ -31,13 +26,13 @@ namespace TransitWP7
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            this.currentLocation = e.Position.Location;
+            TransitRequestContext.UserLocation = e.Position.Location;
 
             // Poll bing maps about the location
-            BingMapsRestApi.BingMapsQuery.GetLocationInfo(this.currentLocation, LocationCallback, null);
+            ProxyQuery.GetLocationAddress(TransitRequestContext.UserLocation, LocationCallback, null);
         }
 
-        private void LocationCallback(BingMapsRestApi.BingMapsQueryResult result)
+        private void LocationCallback(ProxyQueryResult result)
         {
             if (result.Error != null)
             {
@@ -48,32 +43,29 @@ namespace TransitWP7
             {
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
-                    switch (response.Confidence)
+                    LocationDescription locationDesc = result.LocationDescriptions[0];
+                    switch (locationDesc.Confidence)
                     {
-                        case BingMapsRestApi.ConfidenceLevel.High:
+                        case "High":
                             this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
                             break;
-                        case BingMapsRestApi.ConfidenceLevel.Medium:
+                        case "Medium":
                             this.startAddress.Foreground = new SolidColorBrush(Colors.Yellow);
                             break;
-                        case BingMapsRestApi.ConfidenceLevel.Low:
+                        case "Low":
                             this.startAddress.Foreground = new SolidColorBrush(Colors.Red);
                             break;
                     }
                     this.startAddress.Text = String.Format("Address: {0}",
-                        response.Name);
+                        locationDesc.DisplayName);
                 });
             }
         }
 
-
         private void swapText_Click(object sender, RoutedEventArgs e)
         {
-            string temp = null;
-
             //TODO: Is there an atomic swap?
-            temp = this.startingInput.Text;
+            string temp = this.startingInput.Text;
             this.startingInput.Text = this.endingInput.Text;
             this.endingInput.Text = temp;
 
@@ -91,9 +83,9 @@ namespace TransitWP7
 
             //swap the GPS locations
             GeoCoordinate locationTemp = null;
-            locationTemp = this.startCoordinate;
-            this.startCoordinate = this.endCoordinate;
-            this.endCoordinate = locationTemp;
+            locationTemp = TransitRequestContext.StartLocation;
+            TransitRequestContext.StartLocation = TransitRequestContext.EndLocation;
+            TransitRequestContext.EndLocation = locationTemp;
         }
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
@@ -102,8 +94,7 @@ namespace TransitWP7
             GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
 
             //HACK: replace this with an actual container object later
-            PhoneApplicationService.Current.State["startCoord"] = this.startCoordinate == null ? this.currentLocation : this.startCoordinate;
-            PhoneApplicationService.Current.State["endCoord"] = this.endCoordinate;
+            TransitRequestContext.StartLocation = TransitRequestContext.StartLocation == null ? TransitRequestContext.UserLocation : TransitRequestContext.StartLocation;
 
             NavigationService.Navigate(new Uri("/NavigateMapPage.xaml", UriKind.Relative));
         }
@@ -121,13 +112,15 @@ namespace TransitWP7
         private void hyperlinkButton1_Click(object sender, RoutedEventArgs e)
         {
             string value = (String)this.hyperlinkButton1.Content;
-            if (value.Equals("leaving at", StringComparison.InvariantCultureIgnoreCase))
+            if (value.Equals("departing at", StringComparison.InvariantCultureIgnoreCase))
             {
                 this.hyperlinkButton1.Content = "arriving at";
+                TransitRequestContext.TimeType = BingMapsRestApi.TimeType.Arrival;
             }
             else
             {
-                this.hyperlinkButton1.Content = "leaving at";
+                this.hyperlinkButton1.Content = "departing at";
+                TransitRequestContext.TimeType = BingMapsRestApi.TimeType.Departure;
             }
         }
 
@@ -212,13 +205,7 @@ namespace TransitWP7
             // resolve the starting address if necessary
             if (this.startAddress.Text == "")
             {
-                BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.startingInput.Text, this.currentLocation, StartingCallbackForBingApiQuery, null);
-                /*
-                BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
-                    this.startingInput.Text,
-                    new BingMapsRestApi.UserContextParameters(this.currentLocation),
-                    StartingCallbackForBingApiQuery);
-                */
+                ProxyQuery.GetLocationsAndBusiness(this.startingInput.Text, TransitRequestContext.UserLocation, StartingCallbackForBingApiQuery, null);
 
                 resolveEndLocationLater = true;
             }
@@ -228,22 +215,16 @@ namespace TransitWP7
             {
                 if (resolveEndLocationLater == false)
                 {
-                    BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.endingInput.Text, this.currentLocation, EndingCallbackForBingApiQuery, null);
+                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.UserLocation, EndingCallbackForBingApiQuery, null);
                 }
                 else
                 {
                     PhoneApplicationService.Current.State["resolveEndingLater"] = true;
                 }
-                /*
-                BingMapsRestApi.BingMapsQuery.GetLocationsFromQuery(
-                    this.endingInput.Text,
-                    new BingMapsRestApi.UserContextParameters(this.currentLocation),
-                    EndingCallbackForBingApiQuery);
-                */
             }
         }
 
-        private void StartingCallbackForBingApiQuery(BingSearchRestApi.BingSearchQueryResult result)
+        private void StartingCallbackForBingApiQuery(ProxyQueryResult result)
         {
             if (result.Error != null)
             {
@@ -259,7 +240,7 @@ namespace TransitWP7
             }
         }
 
-        private void UIStartingCallbackForBingApiQuery(BingSearchRestApi.BingSearchQueryResult result)
+        private void UIStartingCallbackForBingApiQuery(ProxyQueryResult result)
         {
             // this is an ending result
             PhoneApplicationService.Current.State["isStartResult"] = true;
@@ -267,39 +248,19 @@ namespace TransitWP7
             // save the query name for later
             PhoneApplicationService.Current.State["theQuery"] = this.startingInput.Text;
 
-            // save the result set
-            PhoneApplicationService.Current.State["theResultSet"] = result.Response.Phonebook.Results;
-            NavigationService.Navigate(new Uri("/ResultSelectionPage.xaml", UriKind.Relative));
-
-            //                // just use the first result
-            //    Console.WriteLine("obtained result!");
-            //    Console.WriteLine("Got {0} {1} results",
-            //        result.Response.ResourceSets[0].Resources.Length,
-            //        result.Response.ResourceSets[0].Resources[0].GetType().Name);
-            //}
-
-            //TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
-            //this.startCoordinate = new GeoCoordinate(response.Point.Latitude, response.Point.Longitude);
-            //System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-            //{
-            //    switch (response.Confidence)
-            //    {
-            //        case BingMapsRestApi.ConfidenceLevel.High:
-            //            this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
-            //            break;
-            //        case BingMapsRestApi.ConfidenceLevel.Medium:
-            //            this.startAddress.Foreground = new SolidColorBrush(Colors.Yellow);
-            //            break;
-            //        case BingMapsRestApi.ConfidenceLevel.Low:
-            //            this.startAddress.Foreground = new SolidColorBrush(Colors.Red);
-            //            break;
-            //    }
-            //    this.startAddress.Text = response.Address.FormattedAddress;
-            //}
-            //);
+            if (result.Error == null)
+            {
+                // save the result set
+                PhoneApplicationService.Current.State["theResultSet"] = result.LocationDescriptions;
+                NavigationService.Navigate(new Uri("/ResultSelectionPage.xaml", UriKind.Relative));
+            }
+            else
+            {
+                this.startingInput.Text += " -> no result";
+            }
         }
 
-        private void UIEndingCallbackForBingApiQuery(BingSearchRestApi.BingSearchQueryResult result)
+        private void UIEndingCallbackForBingApiQuery(ProxyQueryResult result)
         {
             // this is an ending result
             PhoneApplicationService.Current.State["isStartResult"] = false;
@@ -307,35 +268,16 @@ namespace TransitWP7
             // save the query name for later
             PhoneApplicationService.Current.State["theQuery"] = this.endingInput.Text;
 
-            // save the result set
-            PhoneApplicationService.Current.State["theResultSet"] = result.Response.Phonebook.Results;
-            NavigationService.Navigate(new Uri("/ResultSelectionPage.xaml", UriKind.Relative));
-
-            // just use the first result
-            //Console.WriteLine("obtained result!");
-            //Console.WriteLine("Got {0} {1} results",
-            //    result.Response.ResourceSets[0].Resources.Length,
-            //    result.Response.ResourceSets[0].Resources[0].GetType().Name);
-
-            //TransitWP7.BingMapsRestApi.Location response = (TransitWP7.BingMapsRestApi.Location)(result.Response.ResourceSets[0].Resources[0]);
-            //this.endCoordinate = new GeoCoordinate(response.Point.Latitude, response.Point.Longitude);
-            //System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-            //    {
-            //        switch (response.Confidence)
-            //        {
-            //            case BingMapsRestApi.ConfidenceLevel.High:
-            //                this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
-            //                break;
-            //            case BingMapsRestApi.ConfidenceLevel.Medium:
-            //                this.endAddress.Foreground = new SolidColorBrush(Colors.Yellow);
-            //                break;
-            //            case BingMapsRestApi.ConfidenceLevel.Low:
-            //                this.endAddress.Foreground = new SolidColorBrush(Colors.Red);
-            //                break;
-            //        }
-            //        this.endAddress.Text = response.Address.FormattedAddress;
-            //    }
-            //);
+            if (result.Error == null)
+            {
+                // save the result set
+                PhoneApplicationService.Current.State["theResultSet"] = result.LocationDescriptions;
+                NavigationService.Navigate(new Uri("/ResultSelectionPage.xaml", UriKind.Relative));
+            }
+            else
+            {
+                this.endingInput.Text += " -> no result";
+            }
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -349,33 +291,33 @@ namespace TransitWP7
                 if ((bool)PhoneApplicationService.Current.State.ContainsKey("resolveEndingLater"))
                 {
                     PhoneApplicationService.Current.State.Remove("resolveEndingLater");
-                    BingSearchRestApi.BingSearchQuery.GetLocationInfo(this.endingInput.Text, this.currentLocation, EndingCallbackForBingApiQuery, null);
+                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.UserLocation, EndingCallbackForBingApiQuery, null);
                 }
             }
         }
 
         private void ReturnFromResultSelection(bool isStartResult)
         {
-            PhonebookResult result = (PhonebookResult)PhoneApplicationService.Current.State["selectedResult"];
+            LocationDescription result = (LocationDescription)PhoneApplicationService.Current.State["selectedResult"];
 
             // set some values here
             if ((bool)PhoneApplicationService.Current.State["isStartResult"] == true)
             {
-                this.startCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
-                this.startingInput.Text = result.Business;
+                TransitRequestContext.StartLocation = result.GeoCoordinate;
+                this.startingInput.Text = result.DisplayName;
                 this.startAddress.Text = result.Address;
                 this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
             }
             else
             {
-                this.endCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
-                this.endingInput.Text = result.Business;
+                TransitRequestContext.EndLocation = result.GeoCoordinate;
+                this.endingInput.Text = result.DisplayName;
                 this.endAddress.Text = result.Address;
                 this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
             }
         }
 
-        private void EndingCallbackForBingApiQuery(BingSearchRestApi.BingSearchQueryResult result)
+        private void EndingCallbackForBingApiQuery(ProxyQueryResult result)
         {
             if (result.Error != null)
             {

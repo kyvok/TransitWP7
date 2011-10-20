@@ -21,7 +21,7 @@ namespace TransitWP7.BingSearchRestApi
         /// <param name="point">Location on map.</param>
         /// <param name="callback">Callback that will use the response result.</param>
         /// <param name="userState">An object to pass to the callback</param>
-        public static void GetLocationInfo(string query, GeoCoordinate userLocation, Action<BingSearchQueryResult> callback, object userState)
+        public static void GetBusinessInfo(string query, GeoCoordinate userLocation, Action<BingSearchQueryResult> callback, object userState)
         {
             var request = new PhonebookRequest()
             {
@@ -30,6 +30,24 @@ namespace TransitWP7.BingSearchRestApi
                 Longitude = userLocation.Longitude,
                 Radius = 80,
                 Sources = new SourceType[] { SourceType.PhoneBook },
+                AppId = ApiKeys.BingSearchKey
+            };
+            var queryUri = ConstructQueryUri(request.ToString());
+            ExecuteQuery(queryUri, callback, userState);
+        }
+
+        /// <summary>
+        /// Takes a query and returns suggested spelling for that entry.
+        /// </summary>
+        /// <param name="query">Query to suggest spelling for.</param>
+        /// <param name="callback">Callback that will use the response result.</param>
+        /// <param name="userState">An object to pass to the callback</param>
+        public static void GetSpellSuggestions(string query, Action<BingSearchQueryResult> callback, object userState)
+        {
+            var request = new SpellRequest()
+            {
+                Query = query,
+                Sources = new SourceType[] { SourceType.Spell },
                 AppId = ApiKeys.BingSearchKey
             };
             var queryUri = ConstructQueryUri(request.ToString());
@@ -175,8 +193,8 @@ namespace TransitWP7.BingSearchRestApi
     public class PhonebookRequest : SearchRequest
     {
         //optional
-        public UInt32? Count { get; set; } //max 25, min 1, default 10
-        public UInt32? Offset { get; set; } // count+offset should not go over 1000
+        public uint? Count { get; set; } //max 25, min 1, default 10
+        public uint? Offset { get; set; } // count+offset should not go over 1000
         public string FileType { get; set; } //do not use
         public PhonebookSortOption? SortBy { get; set; }
         //TODO: do we want this LocID parameter?
@@ -201,6 +219,10 @@ namespace TransitWP7.BingSearchRestApi
 
             return base.ToString() + builder.ToString();
         }
+    }
+
+    public class SpellRequest : SearchRequest
+    {
     }
 
     public enum AdultOption
