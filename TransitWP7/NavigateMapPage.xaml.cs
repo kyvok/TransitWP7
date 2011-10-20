@@ -31,14 +31,37 @@ namespace TransitWP7
             // TODO: figure out how to do this in xaml
             // this.mainMap.Width = this.LayoutRoot.ColumnDefinitions[0].ActualWidth;
             // this.mainMap.Height = this.LayoutRoot.RowDefinitions[0].ActualHeight;
+        }
 
-            ProxyQuery.GetTransitDirections(
-                TransitRequestContext.StartLocation,
-                TransitRequestContext.EndLocation,
-                DateTime.Now.AddHours(8),
-                TimeCondition.Departure,
-                TransitRouteCalculated,
-                null);
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnBackKeyPress(e);
+            NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+        }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            //base.OnNavigatedTo(e);
+
+            TransitDescription description = (TransitDescription)PhoneApplicationService.Current.State["transitToDisplay"];
+
+            startLocPushpin.Location = description.StartLocation;
+            startLocPushpin.Content = "Start!";
+            endLocPushpin.Location = description.EndLocation;
+            endLocPushpin.Content = "End!";
+
+            foreach (var step in description.ItinerarySteps)
+            {
+                mainMap.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = step.Instruction });
+            }
+
+            routePath.Locations.Clear();
+            foreach (var gc in description.GetMapPolyline().Locations)
+            {
+                routePath.Locations.Add(gc);
+            }
+
+            mainMap.SetView(description.GetMapView());
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
@@ -95,39 +118,6 @@ namespace TransitWP7
         {
             // Recenter the map on current user location and preserve the zoom level
             this.mainMap.SetView(this.currentLocation, mainMap.ZoomLevel);
-        }
-
-        private void TransitRouteCalculated(ProxyQueryResult result)
-        {
-            if (result.Error == null)
-            {
-                Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    var oneRoute = result.TransitDescriptions[0];
-
-                    startLocPushpin.Location = oneRoute.StartLocation;
-                    startLocPushpin.Content = "Start!";
-                    endLocPushpin.Location = oneRoute.EndLocation;
-                    endLocPushpin.Content = "End!";
-
-                    foreach (var step in oneRoute.ItinerarySteps)
-                    {
-                        mainMap.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = step.Instruction });
-                    }
-
-                    routePath.Locations.Clear();
-                    foreach (var gc in oneRoute.GetMapPolyline().Locations)
-                    {
-                        routePath.Locations.Add(gc);
-                    }
-                    
-                    mainMap.SetView(oneRoute.GetMapView());
-                });
-            }
-            else
-            {
-                //Show the Exception or something like that.
-            }
         }
     }
 }

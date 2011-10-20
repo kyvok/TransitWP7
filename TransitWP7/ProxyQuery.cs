@@ -334,6 +334,22 @@ namespace TransitWP7
                 return this.steps;
             }
         }
+
+        public string ArrivalTime
+        {
+            get
+            {
+                return this.route.RouteLegs[0].EndTime.ToShortTimeString();
+            }
+        }
+
+        public string DepartureTime
+        {
+            get
+            {
+                return this.route.RouteLegs[0].StartTime.ToShortTimeString();
+            }
+        }
     }
 
     public class ItineraryStep
@@ -358,6 +374,30 @@ namespace TransitWP7
             get
             {
                 return this.item.Instruction.Value;
+            }
+        }
+
+        public string TravelMode
+        {
+            get
+            {
+                return this.item.Detail.Mode == null ? "" : this.item.Detail.Mode;
+            }
+        }
+
+        public string BusNumber
+        {
+            get
+            {
+                return this.item.TransitLine.AbbreviatedName;
+            }
+        }
+
+        public string IconType
+        {
+            get
+            {
+                return this.item.IconType.ToString().StartsWith("N") ? "" : this.item.IconType.ToString();
             }
         }
     }

@@ -74,6 +74,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ProxyQuery.cs" />
+    <Compile Include="SelectTransitResultPage.xaml.cs">
+      <DependentUpon>SelectTransitResultPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TransitRequestContext.cs" />
     <Compile Include="BingMapsExtensionMethods.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQuery.cs" />
@@ -118,6 +121,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SelectMapLocation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectTransitResultPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

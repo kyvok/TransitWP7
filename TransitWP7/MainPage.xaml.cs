@@ -96,7 +96,7 @@ namespace TransitWP7
             //HACK: replace this with an actual container object later
             TransitRequestContext.StartLocation = TransitRequestContext.StartLocation == null ? TransitRequestContext.UserLocation : TransitRequestContext.StartLocation;
 
-            NavigationService.Navigate(new Uri("/NavigateMapPage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
         }
 
         private void findStart_Click(object sender, RoutedEventArgs e)
