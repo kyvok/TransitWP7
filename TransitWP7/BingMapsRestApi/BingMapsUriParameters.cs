@@ -12,7 +12,8 @@ namespace TransitWP7.BingMapsRestApi
     public class LocationByPoint
     {
         public Point Point { get; set; }
-        public List<EntityType> IncludeEntityTypes { get; set; } //TODO: this only supports a subset of the actual enum
+        //TODO: this only supports a subset of the actual enum
+        public List<EntityType> IncludeEntityTypes { get; set; }
 
         public LocationByPoint(Point point)
         {

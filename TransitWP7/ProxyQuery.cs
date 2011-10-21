@@ -87,6 +87,13 @@ namespace TransitWP7
             {
                 foreach (var location in result.Response.GetLocations())
                 {
+                    var locationDescription = new LocationDescription(location);
+                    //ignore values farther than 80 miles. (same as phonebook API)
+                    if (locationDescription.GeoCoordinate.GetDistanceTo(queryState.UserLocation) / 1600 > 80)
+                    {
+                        continue;
+                    }
+
                     if (queryState.LocationDescriptions == null)
                     {
                         queryState.LocationDescriptions = new List<LocationDescription>();

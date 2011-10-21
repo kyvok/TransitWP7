@@ -7,6 +7,7 @@ namespace TransitWP7.BingSearchRestApi
     using System.Net;
     using System.Text;
     using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// Helper class to query BingMaps resources.
@@ -29,6 +30,7 @@ namespace TransitWP7.BingSearchRestApi
                 Latitude = userLocation.Latitude,
                 Longitude = userLocation.Longitude,
                 Radius = 80,
+                Count = 5,
                 Sources = new SourceType[] { SourceType.PhoneBook },
                 AppId = ApiKeys.BingSearchKey
             };
@@ -61,7 +63,7 @@ namespace TransitWP7.BingSearchRestApi
         /// <returns>The REST URL representing the resource query.</returns>
         private static Uri ConstructQueryUri(string resourceQueryParameters)
         {
-            const string BingSearchRESTServicesBaseAddress = "http://api.bing.net/xml.aspx";
+            const string BingSearchRESTServicesBaseAddress = "http://api.bing.net/json.aspx";
 
             var uri = new StringBuilder();
             uri.Append(BingSearchRESTServicesBaseAddress);
@@ -89,7 +91,14 @@ namespace TransitWP7.BingSearchRestApi
             try
             {
                 var httpResponse = context.HttpRequest.EndGetResponse(asyncResult);
-                var response = (SearchResponse)BingSearchResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+                //var response = (SearchResponse)BingSearchResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+                string jsonString = String.Empty;
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+                {
+                    jsonString = reader.ReadToEnd();
+                }
+                var wrapper = JsonConvert.DeserializeObject<BingSearchWrapper>(jsonString);
+                var response = wrapper.SearchResponse;
                 if (response.Errors != null && response.Errors.Length > 0)
                 {
                     StringBuilder exceptionMessage = new StringBuilder();
@@ -123,6 +132,11 @@ namespace TransitWP7.BingSearchRestApi
                 this.AsyncCallback = callback;
             }
         }
+    }
+
+    public class BingSearchWrapper
+    {
+        public SearchResponse SearchResponse { get; set; }
     }
 
     public class SearchRequest
