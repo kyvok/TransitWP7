@@ -73,6 +73,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DateTimeSelectionPage.xaml.cs">
+      <DependentUpon>DateTimeSelectionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ExceptionPage.xaml.cs">
       <DependentUpon>ExceptionPage.xaml</DependentUpon>
     </Compile>
@@ -114,6 +117,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="DateTimeSelectionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ExceptionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -154,12 +161,16 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Toolkit.Content\ApplicationBar.Cancel.png" />
+    <Resource Include="Toolkit.Content\ApplicationBar.Check.png" />
     <Resource Include="Images\bus_hi.png" />
     <Resource Include="Images\bus_lo.png" />
     <Resource Include="Images\rail_hi.png" />
     <Resource Include="Images\rail_lo.png" />
     <Resource Include="Images\walk_hi.png" />
     <Resource Include="Images\walk_lo.png" />
+    <Resource Include="Images\swap_hi.png" />
+    <Resource Include="Images\swap_lo.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup />

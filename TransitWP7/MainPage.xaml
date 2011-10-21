@@ -11,7 +11,8 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" xmlns:my="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI">
+    shell:SystemTray.IsVisible="True"
+    xmlns:msad="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI">
 
     <!-- TODO: Switch everything to be formatted nicer by grid -->
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -22,27 +23,42 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28"></StackPanel>
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">            
+        </StackPanel>
 
-        <!-- TODO: highlight all text in box once selected -->
-        <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <TextBox Height="72" Margin="6,136,47,515" Name="startingInput" Text="My Current Location" VerticalAlignment="Center" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus"/>
-            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,275,0,376" Name="endingInput" Text="Starbucks" VerticalAlignment="Center" Width="403" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" />
-            <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
-            <HyperlinkButton Content="departing at" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
-            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,114,0,0" Name="textBlock1" Text="Starting Location" VerticalAlignment="Top" />
-            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,253,0,0" Name="textBlock2" Text="Ending Location" VerticalAlignment="Top" />
-            <HyperlinkButton Content="swap locations" Height="30" HorizontalAlignment="Left" Margin="268,114,0,0" Name="swapText" VerticalAlignment="Top" Width="200" Click="swapText_Click" />
-            <toolkit:DatePicker HorizontalAlignment="Left" Margin="153,383,0,0" Name="datePicker1" VerticalAlignment="Top" />
-            <toolkit:TimePicker HorizontalAlignment="Left" Margin="299,383,0,0" Name="timePicker1" VerticalAlignment="Top" />
-            <Button Content="o" Height="72" HorizontalAlignment="Left" Margin="387,136,0,0" Name="findStart" VerticalAlignment="Top" Width="69" Click="findStart_Click" />
-            <Button Content="o" Height="72" HorizontalAlignment="Left" Margin="387,275,0,0" Name="findEnd" VerticalAlignment="Top" Width="69" Click="findEnd_Click" />
+            <!-- Advertisement control -->
+            <msad:AdControl Grid.Row="0" AdUnitId="Image480_80" ApplicationId="test_client" Height="80" HorizontalAlignment="Left" Name="adControl1" VerticalAlignment="Top" Width="480" Margin="0,0,0,0" />
+
+            <!-- Start section -->
+            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,114,0,0" Text="Start" VerticalAlignment="Top" />
+            <TextBox Height="72" Margin="6,136,47,515" Name="startingInput" Text="My Current Location" VerticalAlignment="Center" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus" KeyUp="TextBoxKeyUp" />
             <TextBlock Height="49" HorizontalAlignment="Left" Margin="19,198,0,0" Name="startAddress" Text="" VerticalAlignment="Top" Width="379" />
+
+            <!-- End section -->
+            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,253,0,0" Text="End" VerticalAlignment="Top" />
+            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,275,0,376" Name="endingInput" Text="" VerticalAlignment="Center" Width="403" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" KeyUp="TextBoxKeyUp" />
             <TextBlock Height="49" HorizontalAlignment="Left" Margin="19,336,0,0" Name="endAddress" Text="" VerticalAlignment="Top" Width="379" />
-            <Button Content="Now" Height="73" HorizontalAlignment="Left" Margin="153,440,0,0" Name="nowButton" VerticalAlignment="Top" Width="281" Click="nowButton_Click" />
+
+            <!-- Swap button -->
+            <Button Height="70" HorizontalAlignment="Left" Margin="390,210,0,0" Name="swapText" VerticalAlignment="Top" Width="70" Click="swapText_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="Images/swap_lo.png" Stretch="Fill">
+                        <ImageBrush.Transform>
+                            <RotateTransform Angle="90" CenterX="20" CenterY="20" />
+                        </ImageBrush.Transform>
+                    </ImageBrush>
+                </Button.Background>
+            </Button>
+
+            <!-- Time selection button -->
+            <HyperlinkButton Content="Departing now" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
+
+            <!-- TODO: Get rid of this button! -->
             <Button Content="Verify Addresses" Height="72" HorizontalAlignment="Left" Margin="6,519,0,0" Name="button1" VerticalAlignment="Top" Width="450" Click="button1_Click" />
-            <my:AdControl AdUnitId="Image300_50" ApplicationId="test_client" Height="50" HorizontalAlignment="Left" Name="adControl1" VerticalAlignment="Top" Width="300" Margin="79,0,0,0" />
+            <!-- Calculate transit button -->
+            <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
+
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>

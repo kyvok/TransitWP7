@@ -33,15 +33,16 @@ namespace TransitWP7
             // this.mainMap.Height = this.LayoutRoot.RowDefinitions[0].ActualHeight;
         }
 
-        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
-        {
-            base.OnBackKeyPress(e);
-            NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
-        }
+        //TODO: Navigation is messed up.
+        //protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        //{
+        //    base.OnBackKeyPress(e);
+        //    NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
+        //}
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            //base.OnNavigatedTo(e);
+            base.OnNavigatedTo(e);
 
             TransitDescription description = (TransitDescription)PhoneApplicationService.Current.State["transitToDisplay"];
 

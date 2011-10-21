@@ -36,7 +36,7 @@ namespace TransitWP7
                 TransitRequestContext.StartLocation,
                 TransitRequestContext.EndLocation,
                 DateTime.Now,
-                TimeCondition.Departure,
+                TimeCondition.DepartingAt,
                 TransitRouteCalculated,
                 null);
         }
@@ -74,21 +74,18 @@ namespace TransitWP7
                 {
                     this.TempMessage.Text = "";
                     this.resultsList.ItemsSource = transitResults;
-                    this.resultsList.SelectedIndex = 0;
                 });
             }
             else
             {
-                //Show the Exception or something like that.
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    this.TempMessage.Text = "Error occured in query. Retry.";
+                });
             }
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            this.NavigationService.GoBack();
-        }
-
-        private void AcceptButton_Click(object sender, EventArgs e)
+        private void resultsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PhoneApplicationService.Current.State["transitToDisplay"] = this.rawData[this.resultsList.SelectedIndex];
             NavigationService.Navigate(new Uri("/NavigateMapPage.xaml", UriKind.Relative));

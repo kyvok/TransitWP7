@@ -8,6 +8,7 @@ namespace TransitWP7
     using System.Windows.Media;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
+    using System.Windows.Input;
 
     public partial class MainPage : PhoneApplicationPage
     {
@@ -99,33 +100,27 @@ namespace TransitWP7
             NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
         }
 
-        private void findStart_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/SelectMapLocation.xaml", UriKind.Relative));
-        }
-
-        private void findEnd_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/SelectMapLocation.xaml", UriKind.Relative));
-        }
-
         private void hyperlinkButton1_Click(object sender, RoutedEventArgs e)
         {
-            string value = (String)this.hyperlinkButton1.Content;
-            if (value.Equals("departing at", StringComparison.InvariantCultureIgnoreCase))
-            {
-                this.hyperlinkButton1.Content = "arriving at";
-                TransitRequestContext.TimeType = BingMapsRestApi.TimeType.Arrival;
-            }
-            else
-            {
-                this.hyperlinkButton1.Content = "departing at";
-                TransitRequestContext.TimeType = BingMapsRestApi.TimeType.Departure;
-            }
+            NavigationService.Navigate(new Uri("/DateTimeSelectionPage.xaml", UriKind.Relative));
+            //string value = (String)this.hyperlinkButton1.Content;
+            //if (value.Equals("departing at", StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    this.hyperlinkButton1.Content = "arriving at";
+            //    TransitRequestContext.TimeType = TimeCondition.ArrivingAt;
+            //}
+            //else
+            //{
+            //    this.hyperlinkButton1.Content = "departing at";
+            //    TransitRequestContext.TimeType = TimeCondition.DepartingAt;
+            //}
         }
 
         private void startingInput_GotFocus(object sender, RoutedEventArgs e)
         {
+            this.startingInput.SelectionStart = 0;
+            this.startingInput.SelectionLength = this.startingInput.Text.Length;
+
             // save the old text if we got focus
             this.startLocationOnFocus = this.startingInput.Text;
 
@@ -167,6 +162,9 @@ namespace TransitWP7
 
         private void endingInput_GotFocus(object sender, RoutedEventArgs e)
         {
+            this.endingInput.SelectionStart = 0;
+            this.endingInput.SelectionLength = this.endingInput.Text.Length;
+
             // save the old text if we got focus
             this.endLocationOnFocus = this.endingInput.Text;
 
@@ -186,12 +184,6 @@ namespace TransitWP7
             {
                 this.endAddress.Text = "";
             }
-        }
-
-        private void nowButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.datePicker1.Value = DateTime.Now;
-            this.timePicker1.Value = DateTime.Now;
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
@@ -228,8 +220,10 @@ namespace TransitWP7
         {
             if (result.Error != null)
             {
-                Console.WriteLine("obtained an error!");
-                Console.WriteLine(result.Error.Message);
+                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    this.startingInput.Text += " -> no result";
+                });
             }
             else
             {
@@ -282,6 +276,8 @@ namespace TransitWP7
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
+            base.OnNavigatedTo(e);
+
             // determine if I came from the result selection page
             if ((bool)PhoneApplicationService.Current.State.ContainsKey("isFromResultSelection"))
             {
@@ -321,8 +317,10 @@ namespace TransitWP7
         {
             if (result.Error != null)
             {
-                Console.WriteLine("obtained an error!");
-                Console.WriteLine(result.Error.Message);
+                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    this.endingInput.Text += " -> no result";
+                });
             }
             else
             {
@@ -330,6 +328,14 @@ namespace TransitWP7
                 {
                     UIEndingCallbackForBingApiQuery(result);
                 });
+            }
+        }
+
+        private void TextBoxKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.Focus();
             }
         }
     }

@@ -11,18 +11,25 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
-    shell:SystemTray.IsVisible="True" xmlns:my="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" DataContext="{Binding}">
+    shell:SystemTray.IsVisible="True"
+    xmlns:my="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" DataContext="{Binding}"
+    xmlns:msad="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <my:Map Grid.Row="0" HorizontalAlignment="Stretch" Name="mainMap" VerticalAlignment="Stretch" ZoomLevel="15.0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+        <!-- Advertisement control -->
+        <msad:AdControl Grid.Row="0" AdUnitId="Image480_80" ApplicationId="test_client" Height="80" HorizontalAlignment="Left" Name="adControl1" VerticalAlignment="Top" Width="480" Margin="0,0,0,0" />
+
+        <!-- Map layer -->
+        <my:Map Grid.Row="1" HorizontalAlignment="Stretch" Name="mainMap" VerticalAlignment="Stretch" ZoomLevel="15.0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <my:MapLayer>
                 <my:Pushpin Name="meIndicator"/>
                 <my:Pushpin Name="endLocPushpin" />
@@ -38,7 +45,7 @@
                                 
             </my:MapLayer>
         </my:Map>
-        <TextBlock Grid.Row="1" Text="Current Location: " Name="myLocation" TextWrapping="Wrap" />
+        <TextBlock Grid.Row="2" Text="Current Location: " Name="myLocation" TextWrapping="Wrap" />
     </Grid>
 
     <phone:PhoneApplicationPage.ApplicationBar>

@@ -19,6 +19,8 @@ namespace TransitWP7
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs arg)
         {
+            base.OnNavigatedTo(arg);
+
             // check to see if we have a title
             object titleText = null;
             if (PhoneApplicationService.Current.State.TryGetValue("theQuery", out titleText))
@@ -32,9 +34,6 @@ namespace TransitWP7
             {
                 resultSet = (List<LocationDescription>)PhoneApplicationService.Current.State["theResultSet"];
                 this.resultsList.ItemsSource = this.resultSet;
-
-                // automatically select first result
-                this.resultsList.SelectedIndex = 0;
             }
 
             // check to see if we're the starting result or end result
@@ -48,12 +47,7 @@ namespace TransitWP7
             }
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            this.NavigationService.GoBack();
-        }
-
-        private void AcceptButton_Click(object sender, EventArgs e)
+        private void resultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             PhoneApplicationService.Current.State["isFromResultSelection"] = true;
             PhoneApplicationService.Current.State["selectedResult"] = this.resultSet[this.resultsList.SelectedIndex];

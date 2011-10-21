@@ -27,7 +27,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <ListBox HorizontalAlignment="Stretch" Margin="6,6,0,0" Name="resultsList" VerticalAlignment="Stretch" Width="444" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+            <ListBox HorizontalAlignment="Stretch" Margin="6,6,0,0" Name="resultsList" VerticalAlignment="Stretch" Width="444" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionChanged="resultsList_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
@@ -39,12 +39,4 @@
             </ListBox>
         </Grid>
     </Grid>
- 
-    <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True" Opacity="0.5">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Accept" Click="AcceptButton_Click"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Cancel" Click="CancelButton_Click"/>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
-
 </phone:PhoneApplicationPage>

@@ -3,10 +3,13 @@
 namespace TransitWP7
 {
     using System;
+    using System.Linq;
     using TransitWP7.BingMapsRestApi;
     using TransitWP7.BingSearchRestApi;
     using System.Device.Location;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Globalization;
 
     /// <summary>
     /// Calls REST APIs and isolate their type mapping by converting to transitive types.
@@ -246,11 +249,74 @@ namespace TransitWP7
         public Exception Error { get; set; }
     }
 
+    [TypeConverter(typeof(EnumTypeConverter))]
     public enum TimeCondition
     {
-        Arrival,
-        Departure,
-        LastArrivalTime
+        [EnumDisplayName("Arriving at")]
+        ArrivingAt,
+        [EnumDisplayName("Departing at")]
+        DepartingAt,
+        [EnumDisplayName("Last arrival time")]
+        LastArrivalTime,
+        [EnumDisplayName("Departing now")]
+        Now
+    }
+
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public class EnumDisplayNameAttribute : Attribute
+    {
+        public EnumDisplayNameAttribute(string displayName)
+        {
+            DisplayName = displayName;
+        }
+
+        public string DisplayName { get; set; }
+    }
+
+    public static class Enum<T>
+    {
+        public static IEnumerable<string> GetNames()
+        {
+            var type = typeof(T);
+            if (!type.IsEnum)
+                throw new ArgumentException("Type '" + type.Name + "' is not an enum");
+
+            return (
+              from field in type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+              where field.IsLiteral
+              select field.Name).ToList<string>();
+        }
+    }
+
+    public class EnumTypeConverter : TypeConverter
+    {
+        private Type EnumType { get; set; }
+
+        public EnumTypeConverter(Type enumType)
+            : base()
+        {
+            this.EnumType = enumType;
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string) && value != null)
+            {
+                var enumType = value.GetType();
+                if (enumType.IsEnum)
+                    return GetDisplayName(value);
+            }
+
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+        private string GetDisplayName(object enumValue)
+        {
+            var displayNameAttribute = EnumType.GetField(enumValue.ToString()).GetCustomAttributes(typeof(EnumDisplayNameAttribute), false).FirstOrDefault() as EnumDisplayNameAttribute;
+            if (displayNameAttribute != null)
+                return displayNameAttribute.DisplayName;
+
+            return Enum.GetName(EnumType, enumValue);
+        }
     }
 
     public class TransitDescription
