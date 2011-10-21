@@ -73,6 +73,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ExceptionPage.xaml.cs">
+      <DependentUpon>ExceptionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProxyQuery.cs" />
     <Compile Include="SelectTransitResultPage.xaml.cs">
       <DependentUpon>SelectTransitResultPage.xaml</DependentUpon>
@@ -108,6 +111,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="ExceptionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

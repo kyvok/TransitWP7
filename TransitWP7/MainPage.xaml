@@ -6,7 +6,7 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="696"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -27,8 +27,8 @@
         <!-- TODO: highlight all text in box once selected -->
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <TextBox Height="72" Margin="6,0,47,308" Name="startingInput" Text="My Current Location" VerticalAlignment="Center" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus"/>
-            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,275,0,304" Name="endingInput" Text="Starbucks" VerticalAlignment="Center" Width="403" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" />
+            <TextBox Height="72" Margin="6,136,47,515" Name="startingInput" Text="My Current Location" VerticalAlignment="Center" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus"/>
+            <TextBox Height="72" HorizontalAlignment="Left" Margin="6,275,0,376" Name="endingInput" Text="Starbucks" VerticalAlignment="Center" Width="403" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" />
             <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
             <HyperlinkButton Content="departing at" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
             <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,114,0,0" Name="textBlock1" Text="Starting Location" VerticalAlignment="Top" />
@@ -45,18 +45,4 @@
             <my:AdControl AdUnitId="Image300_50" ApplicationId="test_client" Height="50" HorizontalAlignment="Left" Name="adControl1" VerticalAlignment="Top" Width="300" Margin="79,0,0,0" />
         </Grid>
     </Grid>
- 
-    
-    <!--Sample code showing usage of ApplicationBar-->
-    <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>
-
 </phone:PhoneApplicationPage>

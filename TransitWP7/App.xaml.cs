@@ -6,6 +6,7 @@ namespace TransitWP7
     using System.Windows.Navigation;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
+    using System;
 
     public partial class App : Application
     {
@@ -92,6 +93,15 @@ namespace TransitWP7
             {
                 // An unhandled exception has occurred; break into the debugger
                 System.Diagnostics.Debugger.Break();
+            }
+            else
+            {
+                // handle the exception
+                e.Handled = true;
+
+                //Navigate to the error page
+                PhoneApplicationService.Current.State["exception"] = e.ExceptionObject.ToString();
+                RootFrame.Navigate(new Uri("/ExceptionPage.xaml", UriKind.Relative));
             }
         }
 
