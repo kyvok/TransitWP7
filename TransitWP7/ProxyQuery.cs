@@ -347,7 +347,7 @@ namespace TransitWP7
                 }
             }
 
-            //TODO: need to add endpoint?
+            //TODO: need to add endpoint to the step list?
         }
 
         public Microsoft.Phone.Controls.Maps.LocationRect GetMapView()
@@ -368,9 +368,9 @@ namespace TransitWP7
                 Opacity = 0.7,
             };
 
-            foreach (var index in this.route.RoutePaths[0].RoutePathGeneralization[0].PathIndices)
+            foreach (var point in this.route.RoutePaths[0].Line)
             {
-                polyline.Locations.Add(this.route.RoutePaths[0].Line[index].AsGeoCoordinate());
+                polyline.Locations.Add(point.AsGeoCoordinate());
             }
 
             return polyline;

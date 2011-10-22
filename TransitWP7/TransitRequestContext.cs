@@ -5,6 +5,7 @@ namespace TransitWP7
     using System;
     using System.Collections.Generic;
     using System.Device.Location;
+using System.Collections.ObjectModel;
 
     public static class TransitRequestContext
     {
@@ -15,5 +16,9 @@ namespace TransitWP7
         public static TimeCondition TimeType { get; set; }
 
         public static IEnumerable<string> EnumValues { get { return Enum<TimeCondition>.GetNames(); } }
+
+        public static ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
+        public static ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
+        public static ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
     }
 }

@@ -22,6 +22,7 @@ namespace TransitWP7
             // TODO: refactor the location stuff
             InitializeComponent();
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+            this.endingInput.Focus();
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
@@ -103,17 +104,6 @@ namespace TransitWP7
         private void hyperlinkButton1_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/DateTimeSelectionPage.xaml", UriKind.Relative));
-            //string value = (String)this.hyperlinkButton1.Content;
-            //if (value.Equals("departing at", StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    this.hyperlinkButton1.Content = "arriving at";
-            //    TransitRequestContext.TimeType = TimeCondition.ArrivingAt;
-            //}
-            //else
-            //{
-            //    this.hyperlinkButton1.Content = "departing at";
-            //    TransitRequestContext.TimeType = TimeCondition.DepartingAt;
-            //}
         }
 
         private void startingInput_GotFocus(object sender, RoutedEventArgs e)
