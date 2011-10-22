@@ -22,6 +22,8 @@ namespace TransitWP7
             // TODO: refactor the location stuff
             InitializeComponent();
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+
+            // Go an extra step in usability, auto-select the end location input!
             this.endingInput.Focus();
         }
 
@@ -108,6 +110,7 @@ namespace TransitWP7
 
         private void startingInput_GotFocus(object sender, RoutedEventArgs e)
         {
+            //select all text
             this.startingInput.SelectionStart = 0;
             this.startingInput.SelectionLength = this.startingInput.Text.Length;
 
@@ -152,6 +155,7 @@ namespace TransitWP7
 
         private void endingInput_GotFocus(object sender, RoutedEventArgs e)
         {
+            //select all text
             this.endingInput.SelectionStart = 0;
             this.endingInput.SelectionLength = this.endingInput.Text.Length;
 
@@ -212,7 +216,8 @@ namespace TransitWP7
             {
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    this.startingInput.Text += " -> no result";
+                    this.startingInput.Focus();
+                    MessageBox.Show("Could not find start location");
                 });
             }
             else
@@ -240,7 +245,8 @@ namespace TransitWP7
             }
             else
             {
-                this.startingInput.Text += " -> no result";
+                this.startingInput.Focus();
+                MessageBox.Show("Could not find start location");
             }
         }
 
@@ -260,7 +266,8 @@ namespace TransitWP7
             }
             else
             {
-                this.endingInput.Text += " -> no result";
+                this.endingInput.Focus();
+                MessageBox.Show("Could not find end location");
             }
         }
 
@@ -309,7 +316,8 @@ namespace TransitWP7
             {
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    this.endingInput.Text += " -> no result";
+                    this.endingInput.Focus();
+                    MessageBox.Show("Could not find end location");
                 });
             }
             else

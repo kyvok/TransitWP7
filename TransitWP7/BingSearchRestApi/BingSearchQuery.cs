@@ -30,7 +30,8 @@ namespace TransitWP7.BingSearchRestApi
                 Latitude = userLocation.Latitude,
                 Longitude = userLocation.Longitude,
                 Radius = 80,
-                Count = 5,
+                Count = 10,
+                SortBy = PhonebookSortOption.Distance,
                 Sources = new SourceType[] { SourceType.PhoneBook },
                 AppId = ApiKeys.BingSearchKey
             };
@@ -227,9 +228,12 @@ namespace TransitWP7.BingSearchRestApi
                 builder.Append("&Phonebook.Offset=");
                 builder.Append(this.Offset);
             }
+            if (this.SortBy.HasValue)
+            {
+                builder.Append("&Phonebook.SortBy=");
+                builder.Append(this.SortBy.ToString());
+            }
             //TODO: insert FileType
-            //TODO: insert SortBy
-
 
             return base.ToString() + builder.ToString();
         }
