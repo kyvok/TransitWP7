@@ -94,13 +94,9 @@ namespace TransitWP7
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
         {
-            //remove the old callback
-            GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-
-            //HACK: replace this with an actual container object later
-            TransitRequestContext.StartLocation = TransitRequestContext.StartLocation == null ? TransitRequestContext.UserLocation : TransitRequestContext.StartLocation;
-
-            NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
+            this.theProgressBar.Visibility = System.Windows.Visibility.Visible;
+            // call the old verify address
+            this.verifyAddress_Click(sender, e);
         }
 
         private void hyperlinkButton1_Click(object sender, RoutedEventArgs e)
@@ -180,7 +176,7 @@ namespace TransitWP7
             }
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void verifyAddress_Click(object sender, RoutedEventArgs e)
         {
             // disable this button immediately to prevent multiple clicks
             // this.button1.IsEnabled = false;
@@ -307,6 +303,16 @@ namespace TransitWP7
                 this.endingInput.Text = result.DisplayName;
                 this.endAddress.Text = result.Address;
                 this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
+
+                // stop the progress bar
+                this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
+
+                //remove the old callback
+                GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+
+                //HACK: replace this with an actual container object later
+                TransitRequestContext.StartLocation = TransitRequestContext.StartLocation == null ? TransitRequestContext.UserLocation : TransitRequestContext.StartLocation;
+                NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
             }
         }
 

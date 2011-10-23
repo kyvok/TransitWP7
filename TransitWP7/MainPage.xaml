@@ -32,7 +32,7 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            
+            <ProgressBar Name="theProgressBar" IsIndeterminate="True" Visibility="Collapsed"/>
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
@@ -64,7 +64,6 @@
             <HyperlinkButton Content="Departing now" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
 
             <!-- TODO: Get rid of this button! -->
-            <Button Content="Verify Addresses" Height="72" HorizontalAlignment="Left" Margin="6,519,0,0" Name="button1" VerticalAlignment="Top" Width="450" Click="button1_Click" />
             <!-- Calculate transit button -->
             <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
 
