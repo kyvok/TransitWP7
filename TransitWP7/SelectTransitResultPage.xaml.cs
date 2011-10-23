@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
+﻿//TODO: copyright info
 
+//TODO: only one option? automatically select it! No options? show walking directions!
+//TODO: in results for end and start location, similar: only one option? take it!
 namespace TransitWP7
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Controls;
+    using Microsoft.Phone.Controls;
+    using Microsoft.Phone.Shell;
+
     public partial class SelectTransitResultPage : PhoneApplicationPage
     {
         List<SummaryTransitData> transitResults = new List<SummaryTransitData>();

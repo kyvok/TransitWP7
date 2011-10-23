@@ -79,14 +79,16 @@
     <Compile Include="ExceptionPage.xaml.cs">
       <DependentUpon>ExceptionPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Globals.cs" />
     <Compile Include="PersistedInfo.cs" />
-    <Compile Include="ProxyQuery.cs" />
+    <Compile Include="Model\ProxyQuery.cs" />
     <Compile Include="SelectTransitResultPage.xaml.cs">
       <DependentUpon>SelectTransitResultPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\TransitModelTypes.cs" />
     <Compile Include="TransitRequestContext.cs" />
     <Compile Include="BingMapsExtensionMethods.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQuery.cs" />

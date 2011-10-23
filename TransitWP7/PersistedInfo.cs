@@ -43,7 +43,7 @@ namespace TransitWP7
             else
             {
                 // default values
-                TransitRequestContext.Current.StartName = "My Current Location";
+                TransitRequestContext.Current.StartName = Globals.MyCurrentLocationText;
                 TransitRequestContext.Current.StartAddress = "";
 
                 TransitRequestContext.Current.EndName = "";

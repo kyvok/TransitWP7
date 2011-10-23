@@ -5,12 +5,12 @@ namespace TransitWP7
     using System;
     using System.Device.Location;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
     using System.Windows.Media;
+    using System.Windows.Navigation;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
-    using System.Windows.Input;
-    using System.Windows.Controls;
-    using TransitWP7.BingMapsRestApi;
 
     public partial class MainPage : PhoneApplicationPage
     {
@@ -53,8 +53,7 @@ namespace TransitWP7
         {
             if (result.Error != null)
             {
-                Console.WriteLine("obtained an error!");
-                Console.WriteLine(result.Error.Message);
+                MessageBox.Show(result.Error.Message, "LocationCallback obtained an error!", MessageBoxButton.OK);
             }
             else
             {
@@ -63,7 +62,7 @@ namespace TransitWP7
                 this.currentConfidence = locationDesc.Confidence;
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    if (this.startingInput.Text == "My Current Location")
+                    if (this.startingInput.Text == Globals.MyCurrentLocationText)
                     {
                         switch (this.currentConfidence)
                         {
@@ -112,14 +111,9 @@ namespace TransitWP7
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
         {
-            this.theProgressBar.Visibility = System.Windows.Visibility.Visible;
+            this.theProgressBar.Visibility = Visibility.Visible;
             // call the old verify address
             this.verifyAddress_Click(sender, e);
-        }
-
-        private void dateTimeSelectionButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/DateTimeSelectionPage.xaml", UriKind.Relative));
         }
 
         private void startingInput_GotFocus(object sender, RoutedEventArgs e)
@@ -148,7 +142,7 @@ namespace TransitWP7
                 // use empty as current location
                 if (this.startingInput.Text == "")
                 {
-                    this.startingInput.Text = "My Current Location";
+                    this.startingInput.Text = Globals.MyCurrentLocationText;
                     this.startAddress.Text = String.Format("Address: {0}", this.currentAddress);
                 }
                 else
@@ -158,24 +152,6 @@ namespace TransitWP7
 
                 TransitRequestContext.Current.StartName = this.startingInput.Text;
                 TransitRequestContext.Current.StartAddress = this.startAddress.Text;
-            }
-        }
-
-        // TODO: explore databinding this and get all this into its own class
-        public bool IsTransitButtonEnabled
-        {
-            get
-            {
-                return this.startAddress.Text != "" && this.endAddress.Text != "";
-            }
-        }
-
-        // TODO: explore databinding this and get all this into its own class
-        public bool IsResolveButtonEnabled
-        {
-            get
-            {
-                return !this.IsTransitButtonEnabled;
             }
         }
 
@@ -210,9 +186,6 @@ namespace TransitWP7
 
         private void verifyAddress_Click(object sender, RoutedEventArgs e)
         {
-            // disable this button immediately to prevent multiple clicks
-            // this.button1.IsEnabled = false;
-
             // Let's resolve the addresses
             bool resolveEndLocationLater = false;
 
@@ -299,7 +272,7 @@ namespace TransitWP7
             }
         }
 
-        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -367,7 +340,7 @@ namespace TransitWP7
             }
         }
 
-        private void TextBoxKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TextBoxKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {

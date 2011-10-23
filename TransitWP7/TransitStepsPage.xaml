@@ -27,9 +27,25 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0"></Grid>
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <ListBox HorizontalAlignment="Stretch" Margin="6,6,0,0" Name="resultsList" VerticalAlignment="Stretch" Width="444" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding TravelMode}" FontSize="40" FontStyle="Normal"/>
+                            <TextBlock Text="{Binding Intruction}" FontSize="20" FontStyle="Italic"/>
+                            <!-- Need to put some thought in the information we show here. -->
+                            <!--
+                            <TextBlock Text="{Binding DepartsAt}" FontSize="20" FontStyle="Italic"/>
+                            <TextBlock Text="{Binding ArrivesAt}" FontSize="20" FontStyle="Italic"/>
+                            -->
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
     </Grid>
- 
+
     <!--Sample code showing usage of ApplicationBar-->
     <!--<phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">

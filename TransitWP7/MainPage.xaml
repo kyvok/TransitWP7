@@ -19,66 +19,62 @@
     <!-- TODO: Switch everything to be formatted nicer by grid -->
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <!--
-        <StackPanel Orientation="Horizontal" x:Name="ProgressBarInNonStandardPlace" Margin="0,-80,0,0">
-            <TextBlock Text="Getting info..." Height="30"/>
+        <StackPanel x:Name="TitlePanel" Margin="12,17,0,28">
+            <!-- consider the performance progress bar from toolkit-->
+            <!--
             <toolkit:PerformanceProgressBar ActualIsIndeterminate="True" IsIndeterminate="True" Visibility="Visible" Width="280" Height="30"/>
-        </StackPanel>
-        -->
-
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <ProgressBar Name="theProgressBar" IsIndeterminate="True" Visibility="Collapsed"/>
+            -->
+            <ProgressBar Name="theProgressBar" IsIndeterminate="True" Visibility="Visible"/>
         </StackPanel>
 
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
-            <!-- Advertisement control -->
-            <msad:AdControl Grid.Row="0" AdUnitId="Image480_80" ApplicationId="test_client" Height="80" HorizontalAlignment="Left" Name="adControl1" VerticalAlignment="Top" Width="480" Margin="0,0,0,0" />
-
+        <!-- Advertisement control -->
+        <msad:AdControl AdUnitId="Image480_80" ApplicationId="test_client" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" Width="480" Margin="0,0,0,0" />
+        
+        <!-- Location panels -->
+        <StackPanel Margin="12,150,12,0">
             <!-- Start section -->
-            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,114,0,0" Text="Start" VerticalAlignment="Top" />
-            <TextBox InputScope="Maps" Height="72" Margin="6,136,47,515" Name="startingInput" Text="My Current Location" VerticalAlignment="Center" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus" KeyUp="TextBoxKeyUp" />
-            <TextBlock Height="49" HorizontalAlignment="Left" Margin="19,198,0,0" Name="startAddress" Text="" VerticalAlignment="Top" Width="379" />
-
-            <!-- End section -->
-            <TextBlock Height="30" HorizontalAlignment="Left" Margin="19,253,0,0" Text="End" VerticalAlignment="Top" />
-            <TextBox InputScope="Maps" Height="72" HorizontalAlignment="Left" Margin="8,275,0,376" Name="endingInput" Text="" VerticalAlignment="Center" Width="403" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" KeyUp="TextBoxKeyUp" />
-            <TextBlock Height="49" HorizontalAlignment="Left" Margin="19,336,0,0" Name="endAddress" Text="" VerticalAlignment="Top" Width="379" />
-
-            <!-- Swap button -->
-            <Button Height="70" HorizontalAlignment="Left" Margin="390,210,0,0" Name="swapText" VerticalAlignment="Top" Width="70" Click="swapText_Click">
-                <Button.Background>
-                    <ImageBrush ImageSource="Images/swap_lo.png" Stretch="Fill">
-                        <ImageBrush.Transform>
-                            <RotateTransform Angle="90" CenterX="20" CenterY="20" />
-                        </ImageBrush.Transform>
-                    </ImageBrush>
-                </Button.Background>
-            </Button>
-
-            <!-- Time selection zone -->
-            <StackPanel Margin="0,350,0,0">
-                <toolkit:ListPicker SelectedIndex="0" SelectionChanged="ListPicker_SelectionChanged">
-                    <toolkit:ListPickerItem Content="Departing now" />
-                    <toolkit:ListPickerItem Content="Departing at" />
-                    <toolkit:ListPickerItem Content="Arriving at" />
-                    <toolkit:ListPickerItem Content="Last arrival time for today" />
-                </toolkit:ListPicker>
-                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
-                    <TextBlock Text="Date" VerticalAlignment="Center"/>
-                    <toolkit:DatePicker Name="datePicker" ValueChanged="DatePicker_ValueChanged" />
-                    <TextBlock Text="Time" VerticalAlignment="Center" />
-                    <toolkit:TimePicker Name="timePicker" ValueChanged="TimePicker_ValueChanged" />
-                </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Height="30" Width="60" TextAlignment="Right" HorizontalAlignment="Left" Text="Start" VerticalAlignment="Center" />
+                <TextBox InputScope="Maps" Height="72" Name="startingInput" Text="My Current Location" VerticalAlignment="Center" Width="350" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus" KeyUp="TextBoxKeyUp" />
             </StackPanel>
+            <TextBlock Height="40" HorizontalAlignment="Left" Name="startAddress" Text="" VerticalAlignment="Top" Width="330" Margin="70,0,0,0"/>
+            <!-- End section -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Height="30" Width="60" TextAlignment="Right" HorizontalAlignment="Left" Text="End" VerticalAlignment="Center" />
+                <TextBox InputScope="Maps" Height="72" Name="endingInput" Text="" VerticalAlignment="Center" Width="350" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" KeyUp="TextBoxKeyUp" />
+            </StackPanel>
+            <TextBlock Height="40" HorizontalAlignment="Left" Name="endAddress" Text="" VerticalAlignment="Top" Width="330" Margin="70,0,0,0"/>
+        </StackPanel>
 
-            <!-- Calculate transit button -->
-            <Button Content="Trans It!" Height="72" HorizontalAlignment="Stretch" Name="navigateButton" VerticalAlignment="Bottom" Click="navigateButton_Click"/>
-        </Grid>
+        <!-- Swap button -->
+        <Button Height="70" HorizontalAlignment="Left" Margin="410,205,0,12" Name="swapText" VerticalAlignment="Top" Width="70" Click="swapText_Click">
+            <Button.Background>
+                <ImageBrush ImageSource="Images/swap_lo.png" Stretch="Fill">
+                    <ImageBrush.Transform>
+                        <RotateTransform Angle="90" CenterX="20" CenterY="20" />
+                    </ImageBrush.Transform>
+                </ImageBrush>
+            </Button.Background>
+        </Button>
+
+        <!-- Time selection zone -->
+        <StackPanel Margin="12,390,12,0">
+            <toolkit:ListPicker SelectedIndex="0" SelectionChanged="ListPicker_SelectionChanged" Margin="70,0,12,9">
+                <toolkit:ListPickerItem Content="Departing now" />
+                <toolkit:ListPickerItem Content="Departing at" />
+                <toolkit:ListPickerItem Content="Arriving at" />
+                <toolkit:ListPickerItem Content="Last arrival time for today" />
+            </toolkit:ListPicker>
+            <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+                <TextBlock Text="Date" VerticalAlignment="Center"/>
+                <toolkit:DatePicker Name="datePicker" ValueChanged="DatePicker_ValueChanged" />
+                <TextBlock Text="Time" VerticalAlignment="Center" />
+                <toolkit:TimePicker Name="timePicker" ValueChanged="TimePicker_ValueChanged" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Calculate transit button -->
+        <Button Content="Trans It!" Height="72" HorizontalAlignment="Stretch" Name="navigateButton" VerticalAlignment="Bottom" Click="navigateButton_Click"/>
     </Grid>
 </phone:PhoneApplicationPage>

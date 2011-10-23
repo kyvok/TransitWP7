@@ -33,13 +33,6 @@ namespace TransitWP7
             // this.mainMap.Height = this.LayoutRoot.RowDefinitions[0].ActualHeight;
         }
 
-        //TODO: Navigation is messed up.
-        //protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
-        //{
-        //    base.OnBackKeyPress(e);
-        //    NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
-        //}
-
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);

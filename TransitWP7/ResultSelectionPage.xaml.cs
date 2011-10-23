@@ -7,6 +7,8 @@ namespace TransitWP7
     using Microsoft.Phone.Shell;
     using System.Collections.Generic;
 
+    //TODO: distance of the item from origin
+    //TODO: calculate results from origin for endpoint, not current userlocation!!!
     public partial class ResultSelectionPage : PhoneApplicationPage
     {
         List<LocationDescription> resultSet = null;
