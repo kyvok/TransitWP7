@@ -35,7 +35,7 @@ namespace TransitWP7
             ProxyQuery.GetTransitDirections(
                 TransitRequestContext.Current.StartLocation,
                 TransitRequestContext.Current.EndLocation,
-                DateTime.Now,
+                TransitRequestContext.Current.DateTime,
                 TimeCondition.DepartingAt,
                 TransitRouteCalculated,
                 null);

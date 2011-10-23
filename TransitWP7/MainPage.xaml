@@ -13,7 +13,8 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
     xmlns:msad="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
-    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit">
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:view="clr-namespace:TransitWP7">
 
     <!-- TODO: Switch everything to be formatted nicer by grid -->
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -60,13 +61,24 @@
                 </Button.Background>
             </Button>
 
-            <!-- Time selection button -->
-            <HyperlinkButton Content="Departing now" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
+            <!-- Time selection zone -->
+            <StackPanel Margin="0,350,0,0">
+                <toolkit:ListPicker SelectedIndex="0" SelectionChanged="ListPicker_SelectionChanged">
+                    <toolkit:ListPickerItem Content="Departing now" />
+                    <toolkit:ListPickerItem Content="Departing at" />
+                    <toolkit:ListPickerItem Content="Arriving at" />
+                    <toolkit:ListPickerItem Content="Last arrival time for today" />
+                </toolkit:ListPicker>
+                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+                    <TextBlock Text="Date" VerticalAlignment="Center"/>
+                    <toolkit:DatePicker Name="datePicker" ValueChanged="DatePicker_ValueChanged" />
+                    <TextBlock Text="Time" VerticalAlignment="Center" />
+                    <toolkit:TimePicker Name="timePicker" ValueChanged="TimePicker_ValueChanged" />
+                </StackPanel>
+            </StackPanel>
 
-            <!-- TODO: Get rid of this button! -->
             <!-- Calculate transit button -->
-            <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
-
+            <Button Content="Trans It!" Height="72" HorizontalAlignment="Stretch" Name="navigateButton" VerticalAlignment="Bottom" Click="navigateButton_Click"/>
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>

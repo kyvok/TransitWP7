@@ -10,7 +10,7 @@ namespace TransitWP7
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
-using System.Runtime.Serialization;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Calls REST APIs and isolate their type mapping by converting to transitive types.
@@ -55,6 +55,8 @@ using System.Runtime.Serialization;
                 UserState = userState
             };
 
+            timeType = timeType != TimeCondition.Now ? timeType : TimeCondition.DepartingAt;
+
             BingMapsQuery.GetTransitRoute(startPoint, endPoint, dateTime, (TimeType)timeType, GetTransitDirectionsCallback, queryState);
         }
 
@@ -92,7 +94,8 @@ using System.Runtime.Serialization;
                 foreach (var location in result.Response.GetLocations())
                 {
                     var locationDescription = new LocationDescription(location);
-                    //ignore values farther than 80 miles. (same as phonebook API)
+
+                    // ignore values farther than 80 miles. (same as phonebook API)
                     if (locationDescription.GeoCoordinate.GetDistanceTo(queryState.UserLocation) / 1600 > 80)
                     {
                         continue;
@@ -103,7 +106,7 @@ using System.Runtime.Serialization;
                         queryState.LocationDescriptions = new List<LocationDescription>();
                     }
 
-                    queryState.LocationDescriptions.Add(new LocationDescription(location));
+                    queryState.LocationDescriptions.Add(locationDescription);
                 }
             }
             else
@@ -194,12 +197,20 @@ using System.Runtime.Serialization;
             {
                 foreach (var route in result.Response.GetRoutes())
                 {
+                    var transitDescription = new TransitDescription(route);
+
+                    // ignore more than 90 minute walks.
+                    if (transitDescription.TravelDuration > 60 * 90)
+                    {
+                        continue;
+                    }
+
                     if (queryState.TransitDescriptions == null)
                     {
                         queryState.TransitDescriptions = new List<TransitDescription>();
                     }
 
-                    queryState.TransitDescriptions.Add(new TransitDescription(route));
+                    queryState.TransitDescriptions.Add(transitDescription);
                 }
             }
             else
@@ -250,74 +261,12 @@ using System.Runtime.Serialization;
         public Exception Error { get; set; }
     }
 
-    [TypeConverter(typeof(EnumTypeConverter))]
     public enum TimeCondition
     {
-        [EnumDisplayName("Arriving at")]
         ArrivingAt,
-        [EnumDisplayName("Departing at")]
         DepartingAt,
-        [EnumDisplayName("Last arrival time")]
         LastArrivalTime,
-        [EnumDisplayName("Departing now")]
         Now
-    }
-
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-    public class EnumDisplayNameAttribute : Attribute
-    {
-        public EnumDisplayNameAttribute(string displayName)
-        {
-            DisplayName = displayName;
-        }
-
-        public string DisplayName { get; set; }
-    }
-
-    public static class Enum<T>
-    {
-        public static IEnumerable<string> GetNames()
-        {
-            var type = typeof(T);
-            if (!type.IsEnum)
-                throw new ArgumentException("Type '" + type.Name + "' is not an enum");
-
-            return (
-              from field in type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
-              where field.IsLiteral
-              select field.Name).ToList<string>();
-        }
-    }
-
-    public class EnumTypeConverter : TypeConverter
-    {
-        private Type EnumType { get; set; }
-
-        public EnumTypeConverter(Type enumType)
-            : base()
-        {
-            this.EnumType = enumType;
-        }
-
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-        {
-            if (destinationType == typeof(string) && value != null)
-            {
-                var enumType = value.GetType();
-                if (enumType.IsEnum)
-                    return GetDisplayName(value);
-            }
-
-            return base.ConvertTo(context, culture, value, destinationType);
-        }
-        private string GetDisplayName(object enumValue)
-        {
-            var displayNameAttribute = EnumType.GetField(enumValue.ToString()).GetCustomAttributes(typeof(EnumDisplayNameAttribute), false).FirstOrDefault() as EnumDisplayNameAttribute;
-            if (displayNameAttribute != null)
-                return displayNameAttribute.DisplayName;
-
-            return Enum.GetName(EnumType, enumValue);
-        }
     }
 
     [DataContract]

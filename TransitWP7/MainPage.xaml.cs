@@ -9,7 +9,8 @@ namespace TransitWP7
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
     using System.Windows.Input;
-using TransitWP7.BingMapsRestApi;
+    using System.Windows.Controls;
+    using TransitWP7.BingMapsRestApi;
 
     public partial class MainPage : PhoneApplicationPage
     {
@@ -116,7 +117,7 @@ using TransitWP7.BingMapsRestApi;
             this.verifyAddress_Click(sender, e);
         }
 
-        private void hyperlinkButton1_Click(object sender, RoutedEventArgs e)
+        private void dateTimeSelectionButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/DateTimeSelectionPage.xaml", UriKind.Relative));
         }
@@ -372,6 +373,79 @@ using TransitWP7.BingMapsRestApi;
             {
                 this.Focus();
             }
+        }
+
+        private void DatePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
+        {
+            DateTime baseTime = TransitRequestContext.Current.DateTime;
+            DateTime composingTime = e.NewDateTime.Value;
+
+            TransitRequestContext.Current.DateTime = new DateTime(
+                composingTime.Year,
+                composingTime.Month,
+                composingTime.Day,
+                baseTime.Hour,
+                baseTime.Minute,
+                baseTime.Second);
+        }
+
+        private void TimePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
+        {
+            DateTime baseTime = TransitRequestContext.Current.DateTime;
+            DateTime composingTime = e.NewDateTime.Value;
+
+            TransitRequestContext.Current.DateTime = new DateTime(
+                baseTime.Year,
+                baseTime.Month,
+                baseTime.Day,
+                composingTime.Hour,
+                composingTime.Minute,
+                composingTime.Second);
+        }
+
+        private void ListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var timeTypePicker = sender as ListPicker;
+            if (timeTypePicker != null)
+            {
+                switch (timeTypePicker.SelectedIndex)
+                {
+                    case 0:
+                        TransitRequestContext.Current.DateTime = DateTime.Now;
+                        TransitRequestContext.Current.TimeType = TimeCondition.Now;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Collapsed;
+                        break;
+                    case 1:
+                        this.EnsureDateTimeSyncInContext();
+                        TransitRequestContext.Current.TimeType = TimeCondition.DepartingAt;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 2:
+                        this.EnsureDateTimeSyncInContext();
+                        TransitRequestContext.Current.TimeType = TimeCondition.ArrivingAt;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 3:
+                        TransitRequestContext.Current.DateTime = DateTime.Now;
+                        TransitRequestContext.Current.TimeType = TimeCondition.LastArrivalTime;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Collapsed;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void EnsureDateTimeSyncInContext()
+        {
+            TransitRequestContext.Current.DateTime = new DateTime(
+                datePicker.Value.Value.Year,
+                datePicker.Value.Value.Month,
+                datePicker.Value.Value.Day,
+                timePicker.Value.Value.Hour,
+                timePicker.Value.Value.Minute,
+                timePicker.Value.Value.Second
+                );
         }
     }
 }
