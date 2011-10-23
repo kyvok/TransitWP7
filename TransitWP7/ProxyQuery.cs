@@ -10,6 +10,7 @@ namespace TransitWP7
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
+using System.Runtime.Serialization;
 
     /// <summary>
     /// Calls REST APIs and isolate their type mapping by converting to transitive types.
@@ -319,10 +320,13 @@ namespace TransitWP7
         }
     }
 
+    [DataContract]
     public class TransitDescription
     {
-        private Route route;
-        private List<ItineraryStep> steps;
+        [DataMember]
+        public Route route;
+        [DataMember]
+        public List<ItineraryStep> steps;
 
         public TransitDescription(Route route)
         {
@@ -425,9 +429,11 @@ namespace TransitWP7
         }
     }
 
+    [DataContract]
     public class ItineraryStep
     {
-        ItineraryItem item;
+        [DataMember]
+        public ItineraryItem item;
 
         public ItineraryStep(ItineraryItem item)
         {
@@ -475,10 +481,13 @@ namespace TransitWP7
         }
     }
 
+    [DataContract]
     public class LocationDescription
     {
-        private Location bingMapsResult;
-        private PhonebookResult bingSearchResult;
+        [DataMember]
+        public Location bingMapsResult;
+        [DataMember]
+        public PhonebookResult bingSearchResult;
 
         public LocationDescription(Location result)
         {

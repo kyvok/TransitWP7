@@ -9,6 +9,7 @@ namespace TransitWP7
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
     using System.Windows.Input;
+using TransitWP7.BingMapsRestApi;
 
     public partial class MainPage : PhoneApplicationPage
     {
@@ -16,6 +17,10 @@ namespace TransitWP7
         private Brush startAddressColorOnFocus = null;
         private string endLocationOnFocus = null;
         private Brush endAddressColorOnFocus = null;
+
+        private string currentAddress = "";
+        private GeoLocation currentLocation = null;
+        private string currentConfidence = "";
 
         public MainPage()
         {
@@ -52,14 +57,14 @@ namespace TransitWP7
             }
             else
             {
-                // only if we're current location
-
+                LocationDescription locationDesc = result.LocationDescriptions[0];
+                this.currentAddress = locationDesc.DisplayName;
+                this.currentConfidence = locationDesc.Confidence;
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
                     if (this.startingInput.Text == "My Current Location")
                     {
-                        LocationDescription locationDesc = result.LocationDescriptions[0];
-                        switch (locationDesc.Confidence)
+                        switch (this.currentConfidence)
                         {
                             case "High":
                                 this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
@@ -72,7 +77,7 @@ namespace TransitWP7
                                 break;
                         }
                         this.startAddress.Text = String.Format("Address: {0}",
-                            locationDesc.DisplayName);
+                            this.currentAddress);
                     }
                 });
             }
@@ -143,9 +148,12 @@ namespace TransitWP7
                 if (this.startingInput.Text == "")
                 {
                     this.startingInput.Text = "My Current Location";
+                    this.startAddress.Text = String.Format("Address: {0}", this.currentAddress);
                 }
-
-                this.startAddress.Text = "";
+                else
+                {
+                    this.startAddress.Text = "";
+                }
 
                 TransitRequestContext.Current.StartName = this.startingInput.Text;
                 TransitRequestContext.Current.StartAddress = this.startAddress.Text;

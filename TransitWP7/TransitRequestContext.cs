@@ -5,7 +5,8 @@ namespace TransitWP7
     using System;
     using System.Collections.Generic;
     using System.Device.Location;
-using System.Collections.ObjectModel;
+    using System.Collections.ObjectModel;
+    using System.Xml.Serialization;
 
     public class TransitRequestContext
     {
@@ -21,8 +22,8 @@ using System.Collections.ObjectModel;
         public DateTime DateTime { get; set; }
         public TimeCondition TimeType { get; set; }
 
-        public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
-        public ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
-        public ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
+        //public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
+        //public ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
+        //public ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
     }
 }

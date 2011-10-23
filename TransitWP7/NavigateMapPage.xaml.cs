@@ -40,6 +40,12 @@ namespace TransitWP7
         //    NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
         //}
 
+        protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+            GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+        }
+
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -50,6 +56,8 @@ namespace TransitWP7
             startLocPushpin.Content = "Start!";
             endLocPushpin.Location = description.EndLocation;
             endLocPushpin.Content = "End!";
+
+            PhoneApplicationService.Current.State.Remove("transitToDisplay");
 
             foreach (var step in description.ItinerarySteps)
             {
