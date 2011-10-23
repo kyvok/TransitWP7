@@ -13,7 +13,8 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True"
     xmlns:msad="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
-    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit">
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:view="clr-namespace:TransitWP7">
 
     <!-- TODO: Switch everything to be formatted nicer by grid -->
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -32,7 +33,7 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            
+
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
@@ -60,11 +61,26 @@
                 </Button.Background>
             </Button>
 
-            <!-- Time selection button -->
-            <HyperlinkButton Content="Departing now" Height="30" HorizontalAlignment="Left" Margin="-12,404,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="200" Click="hyperlinkButton1_Click" />
+            <!-- Time selection zone -->
+            <StackPanel Margin="0,350,0,0">
+                <toolkit:ListPicker SelectedIndex="0" SelectionChanged="ListPicker_SelectionChanged">
+                    <toolkit:ListPickerItem Content="Departing now" />
+                    <toolkit:ListPickerItem Content="Departing at" />
+                    <toolkit:ListPickerItem Content="Arriving at" />
+                    <toolkit:ListPickerItem Content="Last arrival time" />
+                </toolkit:ListPicker>
+                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+                    <StackPanel Name="dateStackPanel" Orientation="Horizontal" Visibility="Collapsed">
+                        <TextBlock Text="Date" VerticalAlignment="Center"/>
+                        <toolkit:DatePicker ValueChanged="DatePicker_ValueChanged" />
+                    </StackPanel>
+                    <StackPanel Name="timeStackPanel" Orientation="Horizontal" Visibility="Collapsed">
+                        <TextBlock Text="Time" VerticalAlignment="Center" />
+                        <toolkit:TimePicker ValueChanged="TimePicker_ValueChanged" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
 
-            <!-- TODO: Get rid of this button! -->
-            <Button Content="Verify Addresses" Height="72" HorizontalAlignment="Left" Margin="6,519,0,0" Name="button1" VerticalAlignment="Top" Width="450" Click="button1_Click" />
             <!-- Calculate transit button -->
             <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
 

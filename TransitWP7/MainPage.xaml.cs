@@ -9,6 +9,7 @@ namespace TransitWP7
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
     using System.Windows.Input;
+    using System.Windows.Controls;
 
     public partial class MainPage : PhoneApplicationPage
     {
@@ -103,7 +104,7 @@ namespace TransitWP7
             NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
         }
 
-        private void hyperlinkButton1_Click(object sender, RoutedEventArgs e)
+        private void dateTimeSelectionButton_Click(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/DateTimeSelectionPage.xaml", UriKind.Relative));
         }
@@ -334,6 +335,54 @@ namespace TransitWP7
             if (e.Key == Key.Enter)
             {
                 this.Focus();
+            }
+        }
+
+        private void DatePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
+        {
+            TransitRequestContext.DateTime = e.NewDateTime.Value;
+            MessageBox.Show(TransitRequestContext.DateTime.ToString());
+        }
+
+        private void TimePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
+        {
+            TransitRequestContext.DateTime = e.NewDateTime.Value;
+            MessageBox.Show(TransitRequestContext.DateTime.ToString());
+        }
+
+        private void ListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var timeTypePicker = sender as ListPicker;
+            if (timeTypePicker != null)
+            {
+                switch (timeTypePicker.SelectedIndex)
+                {
+                    case 0:
+                        TransitRequestContext.DateTime = DateTime.Now;
+                        TransitRequestContext.TimeType = TimeCondition.Now;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Collapsed;
+                        break;
+                    case 1:
+                        TransitRequestContext.TimeType = TimeCondition.DepartingAt;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        dateStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        timeStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 2:
+                        TransitRequestContext.TimeType = TimeCondition.ArrivingAt;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        dateStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        timeStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        break;
+                    case 3:
+                        TransitRequestContext.TimeType = TimeCondition.LastArrivalTime;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        dateStackPanel.Visibility = System.Windows.Visibility.Visible;
+                        timeStackPanel.Visibility = System.Windows.Visibility.Collapsed;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

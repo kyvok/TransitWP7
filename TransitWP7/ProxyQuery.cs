@@ -54,6 +54,8 @@ namespace TransitWP7
                 UserState = userState
             };
 
+            timeType = timeType != TimeCondition.Now ? timeType : TimeCondition.DepartingAt;
+
             BingMapsQuery.GetTransitRoute(startPoint, endPoint, dateTime, (TimeType)timeType, GetTransitDirectionsCallback, queryState);
         }
 
@@ -91,7 +93,8 @@ namespace TransitWP7
                 foreach (var location in result.Response.GetLocations())
                 {
                     var locationDescription = new LocationDescription(location);
-                    //ignore values farther than 80 miles. (same as phonebook API)
+
+                    // ignore values farther than 80 miles. (same as phonebook API)
                     if (locationDescription.GeoCoordinate.GetDistanceTo(queryState.UserLocation) / 1600 > 80)
                     {
                         continue;
@@ -102,7 +105,7 @@ namespace TransitWP7
                         queryState.LocationDescriptions = new List<LocationDescription>();
                     }
 
-                    queryState.LocationDescriptions.Add(new LocationDescription(location));
+                    queryState.LocationDescriptions.Add(locationDescription);
                 }
             }
             else
@@ -193,12 +196,20 @@ namespace TransitWP7
             {
                 foreach (var route in result.Response.GetRoutes())
                 {
+                    var transitDescription = new TransitDescription(route);
+
+                    // ignore more than 90 minute walks.
+                    if (transitDescription.TravelDuration > 60 * 90)
+                    {
+                        continue;
+                    }
+
                     if (queryState.TransitDescriptions == null)
                     {
                         queryState.TransitDescriptions = new List<TransitDescription>();
                     }
 
-                    queryState.TransitDescriptions.Add(new TransitDescription(route));
+                    queryState.TransitDescriptions.Add(transitDescription);
                 }
             }
             else
