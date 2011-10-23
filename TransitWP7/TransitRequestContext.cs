@@ -7,18 +7,22 @@ namespace TransitWP7
     using System.Device.Location;
 using System.Collections.ObjectModel;
 
-    public static class TransitRequestContext
+    public class TransitRequestContext
     {
-        public static GeoCoordinate UserLocation { get; set; }
-        public static GeoCoordinate StartLocation { get; set; }
-        public static GeoCoordinate EndLocation { get; set; }
-        public static DateTime DateTime { get; set; }
-        public static TimeCondition TimeType { get; set; }
+        public static TransitRequestContext Current = new TransitRequestContext();
 
-        public static IEnumerable<string> EnumValues { get { return Enum<TimeCondition>.GetNames(); } }
+        public string EndName { get; set; }
+        public string StartName { get; set; }
+        public string EndAddress { get; set; }
+        public string StartAddress { get; set; }
+        public GeoCoordinate UserLocation { get; set; }
+        public GeoCoordinate StartLocation { get; set; }
+        public GeoCoordinate EndLocation { get; set; }
+        public DateTime DateTime { get; set; }
+        public TimeCondition TimeType { get; set; }
 
-        public static ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
-        public static ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
-        public static ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
+        public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
+        public ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
+        public ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
     }
 }

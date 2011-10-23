@@ -81,6 +81,7 @@
     <Compile Include="ExceptionPage.xaml.cs">
       <DependentUpon>ExceptionPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PersistedInfo.cs" />
     <Compile Include="ProxyQuery.cs" />
     <Compile Include="SelectTransitResultPage.xaml.cs">
       <DependentUpon>SelectTransitResultPage.xaml</DependentUpon>

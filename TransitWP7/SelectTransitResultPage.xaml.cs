@@ -33,8 +33,8 @@ namespace TransitWP7
             this.TempMessage.Text = "Calculating...";
 
             ProxyQuery.GetTransitDirections(
-                TransitRequestContext.StartLocation,
-                TransitRequestContext.EndLocation,
+                TransitRequestContext.Current.StartLocation,
+                TransitRequestContext.Current.EndLocation,
                 DateTime.Now,
                 TimeCondition.DepartingAt,
                 TransitRouteCalculated,

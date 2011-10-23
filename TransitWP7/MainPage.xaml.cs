@@ -23,6 +23,13 @@ namespace TransitWP7
             InitializeComponent();
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
 
+            // restore the last used values
+            this.startAddress.Text = TransitRequestContext.Current.StartAddress;
+            this.startingInput.Text = TransitRequestContext.Current.StartName;
+
+            this.endAddress.Text = TransitRequestContext.Current.EndAddress;
+            this.endingInput.Text = TransitRequestContext.Current.EndName;
+
             // Go an extra step in usability, auto-select the end location input!
             this.endingInput.Focus();
         }
@@ -30,10 +37,10 @@ namespace TransitWP7
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            TransitRequestContext.UserLocation = e.Position.Location;
+            TransitRequestContext.Current.UserLocation = e.Position.Location;
 
             // Poll bing maps about the location
-            ProxyQuery.GetLocationAddress(TransitRequestContext.UserLocation, LocationCallback, null);
+            ProxyQuery.GetLocationAddress(TransitRequestContext.Current.UserLocation, LocationCallback, null);
         }
 
         private void LocationCallback(ProxyQueryResult result)
@@ -45,23 +52,28 @@ namespace TransitWP7
             }
             else
             {
+                // only if we're current location
+
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    LocationDescription locationDesc = result.LocationDescriptions[0];
-                    switch (locationDesc.Confidence)
+                    if (this.startingInput.Text == "My Current Location")
                     {
-                        case "High":
-                            this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
-                            break;
-                        case "Medium":
-                            this.startAddress.Foreground = new SolidColorBrush(Colors.Yellow);
-                            break;
-                        case "Low":
-                            this.startAddress.Foreground = new SolidColorBrush(Colors.Red);
-                            break;
+                        LocationDescription locationDesc = result.LocationDescriptions[0];
+                        switch (locationDesc.Confidence)
+                        {
+                            case "High":
+                                this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
+                                break;
+                            case "Medium":
+                                this.startAddress.Foreground = new SolidColorBrush(Colors.Yellow);
+                                break;
+                            case "Low":
+                                this.startAddress.Foreground = new SolidColorBrush(Colors.Red);
+                                break;
+                        }
+                        this.startAddress.Text = String.Format("Address: {0}",
+                            locationDesc.DisplayName);
                     }
-                    this.startAddress.Text = String.Format("Address: {0}",
-                        locationDesc.DisplayName);
                 });
             }
         }
@@ -87,9 +99,9 @@ namespace TransitWP7
 
             //swap the GPS locations
             GeoCoordinate locationTemp = null;
-            locationTemp = TransitRequestContext.StartLocation;
-            TransitRequestContext.StartLocation = TransitRequestContext.EndLocation;
-            TransitRequestContext.EndLocation = locationTemp;
+            locationTemp = TransitRequestContext.Current.StartLocation;
+            TransitRequestContext.Current.StartLocation = TransitRequestContext.Current.EndLocation;
+            TransitRequestContext.Current.EndLocation = locationTemp;
         }
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
@@ -127,7 +139,16 @@ namespace TransitWP7
             }
             else
             {
+                // use empty as current location
+                if (this.startingInput.Text == "")
+                {
+                    this.startingInput.Text = "My Current Location";
+                }
+
                 this.startAddress.Text = "";
+
+                TransitRequestContext.Current.StartName = this.startingInput.Text;
+                TransitRequestContext.Current.StartAddress = this.startAddress.Text;
             }
         }
 
@@ -173,6 +194,8 @@ namespace TransitWP7
             else
             {
                 this.endAddress.Text = "";
+                TransitRequestContext.Current.EndName = this.endingInput.Text;
+                TransitRequestContext.Current.EndAddress = this.endAddress.Text;
             }
         }
 
@@ -187,7 +210,7 @@ namespace TransitWP7
             // resolve the starting address if necessary
             if (this.startAddress.Text == "")
             {
-                ProxyQuery.GetLocationsAndBusiness(this.startingInput.Text, TransitRequestContext.UserLocation, StartingCallbackForBingApiQuery, null);
+                ProxyQuery.GetLocationsAndBusiness(this.startingInput.Text, TransitRequestContext.Current.UserLocation, StartingCallbackForBingApiQuery, null);
 
                 resolveEndLocationLater = true;
             }
@@ -197,7 +220,7 @@ namespace TransitWP7
             {
                 if (resolveEndLocationLater == false)
                 {
-                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.UserLocation, EndingCallbackForBingApiQuery, null);
+                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.Current.UserLocation, EndingCallbackForBingApiQuery, null);
                 }
                 else
                 {
@@ -280,7 +303,7 @@ namespace TransitWP7
                 if ((bool)PhoneApplicationService.Current.State.ContainsKey("resolveEndingLater"))
                 {
                     PhoneApplicationService.Current.State.Remove("resolveEndingLater");
-                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.UserLocation, EndingCallbackForBingApiQuery, null);
+                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.Current.UserLocation, EndingCallbackForBingApiQuery, null);
                 }
             }
         }
@@ -292,14 +315,14 @@ namespace TransitWP7
             // set some values here
             if ((bool)PhoneApplicationService.Current.State["isStartResult"] == true)
             {
-                TransitRequestContext.StartLocation = result.GeoCoordinate;
+                TransitRequestContext.Current.StartLocation = result.GeoCoordinate;
                 this.startingInput.Text = result.DisplayName;
                 this.startAddress.Text = result.Address;
                 this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
             }
             else
             {
-                TransitRequestContext.EndLocation = result.GeoCoordinate;
+                TransitRequestContext.Current.EndLocation = result.GeoCoordinate;
                 this.endingInput.Text = result.DisplayName;
                 this.endAddress.Text = result.Address;
                 this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
@@ -311,7 +334,7 @@ namespace TransitWP7
                 GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
 
                 //HACK: replace this with an actual container object later
-                TransitRequestContext.StartLocation = TransitRequestContext.StartLocation == null ? TransitRequestContext.UserLocation : TransitRequestContext.StartLocation;
+                TransitRequestContext.Current.StartLocation = TransitRequestContext.Current.StartLocation == null ? TransitRequestContext.Current.UserLocation : TransitRequestContext.Current.StartLocation;
                 NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
             }
         }
