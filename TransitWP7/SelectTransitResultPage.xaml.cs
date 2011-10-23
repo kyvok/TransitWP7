@@ -14,7 +14,6 @@ namespace TransitWP7
     public partial class SelectTransitResultPage : PhoneApplicationPage
     {
         List<SummaryTransitData> transitResults = new List<SummaryTransitData>();
-        List<TransitDescription> rawData = new List<TransitDescription>();
 
         public SelectTransitResultPage()
         {
@@ -25,53 +24,33 @@ namespace TransitWP7
         {
             base.OnNavigatedTo(e);
 
-            transitResults.Clear();
+            if (TransitRequestContext.Current.TransitDescriptionCollection.Count > 0)
+            {
+            }
+            else
+            {
+                ProxyQuery.GetTransitDirections(
+                    TransitRequestContext.Current.StartLocation,
+                    TransitRequestContext.Current.EndLocation,
+                    TransitRequestContext.Current.DateTime,
+                    TransitRequestContext.Current.TimeType,
+                    TransitRouteCalculated,
+                    null);
 
-            this.TempMessage.Text = "Calculating...";
-
-            ProxyQuery.GetTransitDirections(
-                TransitRequestContext.Current.StartLocation,
-                TransitRequestContext.Current.EndLocation,
-                TransitRequestContext.Current.DateTime,
-                TimeCondition.DepartingAt,
-                TransitRouteCalculated,
-                null);
+                this.TempMessage.Text = "Calculating...";
+            }
         }
 
         private void TransitRouteCalculated(ProxyQueryResult result)
         {
             if (result.Error == null)
             {
-                this.rawData = result.TransitDescriptions;
-
-                foreach (var transitOption in result.TransitDescriptions)
+                foreach(var item in result.TransitDescriptions)
                 {
-                    bool isWalk = false;
-                    var atd = new SummaryTransitData();
-                    foreach (var item in transitOption.ItinerarySteps)
-                    {
-                        if (item.IconType != "")
-                        {
-                            atd.Steps += isWalk && item.IconType.StartsWith("W") ? "" : (atd.Steps == string.Empty ? "" : "->") + item.IconType.Substring(0, 1);
-                            if (item.IconType.StartsWith("B"))
-                            {
-                                atd.Steps += item.BusNumber;
-                            }
-                            isWalk = item.TravelMode.StartsWith("W") ? true : false;
-                        }
-                    }
-                    atd.Duration = ((int)(transitOption.TravelDuration / 60)).ToString() + " min";
-                    atd.ArrivesAt = transitOption.ArrivalTime;
-                    atd.DepartsAt = transitOption.DepartureTime;
-
-                    transitResults.Add(atd);
+                    TransitRequestContext.Current.TransitDescriptionCollection.Add(item);
                 }
 
-                Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    this.TempMessage.Text = "";
-                    this.resultsList.ItemsSource = transitResults;
-                });
+                DisplayTransitTripSummaries();
             }
             else
             {
@@ -82,9 +61,43 @@ namespace TransitWP7
             }
         }
 
+        private void DisplayTransitTripSummaries()
+        {
+            transitResults.Clear();
+
+            foreach (var transitOption in TransitRequestContext.Current.TransitDescriptionCollection)
+            {
+                bool isWalk = false;
+                var atd = new SummaryTransitData();
+                foreach (var item in transitOption.ItinerarySteps)
+                {
+                    if (item.IconType != "")
+                    {
+                        atd.Steps += isWalk && item.IconType.StartsWith("W") ? "" : (atd.Steps == string.Empty ? "" : "->") + item.IconType.Substring(0, 1);
+                        if (item.IconType.StartsWith("B"))
+                        {
+                            atd.Steps += item.BusNumber;
+                        }
+                        isWalk = item.TravelMode.StartsWith("W") ? true : false;
+                    }
+                }
+                atd.Duration = ((int)(transitOption.TravelDuration / 60)).ToString() + " min";
+                atd.ArrivesAt = transitOption.ArrivalTime;
+                atd.DepartsAt = transitOption.DepartureTime;
+
+                transitResults.Add(atd);
+            }
+
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                this.TempMessage.Text = "";
+                this.resultsList.ItemsSource = transitResults;
+            });
+        }
+
         private void resultsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PhoneApplicationService.Current.State["transitToDisplay"] = this.rawData[this.resultsList.SelectedIndex];
+            TransitRequestContext.Current.SelectedTransitTrip = TransitRequestContext.Current.TransitDescriptionCollection[this.resultsList.SelectedIndex];
             NavigationService.Navigate(new Uri("/NavigateMapPage.xaml", UriKind.Relative));
         }
     }

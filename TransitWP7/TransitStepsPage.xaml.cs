@@ -17,19 +17,21 @@ namespace TransitWP7
 
     public partial class TransitStepsPage : PhoneApplicationPage
     {
-        private TransitDescription transitDesc;
-
         public TransitStepsPage()
         {
             InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
 
             this.ShowTransitStepList();
         }
 
-        // 
         private void ShowTransitStepList()
         {
-            this.resultsList.ItemsSource = transitDesc.ItinerarySteps;
+            this.resultsList.ItemsSource = TransitRequestContext.Current.SelectedTransitTrip.ItinerarySteps;
         }
     }
 }

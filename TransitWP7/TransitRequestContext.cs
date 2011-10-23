@@ -22,7 +22,9 @@ namespace TransitWP7
         public DateTime DateTime { get; set; }
         public TimeCondition TimeType { get; set; }
 
-        //public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
+        public TransitDescription SelectedTransitTrip { get; set; }
+
+        public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
         //public ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
         //public ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
     }

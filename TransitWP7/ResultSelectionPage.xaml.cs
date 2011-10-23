@@ -47,6 +47,12 @@ namespace TransitWP7
             {
                 throw new Exception("should never be here");
             }
+
+            //TODO: fix this hack that auto-select if only one item
+            if (this.resultSet.Count == 1)
+            {
+                this.resultsList.SelectedIndex = 0;
+            }
         }
 
         private void resultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

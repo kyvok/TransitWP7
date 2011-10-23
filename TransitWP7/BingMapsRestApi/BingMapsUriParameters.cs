@@ -332,7 +332,7 @@ namespace TransitWP7.BingMapsRestApi
     {
         Arrival,
         Departure, //default
-        LastArrivalTime
+        LastAvailable
     }
 
     public enum AvoidType

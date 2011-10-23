@@ -48,7 +48,7 @@
         </StackPanel>
 
         <!-- Swap button -->
-        <Button Height="70" HorizontalAlignment="Left" Margin="410,205,0,12" Name="swapText" VerticalAlignment="Top" Width="70" Click="swapText_Click">
+        <Button Height="70" BorderThickness="0" HorizontalAlignment="Left" Margin="410,205,0,12" Name="swapText" VerticalAlignment="Top" Width="70" Click="swapText_Click">
             <Button.Background>
                 <ImageBrush ImageSource="Images/swap_lo.png" Stretch="Fill">
                     <ImageBrush.Transform>
@@ -60,11 +60,11 @@
 
         <!-- Time selection zone -->
         <StackPanel Margin="12,390,12,0">
-            <toolkit:ListPicker SelectedIndex="0" SelectionChanged="ListPicker_SelectionChanged" Margin="70,0,12,9">
-                <toolkit:ListPickerItem Content="Departing now" />
-                <toolkit:ListPickerItem Content="Departing at" />
-                <toolkit:ListPickerItem Content="Arriving at" />
-                <toolkit:ListPickerItem Content="Last arrival time for today" />
+            <toolkit:ListPicker SelectedIndex="0" SelectionChanged="ListPicker_SelectionChanged" VerticalContentAlignment="Center" Margin="70,0,12,0">
+                <toolkit:ListPickerItem Content="Departing now" VerticalContentAlignment="Center" />
+                <toolkit:ListPickerItem Content="Departing at" VerticalContentAlignment="Center" />
+                <toolkit:ListPickerItem Content="Arriving at" VerticalContentAlignment="Center" />
+                <toolkit:ListPickerItem Content="Last arrival time for today" VerticalContentAlignment="Center" />
             </toolkit:ListPicker>
             <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
                 <TextBlock Text="Date" VerticalAlignment="Center"/>

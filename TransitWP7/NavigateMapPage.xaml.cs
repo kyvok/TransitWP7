@@ -27,10 +27,6 @@ namespace TransitWP7
             // set the credentials correctly
             ApplicationIdCredentialsProvider credProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.CredentialsProvider = credProvider;
-
-            // TODO: figure out how to do this in xaml
-            // this.mainMap.Width = this.LayoutRoot.ColumnDefinitions[0].ActualWidth;
-            // this.mainMap.Height = this.LayoutRoot.RowDefinitions[0].ActualHeight;
         }
 
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
@@ -43,18 +39,26 @@ namespace TransitWP7
         {
             base.OnNavigatedTo(e);
 
-            TransitDescription description = (TransitDescription)PhoneApplicationService.Current.State["transitToDisplay"];
+            TransitDescription description = TransitRequestContext.Current.SelectedTransitTrip;
 
             startLocPushpin.Location = description.StartLocation;
             startLocPushpin.Content = "Start!";
             endLocPushpin.Location = description.EndLocation;
             endLocPushpin.Content = "End!";
 
-            PhoneApplicationService.Current.State.Remove("transitToDisplay");
-
             foreach (var step in description.ItinerarySteps)
             {
-                mainMap.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = step.Instruction });
+                string instructContent = string.Empty;
+                if (step.IconType != "")
+                {
+                    instructContent = step.IconType.Substring(0, 1);
+                    if (step.IconType.StartsWith("B"))
+                    {
+                        instructContent += step.BusNumber;
+                    }
+                }
+
+                mainMap.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = instructContent });
             }
 
             routePath.Locations.Clear();
@@ -120,6 +124,11 @@ namespace TransitWP7
         {
             // Recenter the map on current user location and preserve the zoom level
             this.mainMap.SetView(this.currentLocation, mainMap.ZoomLevel);
+        }
+
+        private void TransitDirectionListMenuItem_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/TransitStepsPage.xaml", UriKind.Relative));
         }
     }
 }

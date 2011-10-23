@@ -1,6 +1,5 @@
 ﻿//TODO: copyright info
 
-//TODO: consider prefixing all these types to prevent name collision with maps control?
 namespace TransitWP7.BingMapsRestApi
 {
     using System.Diagnostics;

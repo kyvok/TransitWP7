@@ -32,8 +32,11 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <TextBlock Text="{Binding TravelMode}" FontSize="40" FontStyle="Normal"/>
-                            <TextBlock Text="{Binding Intruction}" FontSize="20" FontStyle="Italic"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding IconType}" FontSize="40" FontStyle="Normal"/>
+                                <TextBlock Text="{Binding BusNumber}" FontSize="40" FontStyle="Normal"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding Instruction}" FontSize="20" FontStyle="Italic"/>
                             <!-- Need to put some thought in the information we show here. -->
                             <!--
                             <TextBlock Text="{Binding DepartsAt}" FontSize="20" FontStyle="Italic"/>
