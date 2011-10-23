@@ -369,14 +369,30 @@ namespace TransitWP7
 
         private void DatePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
         {
-            TransitRequestContext.Current.DateTime = e.NewDateTime.Value;
-            MessageBox.Show(TransitRequestContext.Current.DateTime.ToString());
+            DateTime baseTime = TransitRequestContext.Current.DateTime;
+            DateTime composingTime = e.NewDateTime.Value;
+
+            TransitRequestContext.Current.DateTime = new DateTime(
+                composingTime.Year,
+                composingTime.Month,
+                composingTime.Day,
+                baseTime.Hour,
+                baseTime.Minute,
+                baseTime.Second);
         }
 
         private void TimePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
         {
-            TransitRequestContext.Current.DateTime = e.NewDateTime.Value;
-            MessageBox.Show(TransitRequestContext.Current.DateTime.ToString());
+            DateTime baseTime = TransitRequestContext.Current.DateTime;
+            DateTime composingTime = e.NewDateTime.Value;
+
+            TransitRequestContext.Current.DateTime = new DateTime(
+                baseTime.Year,
+                baseTime.Month,
+                baseTime.Day,
+                composingTime.Hour,
+                composingTime.Minute,
+                composingTime.Second);
         }
 
         private void ListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -392,27 +408,36 @@ namespace TransitWP7
                         dateTimeStackPanel.Visibility = System.Windows.Visibility.Collapsed;
                         break;
                     case 1:
+                        this.EnsureDateTimeSyncInContext();
                         TransitRequestContext.Current.TimeType = TimeCondition.DepartingAt;
                         dateTimeStackPanel.Visibility = System.Windows.Visibility.Visible;
-                        dateStackPanel.Visibility = System.Windows.Visibility.Visible;
-                        timeStackPanel.Visibility = System.Windows.Visibility.Visible;
                         break;
                     case 2:
+                        this.EnsureDateTimeSyncInContext();
                         TransitRequestContext.Current.TimeType = TimeCondition.ArrivingAt;
                         dateTimeStackPanel.Visibility = System.Windows.Visibility.Visible;
-                        dateStackPanel.Visibility = System.Windows.Visibility.Visible;
-                        timeStackPanel.Visibility = System.Windows.Visibility.Visible;
                         break;
                     case 3:
+                        TransitRequestContext.Current.DateTime = DateTime.Now;
                         TransitRequestContext.Current.TimeType = TimeCondition.LastArrivalTime;
-                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Visible;
-                        dateStackPanel.Visibility = System.Windows.Visibility.Visible;
-                        timeStackPanel.Visibility = System.Windows.Visibility.Collapsed;
+                        dateTimeStackPanel.Visibility = System.Windows.Visibility.Collapsed;
                         break;
                     default:
                         break;
                 }
             }
+        }
+
+        private void EnsureDateTimeSyncInContext()
+        {
+            TransitRequestContext.Current.DateTime = new DateTime(
+                datePicker.Value.Value.Year,
+                datePicker.Value.Value.Month,
+                datePicker.Value.Value.Day,
+                timePicker.Value.Value.Hour,
+                timePicker.Value.Value.Minute,
+                timePicker.Value.Value.Second
+                );
         }
     }
 }

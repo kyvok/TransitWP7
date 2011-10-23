@@ -67,23 +67,18 @@
                     <toolkit:ListPickerItem Content="Departing now" />
                     <toolkit:ListPickerItem Content="Departing at" />
                     <toolkit:ListPickerItem Content="Arriving at" />
-                    <toolkit:ListPickerItem Content="Last arrival time" />
+                    <toolkit:ListPickerItem Content="Last arrival time for today" />
                 </toolkit:ListPicker>
                 <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
-                    <StackPanel Name="dateStackPanel" Orientation="Horizontal" Visibility="Collapsed">
-                        <TextBlock Text="Date" VerticalAlignment="Center"/>
-                        <toolkit:DatePicker ValueChanged="DatePicker_ValueChanged" />
-                    </StackPanel>
-                    <StackPanel Name="timeStackPanel" Orientation="Horizontal" Visibility="Collapsed">
-                        <TextBlock Text="Time" VerticalAlignment="Center" />
-                        <toolkit:TimePicker ValueChanged="TimePicker_ValueChanged" />
-                    </StackPanel>
+                    <TextBlock Text="Date" VerticalAlignment="Center"/>
+                    <toolkit:DatePicker Name="datePicker" ValueChanged="DatePicker_ValueChanged" />
+                    <TextBlock Text="Time" VerticalAlignment="Center" />
+                    <toolkit:TimePicker Name="timePicker" ValueChanged="TimePicker_ValueChanged" />
                 </StackPanel>
             </StackPanel>
 
             <!-- Calculate transit button -->
-            <Button Content="Trans It!" Height="72" HorizontalAlignment="Left" Margin="6,573,0,0" Name="navigateButton" VerticalAlignment="Top" Width="450" Click="navigateButton_Click" IsEnabled="{Binding ElementName=EnableTransitButton}"/>
-
+            <Button Content="Trans It!" Height="72" HorizontalAlignment="Stretch" Name="navigateButton" VerticalAlignment="Bottom" Click="navigateButton_Click"/>
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>

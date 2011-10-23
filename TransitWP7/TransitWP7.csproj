@@ -111,6 +111,9 @@
     <Compile Include="SelectMapLocation.xaml.cs">
       <DependentUpon>SelectMapLocation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TransitStepsPage.xaml.cs">
+      <DependentUpon>TransitStepsPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -142,6 +145,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TransitStepsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
