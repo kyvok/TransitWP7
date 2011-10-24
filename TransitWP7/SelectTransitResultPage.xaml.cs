@@ -9,7 +9,6 @@ namespace TransitWP7
     using System.Windows;
     using System.Windows.Controls;
     using Microsoft.Phone.Controls;
-    using Microsoft.Phone.Shell;
 
     public partial class SelectTransitResultPage : PhoneApplicationPage
     {
@@ -26,6 +25,7 @@ namespace TransitWP7
 
             if (TransitRequestContext.Current.TransitDescriptionCollection.Count > 0)
             {
+                this.DisplayTransitTripSummaries();
             }
             else
             {
@@ -56,7 +56,9 @@ namespace TransitWP7
             {
                 Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    this.TempMessage.Text = "Error occured in query. Retry.";
+                    this.TempMessage.Text = "";
+                    //TODO: better error message
+                    MessageBox.Show(result.Error.Message);
                 });
             }
         }

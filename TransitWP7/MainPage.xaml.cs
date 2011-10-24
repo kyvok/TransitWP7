@@ -20,7 +20,6 @@ namespace TransitWP7
         private Brush endAddressColorOnFocus = null;
 
         private string currentAddress = "";
-        private GeoLocation currentLocation = null;
         private string currentConfidence = "";
 
         public MainPage()
@@ -112,6 +111,11 @@ namespace TransitWP7
         private void navigateButton_Click(object sender, RoutedEventArgs e)
         {
             this.theProgressBar.Visibility = Visibility.Visible;
+
+            //remove old result, we are starting a new search!
+            TransitRequestContext.Current.SelectedTransitTrip = null;
+            TransitRequestContext.Current.TransitDescriptionCollection.Clear();
+
             // call the old verify address
             this.verifyAddress_Click(sender, e);
         }

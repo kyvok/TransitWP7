@@ -7,8 +7,6 @@ namespace TransitWP7
     using System.Windows.Media;
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Controls.Maps;
-    using Microsoft.Phone.Shell;
-    using System.Windows;
 
     public partial class NavigateMapPage : PhoneApplicationPage
     {
@@ -62,12 +60,12 @@ namespace TransitWP7
             }
 
             routePath.Locations.Clear();
-            foreach (var gc in description.GetMapPolyline().Locations)
+            foreach (var pathPoint in description.PathPoints)
             {
-                routePath.Locations.Add(gc);
+                routePath.Locations.Add(pathPoint);
             }
 
-            mainMap.SetView(description.GetMapView());
+            mainMap.SetView(description.MapView);
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
