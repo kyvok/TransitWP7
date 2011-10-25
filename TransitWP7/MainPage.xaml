@@ -20,16 +20,17 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
 
-        <StackPanel x:Name="TitlePanel" Margin="12,17,0,28">
+        <StackPanel x:Name="TopPanel">
             <!-- consider the performance progress bar from toolkit-->
             <!--
             <toolkit:PerformanceProgressBar ActualIsIndeterminate="True" IsIndeterminate="True" Visibility="Visible" Width="280" Height="30"/>
             -->
-            <ProgressBar Name="theProgressBar" IsIndeterminate="True" Visibility="Visible"/>
+            <ProgressBar Name="theProgressBar" IsIndeterminate="True" Visibility="Collapsed"/>
+            <!-- Advertisement control -->
+            <msad:AdControl AdUnitId="Image480_80" ApplicationId="test_client" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" Width="480" Margin="0,0,0,0" />
         </StackPanel>
 
-        <!-- Advertisement control -->
-        <msad:AdControl AdUnitId="Image480_80" ApplicationId="test_client" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" Width="480" Margin="0,0,0,0" />
+        
         
         <!-- Location panels -->
         <StackPanel Margin="12,150,12,0">
