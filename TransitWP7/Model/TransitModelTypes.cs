@@ -84,6 +84,7 @@ namespace TransitWP7
             this.PostalCode = result.Address.PostalCode;
             this.Address = result.Address.FormattedAddress;
             this.Confidence = result.Confidence.ToString();
+            this.StateOrProvince = result.Address.AdminDistrict;
         }
 
         public LocationDescription(PhonebookResult result)
@@ -98,6 +99,7 @@ namespace TransitWP7
                         result.StateOrProvince,
                         result.PostalCode);
             this.Confidence = "High";
+            this.StateOrProvince = result.StateOrProvince;
         }
 
         public string DisplayName { get; set; }
@@ -105,6 +107,7 @@ namespace TransitWP7
         public string PostalCode { get; set; }
         public string Address { get; set; }
         public string Confidence { get; set; }
+        public string StateOrProvince { get; set; }
     }
 
     public enum TimeCondition

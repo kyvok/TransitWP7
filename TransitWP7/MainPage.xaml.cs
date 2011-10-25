@@ -61,6 +61,10 @@ namespace TransitWP7
                 this.currentConfidence = locationDesc.Confidence;
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
+                    ImageBrush image = new ImageBrush();
+                    image.ImageSource = (ImageSource)new ImageSourceConverter().ConvertFromString(LocationImage.GetImagePath(locationDesc.StateOrProvince));
+                    this.LayoutRoot.Background = image;
+
                     if (this.startingInput.Text == Globals.MyCurrentLocationText)
                     {
                         switch (this.currentConfidence)
