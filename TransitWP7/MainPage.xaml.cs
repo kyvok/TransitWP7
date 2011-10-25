@@ -182,7 +182,16 @@ namespace TransitWP7
             }
             else
             {
-                this.endAddress.Text = "";
+                // use empty as current location
+                if (this.endingInput.Text == "")
+                {
+                    this.endingInput.Text = Globals.MyCurrentLocationText;
+                    this.endAddress.Text = String.Format("Address: {0}", this.currentAddress);
+                }
+                else
+                {
+                    this.endAddress.Text = "";
+                }
                 TransitRequestContext.Current.EndName = this.endingInput.Text;
                 TransitRequestContext.Current.EndAddress = this.endAddress.Text;
             }
