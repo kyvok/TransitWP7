@@ -30,7 +30,7 @@ namespace TransitWP7.BingSearchRestApi
                 Latitude = userLocation.Latitude,
                 Longitude = userLocation.Longitude,
                 Radius = 80,
-                Count = 10,
+                Count = 20,
                 SortBy = PhonebookSortOption.Distance,
                 Sources = new SourceType[] { SourceType.PhoneBook },
                 AppId = ApiKeys.BingSearchKey

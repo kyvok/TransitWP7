@@ -39,6 +39,24 @@ namespace TransitWP7
             this.endingInput.Focus();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            // determine if I came from the result selection page
+            if ((bool)PhoneApplicationService.Current.State.ContainsKey("isFromResultSelection"))
+            {
+                PhoneApplicationService.Current.State.Remove("isFromResultSelection");
+                this.ReturnFromResultSelection((bool)PhoneApplicationService.Current.State["isStartResult"]);
+
+                if ((bool)PhoneApplicationService.Current.State.ContainsKey("resolveEndingLater"))
+                {
+                    PhoneApplicationService.Current.State.Remove("resolveEndingLater");
+                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.Current.UserLocation, EndingCallbackForBingApiQuery, null);
+                }
+            }
+        }
+
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
@@ -115,6 +133,8 @@ namespace TransitWP7
             //remove old result, we are starting a new search!
             TransitRequestContext.Current.SelectedTransitTrip = null;
             TransitRequestContext.Current.TransitDescriptionCollection.Clear();
+            TransitRequestContext.Current.StartingLocationDescriptionCollection.Clear();
+            TransitRequestContext.Current.EndingLocationDescriptionCollection.Clear();
 
             // call the old verify address
             this.verifyAddress_Click(sender, e);
@@ -122,9 +142,9 @@ namespace TransitWP7
 
         private void startingInput_GotFocus(object sender, RoutedEventArgs e)
         {
-            //select all text
-            this.startingInput.SelectionStart = 0;
-            this.startingInput.SelectionLength = this.startingInput.Text.Length;
+            var inputBox = sender as TextBox;
+            inputBox.SelectionStart = 0;
+            inputBox.SelectionLength = inputBox.Text.Length;
 
             // save the old text if we got focus
             this.startLocationOnFocus = this.startingInput.Text;
@@ -132,6 +152,20 @@ namespace TransitWP7
             // grey out the address
             this.startAddressColorOnFocus = this.startAddress.Foreground;
             this.startAddress.Foreground = new SolidColorBrush(Colors.Gray);
+        }
+
+        private void endingInput_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var inputBox = sender as TextBox;
+            inputBox.SelectionStart = 0;
+            inputBox.SelectionLength = inputBox.Text.Length;
+
+            // save the old text if we got focus
+            this.endLocationOnFocus = this.endingInput.Text;
+
+            // grey out the address
+            this.endAddressColorOnFocus = this.endAddress.Foreground;
+            this.endAddress.Foreground = new SolidColorBrush(Colors.Gray);
         }
 
         private void startingInput_LostFocus(object sender, RoutedEventArgs e)
@@ -157,20 +191,6 @@ namespace TransitWP7
                 TransitRequestContext.Current.StartName = this.startingInput.Text;
                 TransitRequestContext.Current.StartAddress = this.startAddress.Text;
             }
-        }
-
-        private void endingInput_GotFocus(object sender, RoutedEventArgs e)
-        {
-            //select all text
-            this.endingInput.SelectionStart = 0;
-            this.endingInput.SelectionLength = this.endingInput.Text.Length;
-
-            // save the old text if we got focus
-            this.endLocationOnFocus = this.endingInput.Text;
-
-            // grey out the address
-            this.endAddressColorOnFocus = this.endAddress.Foreground;
-            this.endAddress.Foreground = new SolidColorBrush(Colors.Gray);
         }
 
         private void endingInput_LostFocus(object sender, RoutedEventArgs e)
@@ -222,7 +242,7 @@ namespace TransitWP7
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
                     this.startingInput.Focus();
-                    MessageBox.Show("Could not find start location");
+                    MessageBox.Show(result.Error.Message);
                 });
             }
             else
@@ -234,9 +254,28 @@ namespace TransitWP7
             }
         }
 
+        private void EndingCallbackForBingApiQuery(ProxyQueryResult result)
+        {
+            if (result.Error != null)
+            {
+                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    this.endingInput.Focus();
+                    MessageBox.Show(result.Error.Message);
+                });
+            }
+            else
+            {
+                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    UIEndingCallbackForBingApiQuery(result);
+                });
+            }
+        }
+
         private void UIStartingCallbackForBingApiQuery(ProxyQueryResult result)
         {
-            // this is an ending result
+            // this is a starting result
             PhoneApplicationService.Current.State["isStartResult"] = true;
 
             // save the query name for later
@@ -251,7 +290,7 @@ namespace TransitWP7
             else
             {
                 this.startingInput.Focus();
-                MessageBox.Show("Could not find start location");
+                MessageBox.Show(result.Error.Message);
             }
         }
 
@@ -272,25 +311,7 @@ namespace TransitWP7
             else
             {
                 this.endingInput.Focus();
-                MessageBox.Show("Could not find end location");
-            }
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-
-            // determine if I came from the result selection page
-            if ((bool)PhoneApplicationService.Current.State.ContainsKey("isFromResultSelection"))
-            {
-                PhoneApplicationService.Current.State.Remove("isFromResultSelection");
-                this.ReturnFromResultSelection((bool)PhoneApplicationService.Current.State["isStartResult"]);
-
-                if ((bool)PhoneApplicationService.Current.State.ContainsKey("resolveEndingLater"))
-                {
-                    PhoneApplicationService.Current.State.Remove("resolveEndingLater");
-                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.Current.UserLocation, EndingCallbackForBingApiQuery, null);
-                }
+                MessageBox.Show(result.Error.Message);
             }
         }
 
@@ -322,25 +343,6 @@ namespace TransitWP7
                 //HACK: replace this with an actual container object later
                 TransitRequestContext.Current.StartLocation = TransitRequestContext.Current.StartLocation == null ? TransitRequestContext.Current.UserLocation : TransitRequestContext.Current.StartLocation;
                 NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
-            }
-        }
-
-        private void EndingCallbackForBingApiQuery(ProxyQueryResult result)
-        {
-            if (result.Error != null)
-            {
-                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    this.endingInput.Focus();
-                    MessageBox.Show("Could not find end location");
-                });
-            }
-            else
-            {
-                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    UIEndingCallbackForBingApiQuery(result);
-                });
             }
         }
 

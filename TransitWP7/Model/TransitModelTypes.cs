@@ -10,6 +10,8 @@ namespace TransitWP7
 
     public class TransitDescription
     {
+        public TransitDescription() { }
+
         public TransitDescription(Route route)
         {
             this.StartLocation = route.RouteLegs[0].ActualStart.AsGeoCoordinate();
@@ -46,6 +48,8 @@ namespace TransitWP7
 
     public class ItineraryStep
     {
+        public ItineraryStep() { }
+
         public ItineraryStep(ItineraryItem item)
         {
             this.GeoCoordinate = item.ManeuverPoint.AsGeoCoordinate();
@@ -77,6 +81,8 @@ namespace TransitWP7
 
     public class LocationDescription
     {
+        public LocationDescription() { }
+
         public LocationDescription(Location result)
         {
             this.DisplayName = result.Name;

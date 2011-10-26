@@ -25,6 +25,7 @@
             <!--
             <toolkit:PerformanceProgressBar ActualIsIndeterminate="True" IsIndeterminate="True" Visibility="Visible" Width="280" Height="30"/>
             -->
+            <!-- consider ProgressIndicator http://msdn.microsoft.com/en-us/library/microsoft.phone.shell.systemtray.progressindicator(v=VS.92).aspx -->
             <ProgressBar Name="theProgressBar" IsIndeterminate="True" Visibility="Visible"/>
         </StackPanel>
 

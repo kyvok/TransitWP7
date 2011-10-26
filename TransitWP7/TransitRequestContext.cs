@@ -5,7 +5,6 @@ namespace TransitWP7
     using System;
     using System.Collections.ObjectModel;
     using System.Device.Location;
-    using System.Xml.Serialization;
 
     public class TransitRequestContext
     {
@@ -21,14 +20,12 @@ namespace TransitWP7
         public DateTime DateTime { get; set; }
         public TimeCondition TimeType { get; set; }
 
-        [XmlIgnore]
-        [System.Runtime.Serialization.DataMember(IsRequired=false)]
         public TransitDescription SelectedTransitTrip { get; set; }
+        public LocationDescription SelectedStartingLocation { get; set; }
+        public LocationDescription SelectedEndingLocation { get; set; }
 
-        [XmlIgnore]
-        [System.Runtime.Serialization.DataMember(IsRequired = false)]
         public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
-        //public ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
-        //public ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
+        public ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
+        public ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
     }
 }
