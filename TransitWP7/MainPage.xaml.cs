@@ -364,10 +364,6 @@ namespace TransitWP7
                 this.endingInput.Focus();
                 MessageBox.Show(result.Error.Message);
             }
-            else
-            {
-                this.navigateButton.IsEnabled = true;
-            }
         }
 
         private void ReturnFromResultSelection(bool isStartResult)

@@ -80,6 +80,9 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="LocationImage.cs" />
+    <Compile Include="Model\TimeCondition.cs" />
+    <Compile Include="Model\ItineraryStep.cs" />
+    <Compile Include="Model\LocationDescription.cs" />
     <Compile Include="PersistedInfo.cs" />
     <Compile Include="Model\ProxyQuery.cs" />
     <Compile Include="SelectTransitResultPage.xaml.cs">
@@ -88,9 +91,9 @@
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\TransitModelTypes.cs" />
-    <Compile Include="TransitRequestContext.cs" />
-    <Compile Include="BingMapsExtensionMethods.cs" />
+    <Compile Include="Model\TransitDescription.cs" />
+    <Compile Include="Model\TransitRequestContext.cs" />
+    <Compile Include="Model\BingMapsExtensionMethods.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQuery.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQueryAsyncCallback.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQueryResult.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="TransitStepsPage.xaml.cs">
       <DependentUpon>TransitStepsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\MainPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
