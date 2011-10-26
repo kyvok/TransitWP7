@@ -9,6 +9,7 @@ namespace TransitWP7
     using System.Windows;
     using System.Windows.Controls;
     using Microsoft.Phone.Controls;
+    using System.Windows.Media.Imaging;
 
     public partial class SelectTransitResultPage : PhoneApplicationPage
     {
@@ -69,16 +70,34 @@ namespace TransitWP7
 
             foreach (var transitOption in TransitRequestContext.Current.TransitDescriptionCollection)
             {
+                SummaryTransitData atd = new SummaryTransitData();
                 bool isWalk = false;
-                var atd = new SummaryTransitData();
-                foreach (var item in transitOption.ItinerarySteps)
+                for (int x = 0; x < transitOption.ItinerarySteps.Count; x++)
                 {
+                    bool lastStep = (x == (transitOption.ItinerarySteps.Count - 1) ? true : false);
+                    ItineraryStep item = transitOption.ItinerarySteps[x];
                     if (item.IconType != "")
                     {
-                        atd.Steps += isWalk && item.IconType.StartsWith("W") ? "" : (atd.Steps == string.Empty ? "" : "->") + item.IconType.Substring(0, 1);
-                        if (item.IconType.StartsWith("B"))
+                        if(item.IconType.StartsWith("W"))
                         {
-                            atd.Steps += item.BusNumber;
+                            if (!isWalk)
+                            {
+                                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                                {
+                                    Image img = new Image();
+                                    img.Source = new BitmapImage(new Uri("images/walk_lo.png", UriKind.Relative));
+                                    atd.Steps.Add(new TransitStep( lastStep ? "" : "->", img));
+                                });
+                            }
+                        }
+                        else if (item.IconType.StartsWith("B"))
+                        {
+                            Deployment.Current.Dispatcher.BeginInvoke(() =>
+                            {
+                                Image img = new Image();
+                                img.Source = new BitmapImage(new Uri("images/bus_lo.png", UriKind.Relative));
+                                atd.Steps.Add(new TransitStep(item.BusNumber + (lastStep ? "" : "->"), img));
+                            });
                         }
                         isWalk = item.TravelMode.StartsWith("W") ? true : false;
                     }
@@ -109,12 +128,24 @@ namespace TransitWP7
     {
         public SummaryTransitData()
         {
-            this.Steps = string.Empty;
+            this.Steps = new List<TransitStep>();
         }
 
-        public string Steps { get; set; }
+        public List<TransitStep> Steps { get; set; }
         public string Duration { get; set; }
         public string DepartsAt { get; set; }
         public string ArrivesAt { get; set; }
+    }
+
+    public class TransitStep
+    {
+        public TransitStep(string str, Image image)
+        {
+            this.Str = str;
+            this.Image = image;
+        }
+
+        public string Str { get; set; }
+        public Image Image { get; set; }
     }
 }

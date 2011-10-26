@@ -12,6 +12,14 @@ namespace TransitWP7
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
 
+    public enum NeedToResolve
+    {
+        None = 0x0,
+        Start = 0x1,
+        End = 0x2,
+        StartAndEnd = 0x3
+    }
+
     public partial class MainPage : PhoneApplicationPage
     {
         private string startLocationOnFocus = null;
@@ -21,6 +29,20 @@ namespace TransitWP7
 
         private string currentAddress = "";
         private string currentConfidence = "";
+
+        public NeedToResolve NeedToResolve
+        {
+            get
+            {
+                int ret = 0;
+                if (this.startAddress.Text == "")
+                    ret |= (int)NeedToResolve.Start;
+                if (this.endAddress.Text == "")
+                    ret |= (int)NeedToResolve.End;
+
+                return (NeedToResolve)ret;
+            }
+        }
 
         public MainPage()
         {
@@ -79,6 +101,10 @@ namespace TransitWP7
                 this.currentConfidence = locationDesc.Confidence;
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
+                    ImageBrush image = new ImageBrush();
+                    image.ImageSource = (ImageSource)new ImageSourceConverter().ConvertFromString(LocationImage.GetImagePath(locationDesc.StateOrProvince));
+                    this.LayoutRoot.Background = image;
+
                     if (this.startingInput.Text == Globals.MyCurrentLocationText)
                     {
                         switch (this.currentConfidence)
@@ -129,6 +155,7 @@ namespace TransitWP7
         private void navigateButton_Click(object sender, RoutedEventArgs e)
         {
             this.theProgressBar.Visibility = Visibility.Visible;
+            this.navigateButton.IsEnabled = false;
 
             //remove old result, we are starting a new search!
             TransitRequestContext.Current.SelectedTransitTrip = null;
@@ -137,7 +164,14 @@ namespace TransitWP7
             TransitRequestContext.Current.EndingLocationDescriptionCollection.Clear();
 
             // call the old verify address
-            this.verifyAddress_Click(sender, e);
+            if (this.NeedToResolve == TransitWP7.NeedToResolve.None)
+            {
+                MoveToTransitSelection();
+            }
+            else
+            {
+                this.verifyAddress_Click(sender, e);
+            }
         }
 
         private void startingInput_GotFocus(object sender, RoutedEventArgs e)
@@ -202,7 +236,16 @@ namespace TransitWP7
             }
             else
             {
-                this.endAddress.Text = "";
+                // use empty as current location
+                if (this.endingInput.Text == "")
+                {
+                    this.endingInput.Text = Globals.MyCurrentLocationText;
+                    this.endAddress.Text = String.Format("Address: {0}", this.currentAddress);
+                }
+                else
+                {
+                    this.endAddress.Text = "";
+                }
                 TransitRequestContext.Current.EndName = this.endingInput.Text;
                 TransitRequestContext.Current.EndAddress = this.endAddress.Text;
             }
@@ -243,6 +286,8 @@ namespace TransitWP7
                 {
                     this.startingInput.Focus();
                     MessageBox.Show(result.Error.Message);
+                    this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
+                    this.navigateButton.IsEnabled = true;
                 });
             }
             else
@@ -260,6 +305,8 @@ namespace TransitWP7
             {
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
+                    this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
+                    this.navigateButton.IsEnabled = true;
                     this.endingInput.Focus();
                     MessageBox.Show(result.Error.Message);
                 });
@@ -289,6 +336,8 @@ namespace TransitWP7
             }
             else
             {
+                this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
+                this.navigateButton.IsEnabled = true;
                 this.startingInput.Focus();
                 MessageBox.Show(result.Error.Message);
             }
@@ -310,22 +359,33 @@ namespace TransitWP7
             }
             else
             {
+                this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
+                this.navigateButton.IsEnabled = true;
                 this.endingInput.Focus();
                 MessageBox.Show(result.Error.Message);
+            }
+            else
+            {
+                this.navigateButton.IsEnabled = true;
             }
         }
 
         private void ReturnFromResultSelection(bool isStartResult)
         {
             LocationDescription result = (LocationDescription)PhoneApplicationService.Current.State["selectedResult"];
+            PhoneApplicationService.Current.State.Remove("isStartResult");
 
             // set some values here
-            if ((bool)PhoneApplicationService.Current.State["isStartResult"] == true)
+            if (isStartResult)
             {
-                TransitRequestContext.Current.StartLocation = result.GeoCoordinate;
-                this.startingInput.Text = result.DisplayName;
-                this.startAddress.Text = result.Address;
-                this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
+                if (this.NeedToResolve == TransitWP7.NeedToResolve.Start)
+                {
+                    TransitRequestContext.Current.StartLocation = result.GeoCoordinate;
+                    this.startingInput.Text = result.DisplayName;
+                    this.startAddress.Text = result.Address;
+                    this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
+                    MoveToTransitSelection();
+                }
             }
             else
             {
@@ -333,17 +393,21 @@ namespace TransitWP7
                 this.endingInput.Text = result.DisplayName;
                 this.endAddress.Text = result.Address;
                 this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
-
-                // stop the progress bar
-                this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
-
-                //remove the old callback
-                GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-
-                //HACK: replace this with an actual container object later
-                TransitRequestContext.Current.StartLocation = TransitRequestContext.Current.StartLocation == null ? TransitRequestContext.Current.UserLocation : TransitRequestContext.Current.StartLocation;
-                NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
+                MoveToTransitSelection();
             }
+        }
+
+        private void MoveToTransitSelection()
+        {
+            // stop the progress bar
+            this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
+
+            //remove the old callback
+            GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+
+            //HACK: replace this with an actual container object later
+            TransitRequestContext.Current.StartLocation = TransitRequestContext.Current.StartLocation == null ? TransitRequestContext.Current.UserLocation : TransitRequestContext.Current.StartLocation;
+            NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)

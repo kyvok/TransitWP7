@@ -32,7 +32,22 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <TextBlock Text="{Binding Steps}" FontSize="40" FontStyle="Normal"/>
+                            <ListBox Name="stepsList" ItemsSource="{Binding Steps}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ContentControl Content="{Binding Image}" Height="32" Width="32"/>
+                                            <TextBlock Text="{Binding Str}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <!--<TextBlock Text="{Binding Steps}" FontSize="40" FontStyle="Normal"/>-->
                             <TextBlock Text="{Binding Duration}" FontSize="20" FontStyle="Italic"/>
                             <TextBlock Text="{Binding DepartsAt}" FontSize="20" FontStyle="Italic"/>
                             <TextBlock Text="{Binding ArrivesAt}" FontSize="20" FontStyle="Italic"/>

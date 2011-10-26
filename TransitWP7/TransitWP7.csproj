@@ -79,6 +79,7 @@
       <DependentUpon>ExceptionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="LocationImage.cs" />
     <Compile Include="PersistedInfo.cs" />
     <Compile Include="Model\ProxyQuery.cs" />
     <Compile Include="SelectTransitResultPage.xaml.cs">
@@ -166,6 +167,7 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\Seattle\seattle000.jpg" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
     <Resource Include="Images\bus_hi.png" />
