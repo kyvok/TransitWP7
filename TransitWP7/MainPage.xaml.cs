@@ -22,6 +22,8 @@ namespace TransitWP7
 
     public partial class MainPage : PhoneApplicationPage
     {
+        private ViewModels.MainPageViewModel viewModel;
+
         private string startLocationOnFocus = null;
         private Brush startAddressColorOnFocus = null;
         private string endLocationOnFocus = null;
@@ -46,24 +48,27 @@ namespace TransitWP7
 
         public MainPage()
         {
-            // TODO: refactor the location stuff
             InitializeComponent();
+            this.viewModel = new ViewModels.MainPageViewModel();
+
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-
-            // restore the last used values
-            this.startAddress.Text = TransitRequestContext.Current.StartAddress;
-            this.startingInput.Text = TransitRequestContext.Current.StartName;
-
-            this.endAddress.Text = TransitRequestContext.Current.EndAddress;
-            this.endingInput.Text = TransitRequestContext.Current.EndName;
-
-            // Go an extra step in usability, auto-select the end location input!
-            this.endingInput.Focus();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
+            // restore the last used values
+            this.startingInput.DataContext = this.viewModel.Context;
+            this.endingInput.DataContext = this.viewModel.Context;
+            this.startAddress.DataContext = this.viewModel.Context;
+            this.endAddress.DataContext = this.viewModel.Context;
+
+            if (e.NavigationMode == NavigationMode.New)
+            {
+                // Go an extra step in usability, auto-select the end location input!
+                this.endingInput.Focus();
+            }
 
             // determine if I came from the result selection page
             if ((bool)PhoneApplicationService.Current.State.ContainsKey("isFromResultSelection"))
@@ -128,16 +133,7 @@ namespace TransitWP7
 
         private void swapText_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Is there an atomic swap?
-            string temp = this.startingInput.Text;
-            this.startingInput.Text = this.endingInput.Text;
-            this.endingInput.Text = temp;
-
-            //swap the addresses text
-            string addressTemp = null;
-            addressTemp = this.startAddress.Text;
-            this.startAddress.Text = this.endAddress.Text;
-            this.endAddress.Text = addressTemp;
+            this.viewModel.SwapEndStartLocations();
 
             //swap the address styles
             Brush brushTemp = null;
@@ -177,8 +173,7 @@ namespace TransitWP7
         private void startingInput_GotFocus(object sender, RoutedEventArgs e)
         {
             var inputBox = sender as TextBox;
-            inputBox.SelectionStart = 0;
-            inputBox.SelectionLength = inputBox.Text.Length;
+            inputBox.SelectAll();
 
             // save the old text if we got focus
             this.startLocationOnFocus = this.startingInput.Text;
@@ -191,8 +186,7 @@ namespace TransitWP7
         private void endingInput_GotFocus(object sender, RoutedEventArgs e)
         {
             var inputBox = sender as TextBox;
-            inputBox.SelectionStart = 0;
-            inputBox.SelectionLength = inputBox.Text.Length;
+            inputBox.SelectAll();
 
             // save the old text if we got focus
             this.endLocationOnFocus = this.endingInput.Text;
@@ -221,9 +215,6 @@ namespace TransitWP7
                 {
                     this.startAddress.Text = "";
                 }
-
-                TransitRequestContext.Current.StartName = this.startingInput.Text;
-                TransitRequestContext.Current.StartAddress = this.startAddress.Text;
             }
         }
 
@@ -246,8 +237,6 @@ namespace TransitWP7
                 {
                     this.endAddress.Text = "";
                 }
-                TransitRequestContext.Current.EndName = this.endingInput.Text;
-                TransitRequestContext.Current.EndAddress = this.endAddress.Text;
             }
         }
 

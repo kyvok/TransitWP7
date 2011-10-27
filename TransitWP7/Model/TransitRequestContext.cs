@@ -19,6 +19,7 @@ namespace TransitWP7
         private DateTime dateTime;
         private TimeCondition timeType;
         private TransitDescription selectedTransitTrip;
+        private LocationDescription userCurrentLocation;
         private LocationDescription selectedStartingLocation;
         private LocationDescription selectedEndingLocation;
 
@@ -214,6 +215,22 @@ namespace TransitWP7
                 {
                     this.selectedEndingLocation = value;
                     this.RaisePropertyChanged("SelectedEndingLocation");
+                }
+            }
+        }
+
+        public LocationDescription UserCurrentLocation
+        {
+            get
+            {
+                return this.userCurrentLocation;
+            }
+            set
+            {
+                if (value != this.userCurrentLocation)
+                {
+                    this.userCurrentLocation = value;
+                    this.RaisePropertyChanged("UserCurrentLocation");
                 }
             }
         }

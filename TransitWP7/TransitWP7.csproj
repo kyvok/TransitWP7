@@ -171,7 +171,7 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Images\Seattle\seattle000.jpg" />
+    <Resource Include="Images\Seattle\seattle000--.jpg" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
     <Resource Include="Images\bus_hi.png" />
