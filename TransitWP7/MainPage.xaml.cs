@@ -51,18 +51,14 @@ namespace TransitWP7
             InitializeComponent();
             this.viewModel = new ViewModels.MainPageViewModel();
 
+            this.DataContext = this.viewModel.Context;
+
             GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            // restore the last used values
-            this.startingInput.DataContext = this.viewModel.Context;
-            this.endingInput.DataContext = this.viewModel.Context;
-            this.startAddress.DataContext = this.viewModel.Context;
-            this.endAddress.DataContext = this.viewModel.Context;
 
             if (e.NavigationMode == NavigationMode.New)
             {
@@ -79,7 +75,7 @@ namespace TransitWP7
                 if ((bool)PhoneApplicationService.Current.State.ContainsKey("resolveEndingLater"))
                 {
                     PhoneApplicationService.Current.State.Remove("resolveEndingLater");
-                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.Current.UserLocation, EndingCallbackForBingApiQuery, null);
+                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.Current.UserGeoCoordinate, EndingCallbackForBingApiQuery, null);
                 }
             }
         }
@@ -87,10 +83,10 @@ namespace TransitWP7
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            TransitRequestContext.Current.UserLocation = e.Position.Location;
+            TransitRequestContext.Current.UserGeoCoordinate = e.Position.Location;
 
             // Poll bing maps about the location
-            ProxyQuery.GetLocationAddress(TransitRequestContext.Current.UserLocation, LocationCallback, null);
+            ProxyQuery.GetLocationAddress(TransitRequestContext.Current.UserGeoCoordinate, LocationCallback, null);
         }
 
         private void LocationCallback(ProxyQueryResult result)
@@ -143,9 +139,9 @@ namespace TransitWP7
 
             //swap the GPS locations
             GeoCoordinate locationTemp = null;
-            locationTemp = TransitRequestContext.Current.StartLocation;
-            TransitRequestContext.Current.StartLocation = TransitRequestContext.Current.EndLocation;
-            TransitRequestContext.Current.EndLocation = locationTemp;
+            locationTemp = TransitRequestContext.Current.StartGeoCoordinate;
+            TransitRequestContext.Current.StartGeoCoordinate = TransitRequestContext.Current.EndGeoCoordinate;
+            TransitRequestContext.Current.EndGeoCoordinate = locationTemp;
         }
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
@@ -248,7 +244,7 @@ namespace TransitWP7
             // resolve the starting address if necessary
             if (this.startAddress.Text == "")
             {
-                ProxyQuery.GetLocationsAndBusiness(this.startingInput.Text, TransitRequestContext.Current.UserLocation, StartingCallbackForBingApiQuery, null);
+                ProxyQuery.GetLocationsAndBusiness(this.startingInput.Text, TransitRequestContext.Current.UserGeoCoordinate, StartingCallbackForBingApiQuery, null);
 
                 resolveEndLocationLater = true;
             }
@@ -258,7 +254,7 @@ namespace TransitWP7
             {
                 if (resolveEndLocationLater == false)
                 {
-                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.Current.UserLocation, EndingCallbackForBingApiQuery, null);
+                    ProxyQuery.GetLocationsAndBusiness(this.endingInput.Text, TransitRequestContext.Current.UserGeoCoordinate, EndingCallbackForBingApiQuery, null);
                 }
                 else
                 {
@@ -365,7 +361,7 @@ namespace TransitWP7
             {
                 if (this.NeedToResolve == TransitWP7.NeedToResolve.Start)
                 {
-                    TransitRequestContext.Current.StartLocation = result.GeoCoordinate;
+                    TransitRequestContext.Current.StartGeoCoordinate = result.GeoCoordinate;
                     this.startingInput.Text = result.DisplayName;
                     this.startAddress.Text = result.Address;
                     this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
@@ -374,7 +370,7 @@ namespace TransitWP7
             }
             else
             {
-                TransitRequestContext.Current.EndLocation = result.GeoCoordinate;
+                TransitRequestContext.Current.EndGeoCoordinate = result.GeoCoordinate;
                 this.endingInput.Text = result.DisplayName;
                 this.endAddress.Text = result.Address;
                 this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
@@ -391,8 +387,9 @@ namespace TransitWP7
             GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
 
             //HACK: replace this with an actual container object later
-            TransitRequestContext.Current.StartLocation = TransitRequestContext.Current.StartLocation == null ? TransitRequestContext.Current.UserLocation : TransitRequestContext.Current.StartLocation;
-            NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
+            TransitRequestContext.Current.StartGeoCoordinate = TransitRequestContext.Current.StartGeoCoordinate == null ? TransitRequestContext.Current.UserGeoCoordinate : TransitRequestContext.Current.StartGeoCoordinate;
+            //NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri("/TransitResultsPivotPage.xaml", UriKind.Relative));
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)

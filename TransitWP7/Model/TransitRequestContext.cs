@@ -13,9 +13,9 @@ namespace TransitWP7
         private string startName;
         private string endAddress;
         private string startAddress;
-        private GeoCoordinate userLocation;
-        private GeoCoordinate startLocation;
-        private GeoCoordinate endLocation;
+        private GeoCoordinate userGeoCoordinate;
+        private GeoCoordinate startGeoCoordinate;
+        private GeoCoordinate endGeoCoordinate;
         private DateTime dateTime;
         private TimeCondition timeType;
         private TransitDescription selectedTransitTrip;
@@ -91,50 +91,50 @@ namespace TransitWP7
             }
         }
 
-        public GeoCoordinate UserLocation
+        public GeoCoordinate UserGeoCoordinate
         {
             get
             {
-                return this.userLocation;
+                return this.userGeoCoordinate;
             }
             set
             {
-                if (value != this.userLocation)
+                if (value != this.userGeoCoordinate)
                 {
-                    this.userLocation = value;
-                    this.RaisePropertyChanged("UserLocation");
+                    this.userGeoCoordinate = value;
+                    this.RaisePropertyChanged("UserGeoCoordinate");
                 }
             }
         }
 
-        public GeoCoordinate StartLocation
+        public GeoCoordinate StartGeoCoordinate
         {
             get
             {
-                return this.startLocation;
+                return this.startGeoCoordinate;
             }
             set
             {
-                if (value != this.startLocation)
+                if (value != this.startGeoCoordinate)
                 {
-                    this.startLocation = value;
-                    this.RaisePropertyChanged("StartLocation");
+                    this.startGeoCoordinate = value;
+                    this.RaisePropertyChanged("StartGeoCoordinate");
                 }
             }
         }
 
-        public GeoCoordinate EndLocation
+        public GeoCoordinate EndGeoCoordinate
         {
             get
             {
-                return this.endLocation;
+                return this.endGeoCoordinate;
             }
             set
             {
-                if (value != this.endLocation)
+                if (value != this.endGeoCoordinate)
                 {
-                    this.endLocation = value;
-                    this.RaisePropertyChanged("EndLocation");
+                    this.endGeoCoordinate = value;
+                    this.RaisePropertyChanged("EndGeoCoordinate");
                 }
             }
         }

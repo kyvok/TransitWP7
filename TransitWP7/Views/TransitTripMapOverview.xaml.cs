@@ -1,20 +1,28 @@
-﻿//TODO: copyright info
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
+using System.Device.Location;
+using Microsoft.Phone.Controls.Maps;
 
-namespace TransitWP7
+namespace TransitWP7.Views
 {
-    using System;
-    using System.Device.Location;
-    using System.Windows.Media;
-    using Microsoft.Phone.Controls;
-    using Microsoft.Phone.Controls.Maps;
-
-    public partial class NavigateMapPage : PhoneApplicationPage
+    public partial class TransitTripMapOverview : UserControl
     {
         GeoCoordinate currentLocation = null;
 
-        public NavigateMapPage()
+        public TransitTripMapOverview()
         {
             InitializeComponent();
+
+
             this.currentLocation = GeoLocation.Instance.GeoWatcher.Position.Location;
             this.meIndicator.Location = this.currentLocation;
             this.mainMap.SetView(this.currentLocation, mainMap.ZoomLevel);
@@ -25,18 +33,13 @@ namespace TransitWP7
             // set the credentials correctly
             ApplicationIdCredentialsProvider credProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.CredentialsProvider = credProvider;
+
+
+            TransitRequestContext.Current.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(Current_PropertyChanged);
         }
 
-        protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
+        void Current_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            base.OnNavigatingFrom(e);
-            GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-        }
-
-        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-
             TransitDescription description = TransitRequestContext.Current.SelectedTransitTrip;
 
             foreach (var step in description.ItinerarySteps)
@@ -61,6 +64,17 @@ namespace TransitWP7
             }
 
             mainMap.SetView(description.MapView);
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+        }
+
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            base.OnLostFocus(e);
+            GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
@@ -95,20 +109,20 @@ namespace TransitWP7
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                     {
                         LocationDescription response = result.LocationDescriptions[0];
-                        switch (response.Confidence)
-                        {
-                            case "High":
-                                myLocation.Foreground = new SolidColorBrush(Colors.Green);
-                                break;
-                            case "Medium":
-                                myLocation.Foreground = new SolidColorBrush(Colors.Yellow);
-                                break;
-                            case "Low":
-                                myLocation.Foreground = new SolidColorBrush(Colors.Red);
-                                break;
-                        }
-                        myLocation.Text = String.Format("Current location: {0}",
-                            response.DisplayName);
+                        //switch (response.Confidence)
+                        //{
+                        //    case "High":
+                        //        myLocation.Foreground = new SolidColorBrush(Colors.Green);
+                        //        break;
+                        //    case "Medium":
+                        //        myLocation.Foreground = new SolidColorBrush(Colors.Yellow);
+                        //        break;
+                        //    case "Low":
+                        //        myLocation.Foreground = new SolidColorBrush(Colors.Red);
+                        //        break;
+                        //}
+                        //myLocation.Text = String.Format("Current location: {0}",
+                        //    response.DisplayName);
                     });
             }
         }
@@ -119,9 +133,9 @@ namespace TransitWP7
             this.mainMap.SetView(this.currentLocation, mainMap.ZoomLevel);
         }
 
-        private void TransitDirectionListMenuItem_Click(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/TransitStepsPage.xaml", UriKind.Relative));
-        }
+        //private void TransitDirectionListMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    NavigationService.Navigate(new Uri("/TransitStepsPage.xaml", UriKind.Relative));
+        //}
     }
 }

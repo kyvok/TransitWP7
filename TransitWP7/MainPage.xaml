@@ -60,19 +60,19 @@
             </Button.Background>
         </Button>
 
-        <!-- Time selection zone -->
-        <StackPanel Margin="12,390,12,0">
-            <toolkit:ListPicker SelectedIndex="0" SelectionChanged="ListPicker_SelectionChanged" VerticalContentAlignment="Center" Margin="70,0,12,0">
+        <!-- Time selection picker -->
+        <StackPanel Orientation="Vertical" Margin="12,390,12,0">
+            <toolkit:ListPicker SelectedIndex="0" SelectionChanged="ListPicker_SelectionChanged" VerticalContentAlignment="Center" Margin="70,0,0,0">
                 <toolkit:ListPickerItem Content="Departing now" VerticalContentAlignment="Center" />
                 <toolkit:ListPickerItem Content="Departing at" VerticalContentAlignment="Center" />
                 <toolkit:ListPickerItem Content="Arriving at" VerticalContentAlignment="Center" />
                 <toolkit:ListPickerItem Content="Last arrival time for today" VerticalContentAlignment="Center" />
             </toolkit:ListPicker>
-            <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+            <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Visible">
                 <TextBlock Text="Date" VerticalAlignment="Center"/>
-                <toolkit:DatePicker Name="datePicker" ValueChanged="DatePicker_ValueChanged" />
+                <toolkit:DatePicker Name="datePicker" ValueChanged="DatePicker_ValueChanged"/>
                 <TextBlock Text="Time" VerticalAlignment="Center" />
-                <toolkit:TimePicker Name="timePicker" ValueChanged="TimePicker_ValueChanged" />
+                <toolkit:TimePicker Name="timePicker" ValueChanged="TimePicker_ValueChanged"/>
             </StackPanel>
         </StackPanel>
 
