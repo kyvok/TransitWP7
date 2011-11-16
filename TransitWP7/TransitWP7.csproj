@@ -84,7 +84,6 @@
     <Compile Include="Model\TimeCondition.cs" />
     <Compile Include="Model\ItineraryStep.cs" />
     <Compile Include="Model\LocationDescription.cs" />
-    <Compile Include="PersistedInfo.cs" />
     <Compile Include="Model\ProxyQuery.cs" />
     <Compile Include="SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -177,14 +176,14 @@
     <Resource Include="Images\Seattle\seattle000--.jpg" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
-    <Resource Include="Images\bus_hi.png" />
-    <Resource Include="Images\bus_lo.png" />
-    <Resource Include="Images\rail_hi.png" />
-    <Resource Include="Images\rail_lo.png" />
-    <Resource Include="Images\walk_hi.png" />
-    <Resource Include="Images\walk_lo.png" />
-    <Resource Include="Images\swap_hi.png" />
-    <Resource Include="Images\swap_lo.png" />
+    <Content Include="Images\bus_hi.png" />
+    <Content Include="Images\bus_lo.png" />
+    <Content Include="Images\rail_hi.png" />
+    <Content Include="Images\rail_lo.png" />
+    <Content Include="Images\walk_hi.png" />
+    <Content Include="Images\walk_lo.png" />
+    <Content Include="Images\swap_hi.png" />
+    <Content Include="Images\swap_lo.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup />

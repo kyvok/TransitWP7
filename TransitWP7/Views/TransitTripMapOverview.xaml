@@ -24,6 +24,8 @@
                                 Locations=""
                                 Opacity="0.7" />
             </my:MapLayer>
+            <my:MapLayer x:Name="pushpinStepsLayer">
+            </my:MapLayer>
         </my:Map>
     </Grid>
 </UserControl>

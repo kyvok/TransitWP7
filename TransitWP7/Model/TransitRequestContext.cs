@@ -9,13 +9,7 @@ namespace TransitWP7
 
     public class TransitRequestContext : INotifyPropertyChanged
     {
-        private string endName;
-        private string startName;
-        private string endAddress;
-        private string startAddress;
         private GeoCoordinate userGeoCoordinate;
-        private GeoCoordinate startGeoCoordinate;
-        private GeoCoordinate endGeoCoordinate;
         private DateTime dateTime;
         private TimeCondition timeType;
         private TransitDescription selectedTransitTrip;
@@ -26,70 +20,6 @@ namespace TransitWP7
         public static TransitRequestContext Current = new TransitRequestContext();
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public string EndName
-        {
-            get
-            {
-                return this.endName;
-            }
-            set
-            {
-                if (value != this.endName)
-                {
-                    this.endName = value;
-                    this.RaisePropertyChanged("EndName");
-                }
-            }
-        }
-
-        public string StartName
-        {
-            get
-            {
-                return this.startName;
-            }
-            set
-            {
-                if (value != this.startName)
-                {
-                    this.startName = value;
-                    this.RaisePropertyChanged("StartName");
-                }
-            }
-        }
-
-        public string EndAddress
-        {
-            get
-            {
-                return this.endAddress;
-            }
-            set
-            {
-                if (value != this.endAddress)
-                {
-                    this.endAddress = value;
-                    this.RaisePropertyChanged("EndAddress");
-                }
-            }
-        }
-
-        public string StartAddress
-        {
-            get
-            {
-                return this.startAddress;
-            }
-            set
-            {
-                if (value != this.startAddress)
-                {
-                    this.startAddress = value;
-                    this.RaisePropertyChanged("StartAddress");
-                }
-            }
-        }
 
         public GeoCoordinate UserGeoCoordinate
         {
@@ -103,38 +33,6 @@ namespace TransitWP7
                 {
                     this.userGeoCoordinate = value;
                     this.RaisePropertyChanged("UserGeoCoordinate");
-                }
-            }
-        }
-
-        public GeoCoordinate StartGeoCoordinate
-        {
-            get
-            {
-                return this.startGeoCoordinate;
-            }
-            set
-            {
-                if (value != this.startGeoCoordinate)
-                {
-                    this.startGeoCoordinate = value;
-                    this.RaisePropertyChanged("StartGeoCoordinate");
-                }
-            }
-        }
-
-        public GeoCoordinate EndGeoCoordinate
-        {
-            get
-            {
-                return this.endGeoCoordinate;
-            }
-            set
-            {
-                if (value != this.endGeoCoordinate)
-                {
-                    this.endGeoCoordinate = value;
-                    this.RaisePropertyChanged("EndGeoCoordinate");
                 }
             }
         }

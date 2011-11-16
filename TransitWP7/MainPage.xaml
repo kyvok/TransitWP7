@@ -15,11 +15,15 @@
     xmlns:msad="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:view="clr-namespace:TransitWP7">
-
+    
     <!-- TODO: Switch everything to be formatted nicer by grid -->
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
 
+        <Grid.Resources>
+            <view:ConfidenceToBrushConverter x:Key="confidenceToBrushConverter" />
+        </Grid.Resources>
+        
         <StackPanel x:Name="TopPanel">
             <!-- consider the performance progress bar from toolkit-->
             <!--
@@ -37,16 +41,42 @@
         <StackPanel Margin="12,150,12,0">
             <!-- Start section -->
             <StackPanel Orientation="Horizontal">
-                <TextBlock Height="30" Width="60" TextAlignment="Right" HorizontalAlignment="Left" Text="Start" VerticalAlignment="Center" />
-                <TextBox InputScope="Maps" Height="72" Name="startingInput" Text="{Binding Path=StartName, Mode=TwoWay}" VerticalAlignment="Center" Width="350" GotFocus="startingInput_GotFocus" LostFocus="startingInput_LostFocus" KeyUp="TextBoxKeyUp" />
+                <TextBlock Height="30" Width="60"
+                           Text="Start" TextAlignment="Right"
+                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <TextBox Name="startingInput" 
+                         InputScope="Maps"
+                         Height="72" Width="350"
+                         Text="{Binding Path=StartName, Mode=TwoWay}"
+                         VerticalAlignment="Center"
+                         GotFocus="InputBox_GotFocus"
+                         KeyUp="TextBoxKeyUp" />
             </StackPanel>
-            <TextBlock Height="40" HorizontalAlignment="Left" Name="startAddress" Text="{Binding Path=StartAddress}" VerticalAlignment="Top" Width="330" Margin="70,0,0,0"/>
+            <TextBlock Name="startAddress"
+                       Text="{Binding Path=StartAddress}"
+                       Foreground="{Binding Path=Context.SelectedStartingLocation.Confidence, Converter={StaticResource confidenceToBrushConverter}}"
+                       Height="40" Width="330" 
+                       HorizontalAlignment="Left" VerticalAlignment="Top"
+                       Margin="70,0,0,0"/>
             <!-- End section -->
             <StackPanel Orientation="Horizontal">
-                <TextBlock Height="30" Width="60" TextAlignment="Right" HorizontalAlignment="Left" Text="End" VerticalAlignment="Center" />
-                <TextBox InputScope="Maps" Height="72" Name="endingInput" Text="{Binding Path=EndName, Mode=TwoWay}" VerticalAlignment="Center" Width="350" GotFocus="endingInput_GotFocus" LostFocus="endingInput_LostFocus" KeyUp="TextBoxKeyUp" />
+                <TextBlock Height="30" Width="60"
+                           Text="End" TextAlignment="Right"
+                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <TextBox Name="endingInput"
+                         InputScope="Maps"
+                         Height="72" Width="350"
+                         Text="{Binding Path=EndName, Mode=TwoWay}"
+                         VerticalAlignment="Center"
+                         GotFocus="InputBox_GotFocus"
+                         KeyUp="TextBoxKeyUp" />
             </StackPanel>
-            <TextBlock Height="40" HorizontalAlignment="Left" Name="endAddress" Text="{Binding Path=EndAddress}" VerticalAlignment="Top" Width="330" Margin="70,0,0,0"/>
+            <TextBlock Name="endAddress"
+                       Text="{Binding Path=EndAddress}"
+                       Foreground="{Binding Path=Context.SelectedEndingLocation.Confidence, Converter={StaticResource confidenceToBrushConverter}}"
+                       Height="40" Width="330"
+                       HorizontalAlignment="Left" VerticalAlignment="Top"
+                       Margin="70,0,0,0"/>
         </StackPanel>
 
         <!-- Swap button -->

@@ -40,35 +40,36 @@ namespace TransitWP7.Views
 
         void Current_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            this.routePath.Locations.Clear();
+            this.pushpinStepsLayer.Children.Clear();
+
             TransitDescription description = TransitRequestContext.Current.SelectedTransitTrip;
 
-            foreach (var step in description.ItinerarySteps)
+            if (description != null)
             {
-                string instructContent = string.Empty;
-                if (step.IconType != "")
+                foreach (var step in description.ItinerarySteps)
                 {
-                    instructContent = step.IconType.Substring(0, 1);
-                    if (step.IconType.StartsWith("B"))
+                    string instructContent = string.Empty;
+                    if (step.IconType != "")
                     {
-                        instructContent += step.BusNumber;
+                        instructContent = step.IconType.Substring(0, 1);
+                        if (step.IconType.StartsWith("B"))
+                        {
+                            instructContent += step.BusNumber;
+                        }
                     }
+
+                    this.pushpinStepsLayer.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = instructContent });
                 }
 
-                mainMap.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = instructContent });
+                routePath.Locations.Clear();
+                foreach (var pathPoint in description.PathPoints)
+                {
+                    this.routePath.Locations.Add(pathPoint);
+                }
+
+                this.mainMap.SetView(description.MapView);
             }
-
-            routePath.Locations.Clear();
-            foreach (var pathPoint in description.PathPoints)
-            {
-                routePath.Locations.Add(pathPoint);
-            }
-
-            mainMap.SetView(description.MapView);
-        }
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
         }
 
         protected override void OnLostFocus(RoutedEventArgs e)

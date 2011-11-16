@@ -23,10 +23,5 @@ namespace TransitWP7.Views
             this.viewModel = new TransitTripDirectionsViewModel();
             this.directionsList.DataContext = viewModel.Context;
         }
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-        }
     }
 }

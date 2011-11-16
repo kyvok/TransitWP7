@@ -25,11 +25,6 @@ namespace TransitWP7.Views
             this.DataContext = this.viewModel;
         }
 
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-        }
-
         private void resultsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.viewModel.ApplyTripSelection(this.resultsList.SelectedIndex);

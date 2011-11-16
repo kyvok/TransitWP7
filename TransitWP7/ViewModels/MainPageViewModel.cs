@@ -4,14 +4,22 @@ using System.Globalization;
 using System;
 using System.Device.Location;
 using System.Windows;
+using System.ComponentModel;
 namespace TransitWP7.ViewModels
 {
-    public class MainPageViewModel
+    public class MainPageViewModel : INotifyPropertyChanged
     {
+        private string endName;
+        private string startName;
+        private string endAddress;
+        private string startAddress;
+
         public MainPageViewModel()
         {
-            //GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+            GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public TransitRequestContext Context
         {
@@ -22,63 +30,131 @@ namespace TransitWP7.ViewModels
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
-        //void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
-        //{
-        //    TransitRequestContext.Current.UserLocation = e.Position.Location;
+        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        {
+            TransitRequestContext.Current.UserGeoCoordinate = e.Position.Location;
 
-        //    // Poll bing maps about the location
-        //    ProxyQuery.GetLocationAddress(TransitRequestContext.Current.UserLocation, LocationCallback, null);
-        //}
+            // Poll bing maps about the location
+            ProxyQuery.GetLocationAddress(TransitRequestContext.Current.UserGeoCoordinate, LocationCallback, null);
+        }
 
-        //private void LocationCallback(ProxyQueryResult result)
-        //{
-        //    if (result.Error != null)
-        //    {
-        //        MessageBox.Show(result.Error.Message, "LocationCallback obtained an error!", MessageBoxButton.OK);
-        //    }
-        //    else
-        //    {
-        //        LocationDescription locationDesc = result.LocationDescriptions[0];
-        //        this.currentAddress = locationDesc.DisplayName;
-        //        this.currentConfidence = locationDesc.Confidence;
-        //        System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-        //        {
-        //            ImageBrush image = new ImageBrush();
-        //            image.ImageSource = (ImageSource)new ImageSourceConverter().ConvertFromString(LocationImage.GetImagePath(locationDesc.StateOrProvince));
-        //            this.LayoutRoot.Background = image;
-
-        //            if (this.startingInput.Text == Globals.MyCurrentLocationText)
-        //            {
-        //                switch (this.currentConfidence)
-        //                {
-        //                    case "High":
-        //                        this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
-        //                        break;
-        //                    case "Medium":
-        //                        this.startAddress.Foreground = new SolidColorBrush(Colors.Yellow);
-        //                        break;
-        //                    case "Low":
-        //                        this.startAddress.Foreground = new SolidColorBrush(Colors.Red);
-        //                        break;
-        //                }
-        //                this.startAddress.Text = String.Format("Address: {0}",
-        //                    this.currentAddress);
-        //            }
-        //        });
-        //    }
-        //}
+        private void LocationCallback(ProxyQueryResult result)
+        {
+            if (result.Error != null)
+            {
+                MessageBox.Show(result.Error.Message, "LocationCallback obtained an error!", MessageBoxButton.OK);
+            }
+            else
+            {
+                TransitRequestContext.Current.UserCurrentLocation = result.LocationDescriptions[0];
+            }
+        }
 
         public void SwapEndStartLocations()
         {
             string tempSwap = string.Empty;
 
-            tempSwap = this.Context.StartName;
-            this.Context.StartName = this.Context.EndName;
-            this.Context.EndName = tempSwap;
+            tempSwap = this.StartName;
+            this.StartName = this.EndName;
+            this.EndName = tempSwap;
 
-            tempSwap = this.Context.StartAddress;
-            this.Context.StartAddress = this.Context.EndAddress;
-            this.Context.EndAddress = tempSwap;
+            tempSwap = this.StartAddress;
+            this.StartAddress = this.EndAddress;
+            this.EndAddress = tempSwap;
+        }
+
+        public string EndName
+        {
+            get
+            {
+                return this.endName;
+            }
+            set
+            {
+                if (value != this.endName)
+                {
+                    this.endName = value;
+                    if (string.Empty.Equals(this.endName))
+                    {
+                        this.endName = Globals.MyCurrentLocationText;
+                        this.EndAddress = this.Context.UserCurrentLocation.Address;
+                        this.Context.SelectedEndingLocation = this.Context.UserCurrentLocation;
+                    }
+                    else
+                    {
+                        this.EndAddress = string.Empty;
+                        this.Context.SelectedEndingLocation = null;
+                    }
+                    this.RaisePropertyChanged("EndName");
+                }
+            }
+        }
+
+        public string StartName
+        {
+            get
+            {
+                return this.startName;
+            }
+            set
+            {
+                if (value != this.startName)
+                {
+                    this.startName = value;
+                    if (string.Empty.Equals(this.startName))
+                    {
+                        this.startName = Globals.MyCurrentLocationText;
+                        this.StartAddress = this.Context.UserCurrentLocation.Address;
+                        this.Context.SelectedStartingLocation = this.Context.UserCurrentLocation;
+                    }
+                    else
+                    {
+                        this.StartAddress = string.Empty;
+                        this.Context.SelectedStartingLocation = null;
+                    }
+                    this.RaisePropertyChanged("StartName");
+                }
+            }
+        }
+
+        public string EndAddress
+        {
+            get
+            {
+                return this.endAddress;
+            }
+            set
+            {
+                if (value != this.endAddress)
+                {
+                    this.endAddress = value;
+                    this.RaisePropertyChanged("EndAddress");
+                }
+            }
+        }
+
+        public string StartAddress
+        {
+            get
+            {
+                return this.startAddress;
+            }
+            set
+            {
+                if (value != this.startAddress)
+                {
+                    this.startAddress = value;
+                    this.RaisePropertyChanged("StartAddress");
+                }
+            }
+        }
+
+        private void RaisePropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 

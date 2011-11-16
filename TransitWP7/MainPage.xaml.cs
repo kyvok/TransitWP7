@@ -3,9 +3,10 @@
 namespace TransitWP7
 {
     using System;
-    using System.Device.Location;
+    using System.Globalization;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Navigation;
@@ -23,14 +24,6 @@ namespace TransitWP7
     public partial class MainPage : PhoneApplicationPage
     {
         private ViewModels.MainPageViewModel viewModel;
-
-        private string startLocationOnFocus = null;
-        private Brush startAddressColorOnFocus = null;
-        private string endLocationOnFocus = null;
-        private Brush endAddressColorOnFocus = null;
-
-        private string currentAddress = "";
-        private string currentConfidence = "";
 
         public NeedToResolve NeedToResolve
         {
@@ -51,9 +44,7 @@ namespace TransitWP7
             InitializeComponent();
             this.viewModel = new ViewModels.MainPageViewModel();
 
-            this.DataContext = this.viewModel.Context;
-
-            GeoLocation.Instance.GeoWatcher.PositionChanged += new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
+            this.DataContext = this.viewModel;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -80,74 +71,14 @@ namespace TransitWP7
             }
         }
 
-        // Event handler for the GeoCoordinateWatcher.PositionChanged event.
-        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
-        {
-            TransitRequestContext.Current.UserGeoCoordinate = e.Position.Location;
-
-            // Poll bing maps about the location
-            ProxyQuery.GetLocationAddress(TransitRequestContext.Current.UserGeoCoordinate, LocationCallback, null);
-        }
-
-        private void LocationCallback(ProxyQueryResult result)
-        {
-            if (result.Error != null)
-            {
-                MessageBox.Show(result.Error.Message, "LocationCallback obtained an error!", MessageBoxButton.OK);
-            }
-            else
-            {
-                LocationDescription locationDesc = result.LocationDescriptions[0];
-                this.currentAddress = locationDesc.DisplayName;
-                this.currentConfidence = locationDesc.Confidence;
-                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    ImageBrush image = new ImageBrush();
-                    image.ImageSource = (ImageSource)new ImageSourceConverter().ConvertFromString(LocationImage.GetImagePath(locationDesc.StateOrProvince));
-                    this.LayoutRoot.Background = image;
-
-                    if (this.startingInput.Text == Globals.MyCurrentLocationText)
-                    {
-                        switch (this.currentConfidence)
-                        {
-                            case "High":
-                                this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
-                                break;
-                            case "Medium":
-                                this.startAddress.Foreground = new SolidColorBrush(Colors.Yellow);
-                                break;
-                            case "Low":
-                                this.startAddress.Foreground = new SolidColorBrush(Colors.Red);
-                                break;
-                        }
-                        this.startAddress.Text = String.Format("Address: {0}",
-                            this.currentAddress);
-                    }
-                });
-            }
-        }
-
         private void swapText_Click(object sender, RoutedEventArgs e)
         {
             this.viewModel.SwapEndStartLocations();
-
-            //swap the address styles
-            Brush brushTemp = null;
-            brushTemp = this.startAddress.Foreground;
-            this.startAddress.Foreground = this.endAddress.Foreground;
-            this.endAddress.Foreground = brushTemp;
-
-            //swap the GPS locations
-            GeoCoordinate locationTemp = null;
-            locationTemp = TransitRequestContext.Current.StartGeoCoordinate;
-            TransitRequestContext.Current.StartGeoCoordinate = TransitRequestContext.Current.EndGeoCoordinate;
-            TransitRequestContext.Current.EndGeoCoordinate = locationTemp;
         }
 
         private void navigateButton_Click(object sender, RoutedEventArgs e)
         {
             this.theProgressBar.Visibility = Visibility.Visible;
-            this.navigateButton.IsEnabled = false;
 
             //remove old result, we are starting a new search!
             TransitRequestContext.Current.SelectedTransitTrip = null;
@@ -166,74 +97,10 @@ namespace TransitWP7
             }
         }
 
-        private void startingInput_GotFocus(object sender, RoutedEventArgs e)
+        private void InputBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var inputBox = sender as TextBox;
             inputBox.SelectAll();
-
-            // save the old text if we got focus
-            this.startLocationOnFocus = this.startingInput.Text;
-
-            // grey out the address
-            this.startAddressColorOnFocus = this.startAddress.Foreground;
-            this.startAddress.Foreground = new SolidColorBrush(Colors.Gray);
-        }
-
-        private void endingInput_GotFocus(object sender, RoutedEventArgs e)
-        {
-            var inputBox = sender as TextBox;
-            inputBox.SelectAll();
-
-            // save the old text if we got focus
-            this.endLocationOnFocus = this.endingInput.Text;
-
-            // grey out the address
-            this.endAddressColorOnFocus = this.endAddress.Foreground;
-            this.endAddress.Foreground = new SolidColorBrush(Colors.Gray);
-        }
-
-        private void startingInput_LostFocus(object sender, RoutedEventArgs e)
-        {
-            // check to see if we need to clear address bar
-            if (this.startingInput.Text == this.startLocationOnFocus)
-            {
-                this.startAddress.Foreground = this.startAddressColorOnFocus;
-            }
-            else
-            {
-                // use empty as current location
-                if (this.startingInput.Text == "")
-                {
-                    this.startingInput.Text = Globals.MyCurrentLocationText;
-                    this.startAddress.Text = String.Format("Address: {0}", this.currentAddress);
-                }
-                else
-                {
-                    this.startAddress.Text = "";
-                }
-            }
-        }
-
-        private void endingInput_LostFocus(object sender, RoutedEventArgs e)
-        {
-            // check to see if we need to clear address bar
-            if (this.endingInput.Text == this.endLocationOnFocus)
-            {
-                this.endAddress.Foreground = this.endAddressColorOnFocus;
-            }
-            else
-            {
-                // use empty as current location
-                if (this.endingInput.Text == "")
-                {
-                    this.endingInput.Text = Globals.MyCurrentLocationText;
-                    this.endAddress.Text = String.Format("Address: {0}", this.currentAddress);
-                }
-                else
-                {
-                    this.endAddress.Text = "";
-                }
-            }
         }
 
         private void verifyAddress_Click(object sender, RoutedEventArgs e)
@@ -272,7 +139,6 @@ namespace TransitWP7
                     this.startingInput.Focus();
                     MessageBox.Show(result.Error.Message);
                     this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
-                    this.navigateButton.IsEnabled = true;
                 });
             }
             else
@@ -291,7 +157,6 @@ namespace TransitWP7
                 System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                 {
                     this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
-                    this.navigateButton.IsEnabled = true;
                     this.endingInput.Focus();
                     MessageBox.Show(result.Error.Message);
                 });
@@ -322,7 +187,6 @@ namespace TransitWP7
             else
             {
                 this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
-                this.navigateButton.IsEnabled = true;
                 this.startingInput.Focus();
                 MessageBox.Show(result.Error.Message);
             }
@@ -345,7 +209,6 @@ namespace TransitWP7
             else
             {
                 this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
-                this.navigateButton.IsEnabled = true;
                 this.endingInput.Focus();
                 MessageBox.Show(result.Error.Message);
             }
@@ -359,21 +222,21 @@ namespace TransitWP7
             // set some values here
             if (isStartResult)
             {
+                this.viewModel.Context.SelectedStartingLocation = result;
+                this.viewModel.StartName = result.DisplayName;
+                this.viewModel.StartAddress = result.Address;
+
                 if (this.NeedToResolve == TransitWP7.NeedToResolve.Start)
                 {
-                    TransitRequestContext.Current.StartGeoCoordinate = result.GeoCoordinate;
-                    this.startingInput.Text = result.DisplayName;
-                    this.startAddress.Text = result.Address;
-                    this.startAddress.Foreground = new SolidColorBrush(Colors.Green);
                     MoveToTransitSelection();
                 }
             }
             else
             {
-                TransitRequestContext.Current.EndGeoCoordinate = result.GeoCoordinate;
-                this.endingInput.Text = result.DisplayName;
-                this.endAddress.Text = result.Address;
-                this.endAddress.Foreground = new SolidColorBrush(Colors.Green);
+                this.viewModel.Context.SelectedEndingLocation = result;
+                this.viewModel.EndName = result.DisplayName;
+                this.viewModel.EndAddress = result.Address;
+
                 MoveToTransitSelection();
             }
         }
@@ -383,11 +246,6 @@ namespace TransitWP7
             // stop the progress bar
             this.theProgressBar.Visibility = System.Windows.Visibility.Collapsed;
 
-            //remove the old callback
-            GeoLocation.Instance.GeoWatcher.PositionChanged -= new EventHandler<GeoPositionChangedEventArgs<GeoCoordinate>>(this.watcher_PositionChanged);
-
-            //HACK: replace this with an actual container object later
-            TransitRequestContext.Current.StartGeoCoordinate = TransitRequestContext.Current.StartGeoCoordinate == null ? TransitRequestContext.Current.UserGeoCoordinate : TransitRequestContext.Current.StartGeoCoordinate;
             //NavigationService.Navigate(new Uri("/SelectTransitResultPage.xaml", UriKind.Relative));
             NavigationService.Navigate(new Uri("/TransitResultsPivotPage.xaml", UriKind.Relative));
         }
@@ -471,6 +329,34 @@ namespace TransitWP7
                 timePicker.Value.Value.Minute,
                 timePicker.Value.Value.Second
                 );
+        }
+    }
+
+    public class ConfidenceToBrushConverter : IValueConverter
+    {
+        private static SolidColorBrush greenBrush = new SolidColorBrush(Colors.Green);
+        private static SolidColorBrush yellowBrush = new SolidColorBrush(Colors.Yellow);
+        private static SolidColorBrush redBrush = new SolidColorBrush(Colors.Red);
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string confidenceLevel = (string)value;
+            switch (confidenceLevel)
+            {
+                case "High":
+                    return greenBrush;
+                case "Medium":
+                    return yellowBrush;
+                case "Low":
+                    return redBrush;
+                default:
+                    return redBrush;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

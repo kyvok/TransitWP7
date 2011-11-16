@@ -8,34 +8,37 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
-    
+
     <Grid x:Name="LayoutRoot">
         <ListBox HorizontalAlignment="Stretch" Margin="6,6,0,0" Name="resultsList" VerticalAlignment="Stretch" Width="444" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionChanged="resultsList_SelectionChanged" ItemsSource="{Binding Path=FormattedTransitTrips}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <ListBox Name="stepsList" ItemsSource="{Binding Path=Steps}">
-                                <ListBox.ItemsPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Duration}" FontSize="40" />
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding Path=Steps}">
+                                <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
                                     </ItemsPanelTemplate>
-                                </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
                                             <ContentControl Content="{Binding Image}" Height="32" Width="32"/>
                                             <TextBlock Text="{Binding Str}"/>
                                         </StackPanel>
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                            <!--<TextBlock Text="{Binding Steps}" FontSize="40" FontStyle="Normal"/>-->
-                            <TextBlock Text="{Binding Duration}" FontSize="20" FontStyle="Italic"/>
-                            <TextBlock Text="{Binding DepartsAt}" FontSize="20" FontStyle="Italic"/>
-                            <TextBlock Text="{Binding ArrivesAt}" FontSize="20" FontStyle="Italic"/>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                <TextBlock Text="{Binding DepartsAt}" FontSize="20"/>
+                                <TextBlock Text="{Binding ArrivesAt}" FontSize="20"/>
+                            </StackPanel>
                         </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>

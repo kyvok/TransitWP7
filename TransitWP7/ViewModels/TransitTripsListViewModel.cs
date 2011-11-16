@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using System.Windows.Media.Imaging;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace TransitWP7.ViewModels
 {
@@ -33,8 +26,8 @@ namespace TransitWP7.ViewModels
             else
             {
                 ProxyQuery.GetTransitDirections(
-                    TransitRequestContext.Current.StartGeoCoordinate,
-                    TransitRequestContext.Current.EndGeoCoordinate,
+                    TransitRequestContext.Current.SelectedStartingLocation.GeoCoordinate,
+                    TransitRequestContext.Current.SelectedEndingLocation.GeoCoordinate,
                     TransitRequestContext.Current.DateTime,
                     TransitRequestContext.Current.TimeType,
                     TransitRouteCalculated,
@@ -76,7 +69,6 @@ namespace TransitWP7.ViewModels
                 bool isWalk = false;
                 for (int x = 0; x < transitOption.ItinerarySteps.Count; x++)
                 {
-                    bool lastStep = (x == (transitOption.ItinerarySteps.Count - 1) ? true : false);
                     ItineraryStep item = transitOption.ItinerarySteps[x];
                     if (item.IconType != "")
                     {
@@ -87,8 +79,8 @@ namespace TransitWP7.ViewModels
                                 Deployment.Current.Dispatcher.BeginInvoke(() =>
                                 {
                                     Image img = new Image();
-                                    img.Source = new BitmapImage(new Uri("images/walk_lo.png", UriKind.Relative));
-                                    atd.Steps.Add(new TransitStep(lastStep ? "" : "->", img));
+                                    img.Source = new BitmapImage(new Uri("/images/walk_lo.png", UriKind.Relative));
+                                    atd.Steps.Add(new TransitStep("", img));
                                 });
                             }
                         }
@@ -97,8 +89,8 @@ namespace TransitWP7.ViewModels
                             Deployment.Current.Dispatcher.BeginInvoke(() =>
                             {
                                 Image img = new Image();
-                                img.Source = new BitmapImage(new Uri("images/bus_lo.png", UriKind.Relative));
-                                atd.Steps.Add(new TransitStep(item.BusNumber + (lastStep ? "" : "->"), img));
+                                img.Source = new BitmapImage(new Uri("/images/bus_lo.png", UriKind.Relative));
+                                atd.Steps.Add(new TransitStep(item.BusNumber, img));
                             });
                         }
                         isWalk = item.TravelMode.StartsWith("W") ? true : false;
