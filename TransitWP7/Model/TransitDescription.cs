@@ -6,7 +6,7 @@ namespace TransitWP7
     using System.ComponentModel;
     using System.Device.Location;
     using Microsoft.Phone.Controls.Maps;
-    using TransitWP7.BingMapsRestApi;
+    using BingApisLib.BingMapsRestApi;
 
     public class TransitDescription : INotifyPropertyChanged
     {

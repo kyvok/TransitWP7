@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010 Express for Windows Phone
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransitWP7", "TransitWP7\TransitWP7.csproj", "{E8E65B58-1D47-46E5-8850-8FF2141D2F64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BingApisLib", "BingApisLib\BingApisLib.csproj", "{D35A5A96-B30E-4847-A80F-80ED718D9188}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{E8E65B58-1D47-46E5-8850-8FF2141D2F64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8E65B58-1D47-46E5-8850-8FF2141D2F64}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8E65B58-1D47-46E5-8850-8FF2141D2F64}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D35A5A96-B30E-4847-A80F-80ED718D9188}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D35A5A96-B30E-4847-A80F-80ED718D9188}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D35A5A96-B30E-4847-A80F-80ED718D9188}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D35A5A96-B30E-4847-A80F-80ED718D9188}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

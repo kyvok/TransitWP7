@@ -9,12 +9,12 @@ namespace TransitWP7
 
     //TODO: distance of the item from origin
     //TODO: calculate results from origin for endpoint, not current userlocation!!!
-    public partial class ResultSelectionPage : PhoneApplicationPage
+    public partial class LocationSelectionView : PhoneApplicationPage
     {
         List<LocationDescription> resultSet = null;
         bool isStartResult = true;
 
-        public ResultSelectionPage()
+        public LocationSelectionView()
         {
             InitializeComponent();
         }

@@ -7,6 +7,8 @@ namespace TransitWP7.BingMapsRestApi
     using System.Net;
     using System.Text;
     using System.Xml.Serialization;
+    using System.Reactive;
+    using System.Reactive.Linq;
 
     /// <summary>
     /// Helper class to query BingMaps resources.
@@ -118,6 +120,28 @@ namespace TransitWP7.BingMapsRestApi
         {
             var httpRequest = WebRequest.Create(queryUri) as HttpWebRequest;
             var context = new BingMapsRequestContext(httpRequest, new BingMapsQueryAsyncCallback(callback, userState));
+
+            //Observable.FromAsyncPattern<WebResponse>(httpRequest.BeginGetResponse, httpRequest.EndGetResponse)()
+            //    .Subscribe<WebResponse>(httpResponse =>
+            //            {
+            //                var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+            //                if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
+            //                {
+            //                    var exceptionMessage = new StringBuilder();
+            //                    exceptionMessage.AppendLine("One or more error were returned by the query:");
+            //                    foreach (var errorDetail in response.ErrorDetails)
+            //                    {
+            //                        exceptionMessage.Append("  ");
+            //                        exceptionMessage.AppendLine(errorDetail);
+            //                    }
+            //                    context.AsyncCallback.Notify(new Exception(exceptionMessage.ToString()));
+            //                }
+            //                else
+            //                {
+            //                    context.AsyncCallback.Notify(response);
+            //                }
+            //            });
+
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
 
@@ -135,9 +159,9 @@ namespace TransitWP7.BingMapsRestApi
                 var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
                 if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
                 {
-                    StringBuilder exceptionMessage = new StringBuilder();
+                    var exceptionMessage = new StringBuilder();
                     exceptionMessage.AppendLine("One or more error were returned by the query:");
-                    foreach (string errorDetail in response.ErrorDetails)
+                    foreach (var errorDetail in response.ErrorDetails)
                     {
                         exceptionMessage.Append("  ");
                         exceptionMessage.AppendLine(errorDetail);

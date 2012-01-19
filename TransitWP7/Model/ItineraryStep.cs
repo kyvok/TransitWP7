@@ -6,7 +6,7 @@ namespace TransitWP7
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Device.Location;
-    using TransitWP7.BingMapsRestApi;
+    using BingApisLib.BingMapsRestApi;
 
     public class ItineraryStep : INotifyPropertyChanged
     {

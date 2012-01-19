@@ -13,9 +13,9 @@ using Microsoft.Phone.Controls;
 
 namespace TransitWP7
 {
-    public partial class SettingsPage : PhoneApplicationPage
+    public partial class SettingsView : PhoneApplicationPage
     {
-        public SettingsPage()
+        public SettingsView()
         {
             InitializeComponent();
         }

@@ -1,5 +1,5 @@
 ﻿<phone:PhoneApplicationPage 
-    x:Class="TransitWP7.ResultSelectionPage"
+    x:Class="TransitWP7.LocationSelectionView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -9,9 +9,9 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
+    shell:SystemTray.IsVisible="True"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
-    shell:SystemTray.IsVisible="True">
+    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -20,19 +20,21 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="PageTitle" Text="query" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock x:Name="PageTitle" Text="Which end location did you mean?" Style="{StaticResource PhoneTextTitle3Style}" />
         </StackPanel>
 
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <ListBox HorizontalAlignment="Stretch" Margin="6,6,0,0" Name="resultsList" VerticalAlignment="Stretch" Width="444" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionChanged="resultsList_SelectionChanged">
+        <Grid Grid.Row="1" Margin="12,0,12,0">
+            <ListBox Name="resultsList"
+                     Width="444"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                     VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                     SelectionChanged="resultsList_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <TextBlock Text="{Binding DisplayName}" FontSize="40" FontStyle="Normal"/>
-                            <TextBlock Text="{Binding Address}" FontSize="20" FontStyle="Italic"/>
+                            <TextBlock Text="{Binding DisplayName}" Padding="12,6,0,0" Style="{StaticResource PhoneTextTitle2Style}" />
+                            <TextBlock Text="{Binding FormattedAddress}" Padding="12,2,0,0" Style="{StaticResource PhoneTextSubtleStyle}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

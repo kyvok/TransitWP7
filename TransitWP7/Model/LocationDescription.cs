@@ -5,13 +5,14 @@ namespace TransitWP7
     using System;
     using System.ComponentModel;
     using System.Device.Location;
-    using TransitWP7.BingMapsRestApi;
-    using TransitWP7.BingSearchRestApi;
+    using BingApisLib.BingMapsRestApi;
+    using BingApisLib.BingSearchRestApi;
 
     public class LocationDescription : INotifyPropertyChanged
     {
         private string displayName;
-        private string address;
+        private string formattedAddress;
+        private string city;
         private string stateOrProvince;
         private string postalCode;
         private string confidence;
@@ -24,7 +25,8 @@ namespace TransitWP7
             this.DisplayName = result.Name;
             this.GeoCoordinate = result.Point.AsGeoCoordinate();
             this.PostalCode = result.Address.PostalCode;
-            this.Address = result.Address.FormattedAddress;
+            this.FormattedAddress = result.Address.FormattedAddress;
+            this.City = result.Address.Locality;
             this.Confidence = result.Confidence.ToString();
             this.StateOrProvince = result.Address.AdminDistrict;
         }
@@ -34,15 +36,41 @@ namespace TransitWP7
             this.DisplayName = result.Title;
             this.GeoCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
             this.PostalCode = result.PostalCode;
-            this.Address = String.Format(
-                        "{0} {1}, {2} {3}",
+            this.FormattedAddress = String.Format(
+                        "{0}, {1}, {2}, {3}",
                         result.Address,
                         result.City,
                         result.StateOrProvince,
                         result.PostalCode);
+            this.City = result.City;
             this.Confidence = "High";
             this.StateOrProvince = result.StateOrProvince;
         }
+
+        //public LocationDescription(WP7Contrib.Services.BingMaps.Model.LocationData result)
+        //{
+        //    this.DisplayName = result.Name;
+        //    this.GeoCoordinate = result.Point;
+        //    this.PostalCode = result.formattedAddress.PostalCode;
+        //    this.formattedAddress = result.formattedAddress.FormattedAddress;
+        //city
+        //    this.Confidence = result.Confidence.ToString();
+        //    this.StateOrProvince = result.address.AdminDistrict;
+        //}
+
+        //public LocationDescription(WP7Contrib.Services.BingMaps.Model.SearchData result)
+        //{
+        //    this.DisplayName = result.Title;
+        //    this.GeoCoordinate = result.Location;
+        //    this.PostalCode = result.PostalCode;
+        //city
+        //    this.formattedAddress = String.Format(
+        //                "{0} {1}, {2}",
+        //                result.address,
+        //                result.City,
+        //                result.PostalCode);
+        //    this.Confidence = "High";
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -62,18 +90,34 @@ namespace TransitWP7
             }
         }
 
-        public string Address
+        public string FormattedAddress
         {
             get
             {
-                return this.address;
+                return this.formattedAddress;
             }
             set
             {
-                if (value != this.address)
+                if (value != this.formattedAddress)
                 {
-                    this.address = value;
-                    this.RaisePropertyChanged("Address");
+                    this.formattedAddress = value;
+                    this.RaisePropertyChanged("FormattedAddress");
+                }
+            }
+        }
+
+        public string City
+        {
+            get
+            {
+                return this.city;
+            }
+            set
+            {
+                if (value != this.city)
+                {
+                    this.city = value;
+                    this.RaisePropertyChanged("City");
                 }
             }
         }

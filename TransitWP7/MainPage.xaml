@@ -31,8 +31,6 @@
             -->
             <!-- consider ProgressIndicator http://msdn.microsoft.com/en-us/library/microsoft.phone.shell.systemtray.progressindicator(v=VS.92).aspx -->
             <ProgressBar Name="theProgressBar" IsIndeterminate="True" Visibility="Collapsed"/>
-            <!-- Advertisement control -->
-            <msad:AdControl AdUnitId="Image480_80" ApplicationId="test_client" Height="80" HorizontalAlignment="Left" VerticalAlignment="Top" Width="480" Margin="0,0,0,0" />
         </StackPanel>
 
         

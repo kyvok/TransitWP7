@@ -14,9 +14,9 @@ using Microsoft.Phone.Shell;
 
 namespace TransitWP7
 {
-    public partial class ExceptionPage : PhoneApplicationPage
+    public partial class ExceptionView : PhoneApplicationPage
     {
-        public ExceptionPage()
+        public ExceptionView()
         {
             InitializeComponent();
         }

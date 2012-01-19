@@ -6,23 +6,13 @@ namespace TransitWP7
     using System.Device.Location;
     using System.Linq;
     using Microsoft.Phone.Controls.Maps;
-    using TransitWP7.BingMapsRestApi;
+    using BingApisLib.BingMapsRestApi;
 
     public static class BingMapsExtensionMethods
     {
-        public static BoundingBox AsBingMapsBoundingBox(this LocationRect locRect)
-        {
-            return new BoundingBox(locRect.South, locRect.West, locRect.North, locRect.East);
-        }
-
         public static LocationRect AsLocationRect(this BoundingBox bb)
         {
             return new LocationRect(bb.NorthLatitude, bb.WestLongitude, bb.SouthLatitude, bb.EastLongitude);
-        }
-
-        public static Point AsBingMapsPoint(this GeoCoordinate geoCoord)
-        {
-            return new Point(geoCoord.Latitude, geoCoord.Longitude);
         }
 
         public static GeoCoordinate AsGeoCoordinate(this Point point)

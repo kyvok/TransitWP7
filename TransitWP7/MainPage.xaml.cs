@@ -13,31 +13,31 @@ namespace TransitWP7
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
 
-    public enum NeedToResolve
-    {
-        None = 0x0,
-        Start = 0x1,
-        End = 0x2,
-        StartAndEnd = 0x3
-    }
+    //public enum NeedToResolve
+    //{
+    //    None = 0x0,
+    //    Start = 0x1,
+    //    End = 0x2,
+    //    StartAndEnd = 0x3
+    //}
 
     public partial class MainPage : PhoneApplicationPage
     {
         private ViewModels.MainPageViewModel viewModel;
 
-        public NeedToResolve NeedToResolve
-        {
-            get
-            {
-                int ret = 0;
-                if (this.startAddress.Text == "")
-                    ret |= (int)NeedToResolve.Start;
-                if (this.endAddress.Text == "")
-                    ret |= (int)NeedToResolve.End;
+        //public NeedToResolve NeedToResolve
+        //{
+        //    get
+        //    {
+        //        int ret = 0;
+        //        if (this.startAddress.Text == "")
+        //            ret |= (int)NeedToResolve.Start;
+        //        if (this.endAddress.Text == "")
+        //            ret |= (int)NeedToResolve.End;
 
-                return (NeedToResolve)ret;
-            }
-        }
+        //        return (NeedToResolve)ret;
+        //    }
+        //}
 
         public MainPage()
         {
@@ -87,14 +87,14 @@ namespace TransitWP7
             TransitRequestContext.Current.EndingLocationDescriptionCollection.Clear();
 
             // call the old verify address
-            if (this.NeedToResolve == TransitWP7.NeedToResolve.None)
-            {
-                MoveToTransitSelection();
-            }
-            else
-            {
+            //if (this.NeedToResolve == TransitWP7.NeedToResolve.None)
+            //{
+            //    MoveToTransitSelection();
+            //}
+            //else
+            //{
                 this.verifyAddress_Click(sender, e);
-            }
+            //}
         }
 
         private void InputBox_GotFocus(object sender, RoutedEventArgs e)
@@ -182,7 +182,7 @@ namespace TransitWP7
             {
                 // save the result set
                 PhoneApplicationService.Current.State["theResultSet"] = result.LocationDescriptions;
-                NavigationService.Navigate(new Uri("/ResultSelectionPage.xaml", UriKind.Relative));
+                NavigationService.Navigate(new Uri("/LocationSelectionView.xaml", UriKind.Relative));
             }
             else
             {
@@ -204,7 +204,7 @@ namespace TransitWP7
             {
                 // save the result set
                 PhoneApplicationService.Current.State["theResultSet"] = result.LocationDescriptions;
-                NavigationService.Navigate(new Uri("/ResultSelectionPage.xaml", UriKind.Relative));
+                NavigationService.Navigate(new Uri("/LocationSelectionView.xaml", UriKind.Relative));
             }
             else
             {
@@ -224,18 +224,18 @@ namespace TransitWP7
             {
                 this.viewModel.Context.SelectedStartingLocation = result;
                 this.viewModel.StartName = result.DisplayName;
-                this.viewModel.StartAddress = result.Address;
+                this.viewModel.StartAddress = result.FormattedAddress;
 
-                if (this.NeedToResolve == TransitWP7.NeedToResolve.Start)
-                {
-                    MoveToTransitSelection();
-                }
+                //if (this.NeedToResolve == TransitWP7.NeedToResolve.Start)
+                //{
+                //    MoveToTransitSelection();
+                //}
             }
             else
             {
                 this.viewModel.Context.SelectedEndingLocation = result;
                 this.viewModel.EndName = result.DisplayName;
-                this.viewModel.EndAddress = result.Address;
+                this.viewModel.EndAddress = result.FormattedAddress;
 
                 MoveToTransitSelection();
             }

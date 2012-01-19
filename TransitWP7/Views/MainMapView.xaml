@@ -1,0 +1,135 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="TransitWP7.MainMapView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.Opacity="0.67"
+    shell:SystemTray.BackgroundColor="{StaticResource PhoneSemitransparentColor}"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <maps:Map Name="mainMap" />
+
+        <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Top">
+            <StackPanel>
+                <!-- Start section -->
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Height="30" Width="60"
+                           Text="Start" TextAlignment="Right"
+                           HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <TextBox Name="startingInput" 
+                                 InputScope="Maps"
+                                 Height="72" Width="410"
+                                 Text="{Binding Path=StartName, Mode=TwoWay}"
+                                 Background="{StaticResource TransparentBrush}"
+                                 Foreground="{StaticResource PhoneForegroundBrush}"
+                                 VerticalAlignment="Center"
+                                 GotFocus="InputBox_GotFocus"
+                                 KeyUp="TextBoxKeyUp" />
+                        <!--<Line X1="-400" X2="0" Y1="60" Y2="60" Stroke="White" StrokeThickness="2" />-->
+                </StackPanel>                
+                <!-- End section -->
+                <StackPanel Orientation="Horizontal">
+                    <!-- Maps application uses #8593 for up arrow. -->
+                    <!-- We consider using #8645 for up arrow. -->
+                    <TextBlock Height="30" Width="60"
+                           Text="&#8645;End" TextAlignment="Right"
+                           HorizontalAlignment="Left" VerticalAlignment="Center"
+                           Tap="TextBlock_Tap_1"/>
+                    <TextBox Name="endingInput"
+                         InputScope="Maps"
+                         Height="72" Width="410"
+                         Text="{Binding Path=EndName, Mode=TwoWay}"
+                         Background="{StaticResource TransparentBrush}"
+                         Foreground="{StaticResource PhoneForegroundBrush}"
+                         VerticalAlignment="Center"
+                         GotFocus="InputBox_GotFocus"
+                         KeyUp="TextBoxKeyUp" />
+                        <!--<Line X1="10" X2="400" Y1="0" Y2="0" Stroke="White" StrokeThickness="2" />-->
+                </StackPanel>
+
+                <!-- Time selection picker -->
+                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" Visibility="Collapsed">
+                    <toolkit:ListPicker
+                        Margin="12,4,0,0"
+                        Width="150"
+                        Background="{StaticResource TransparentBrush}"
+                        BorderThickness="0"
+                        Foreground="{StaticResource PhoneForegroundBrush}"
+                        SelectedIndex="0"
+                        SelectionChanged="ListPicker_SelectionChanged">
+                        <toolkit:ListPickerItem Content="Depart now" HorizontalContentAlignment="Center" />
+                        <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Center"/>
+                        <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Center"/>
+                        <toolkit:ListPickerItem Content="Last arrival" HorizontalContentAlignment="Center" />
+                    </toolkit:ListPicker>
+                    <toolkit:DatePicker Name="datePicker"
+                                        Background="{StaticResource TransparentBrush}"
+                                        Foreground="{StaticResource PhoneForegroundBrush}"
+                                        ValueStringFormat="{}{0:m}"
+                                        ValueChanged="DatePicker_ValueChanged"/>
+                    <toolkit:TimePicker Name="timePicker"
+                                        Background="{StaticResource TransparentBrush}"
+                                        Foreground="{StaticResource PhoneForegroundBrush}"
+                                        ValueChanged="TimePicker_ValueChanged"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="More options" FontWeight="Bold"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Tap="TextBlock_Tap"/>
+                    <Button Content="Go" Click="Button_Click" />
+                </StackPanel>
+
+            </StackPanel>
+
+
+            <!-- Current location debug info -->
+            <!--<TextBlock Name="currentLocation"
+                       Text="{Binding Path=CurrentLocation}"
+                       Height="40" Width="330"
+                       HorizontalAlignment="Center" VerticalAlignment="Bottom"/>-->
+        </Grid>
+
+        <Grid Name="bottomGrid" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Bottom" Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock Name="queryNameTextBlock" Text="What was it you wanted?" Padding="12,6,0,0"/>
+                <ListBox  Name="resultsList"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      SelectionChanged="resultsList_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding DisplayName}" Padding="12,6,0,0" Style="{StaticResource PhoneTextTitle2Style}" />
+                                <TextBlock Text="{Binding FormattedAddress}" Padding="12,2,0,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar BackgroundColor="{StaticResource PhoneSemitransparentColor}" Opacity="0.99"  IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
+                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+</phone:PhoneApplicationPage>

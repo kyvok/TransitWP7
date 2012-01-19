@@ -77,7 +77,7 @@ namespace TransitWP7.ViewModels
                     if (string.Empty.Equals(this.endName))
                     {
                         this.endName = Globals.MyCurrentLocationText;
-                        this.EndAddress = this.Context.UserCurrentLocation.Address;
+                        this.EndAddress = this.Context.UserCurrentLocation.FormattedAddress;
                         this.Context.SelectedEndingLocation = this.Context.UserCurrentLocation;
                     }
                     else
@@ -104,7 +104,7 @@ namespace TransitWP7.ViewModels
                     if (string.Empty.Equals(this.startName))
                     {
                         this.startName = Globals.MyCurrentLocationText;
-                        this.StartAddress = this.Context.UserCurrentLocation.Address;
+                        this.StartAddress = this.Context.UserCurrentLocation.FormattedAddress;
                         this.Context.SelectedStartingLocation = this.Context.UserCurrentLocation;
                     }
                     else
