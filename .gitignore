@@ -5,5 +5,9 @@
 [Oo]bj/
 [Bb]in/
 [Aa]pp_Data/
+packages/*
+_ReSharper.*
+*[Rr]e[Ss]harper.user
+*.docstates
 BingMapsKey*
 ApiKeys*
