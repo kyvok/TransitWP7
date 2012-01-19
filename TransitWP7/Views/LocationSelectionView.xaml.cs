@@ -11,6 +11,8 @@ namespace TransitWP7
     //TODO: calculate results from origin for endpoint, not current userlocation!!!
     public partial class LocationSelectionView : PhoneApplicationPage
     {
+        private readonly ViewModels.LocationSelectionViewModel _viewModel = new ViewModels.LocationSelectionViewModel();
+
         List<LocationDescription> resultSet = null;
         bool isStartResult = true;
 
@@ -46,12 +48,6 @@ namespace TransitWP7
             else
             {
                 throw new Exception("should never be here");
-            }
-
-            //TODO: fix this hack that auto-select if only one item
-            if (this.resultSet.Count == 1)
-            {
-                this.resultsList.SelectedIndex = 0;
             }
         }
 

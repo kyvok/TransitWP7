@@ -104,8 +104,7 @@
 
         <Grid Name="bottomGrid" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Bottom" Visibility="Collapsed">
             <StackPanel>
-                <TextBlock Name="queryNameTextBlock" Text="What was it you wanted?" Padding="12,6,0,0"/>
-                <ListBox  Name="resultsList"
+                <ListBox Name="transitList"
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                       SelectionChanged="resultsList_SelectionChanged">
                     <ListBox.ItemTemplate>

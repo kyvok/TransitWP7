@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Device.Location;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Controls.Maps;
-using Microsoft.Phone.Shell;
-
-
+﻿
 namespace TransitWP7
 {
+    using System;
+    using System.Device.Location;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using Microsoft.Phone.Controls;
+    using Microsoft.Phone.Controls.Maps;
+
     public partial class MainMapView : PhoneApplicationPage
     {
         private readonly ViewModels.MainMapViewModel _viewModel = new ViewModels.MainMapViewModel();
@@ -125,8 +118,8 @@ namespace TransitWP7
                 {
                     System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
                     {
-                        this.queryNameTextBlock.Text = this.startingInput.Text;
-                        this.resultsList.ItemsSource = result.LocationDescriptions;
+                        //this.queryNameTextBlock.Text = this.startingInput.Text;
+                        //this.resultsList.ItemsSource = result.LocationDescriptions;
                         this.bottomGrid.Height = Application.Current.Host.Content.ActualHeight - this.topGrid.ActualHeight;
                         this.bottomGrid.Visibility = Visibility.Visible;
                     });
@@ -136,7 +129,7 @@ namespace TransitWP7
 
         private void resultsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TransitRequestContext.Current.SelectedStartingLocation = (LocationDescription)this.resultsList.Items[this.resultsList.SelectedIndex];
+            //TransitRequestContext.Current.SelectedStartingLocation = (LocationDescription)this.resultsList.Items[this.resultsList.SelectedIndex];
             this.bottomGrid.Visibility = Visibility.Collapsed;
         }
 

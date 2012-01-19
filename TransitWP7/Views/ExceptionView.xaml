@@ -13,24 +13,21 @@
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
 
-    <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+        <StackPanel Grid.Row="0" Margin="12,17,0,28">
             <TextBlock x:Name="PageTitle" Text="exception info" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid Grid.Row="1" Margin="12,0,12,0">
+            <Button Content="Copy to clipboard" Height="72" HorizontalAlignment="Left" VerticalAlignment="Top" Width="456" Click="CopyToClipboardClick" />
             <ScrollViewer Height="634" HorizontalAlignment="Left" Name="scrollViewer1" VerticalAlignment="Top" Width="468">
                 <TextBlock Text="Exception goes here" TextWrapping="Wrap" Name="exceptionText" Width="440" FontSize="15" Height="507" />
             </ScrollViewer>
-            <Button Content="copy to clipboard" Height="72" HorizontalAlignment="Left" Margin="-1,3,0,0" Name="button1" VerticalAlignment="Top" Width="456" Click="button1_Click" />
         </Grid>
     </Grid>
 </phone:PhoneApplicationPage>

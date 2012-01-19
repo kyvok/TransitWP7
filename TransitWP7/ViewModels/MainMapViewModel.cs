@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace TransitWP7.ViewModels
 {
-    public class MainMapViewModel : INotifyPropertyChanged
+    public class MainMapViewModel : ViewModelBase
     {
         //private WP7Contrib.Services.BingMaps.BingMapsService bingMapsService;
 
@@ -50,8 +50,6 @@ namespace TransitWP7.ViewModels
                 TransitRequestContext.Current.UserCurrentLocation = result.LocationDescriptions[0];
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public TransitRequestContext Context
         {
