@@ -1,13 +1,11 @@
-﻿//TODO: copyright info
+﻿using System;
+using System.Device.Location;
+using System.Net;
+using System.Text;
+using System.Xml.Serialization;
 
 namespace BingApisLib.BingMapsRestApi
 {
-    using System;
-    using System.Device.Location;
-    using System.Net;
-    using System.Text;
-    using System.Xml.Serialization;
-
     /// <summary>
     /// Helper class to query BingMaps resources.
     /// </summary>

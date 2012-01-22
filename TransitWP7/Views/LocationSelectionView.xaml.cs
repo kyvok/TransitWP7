@@ -1,5 +1,4 @@
-﻿//TODO: copyright info
-using System;
+﻿using System;
 using Microsoft.Phone.Controls;
 
 namespace TransitWP7

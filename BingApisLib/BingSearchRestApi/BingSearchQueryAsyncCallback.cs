@@ -1,10 +1,8 @@
-﻿//TODO: copyright info
+﻿using System;
+using System.Net;
 
 namespace BingApisLib.BingSearchRestApi
 {
-    using System;
-    using System.Net;
-
     internal class BingSearchQueryAsyncCallback
     {
         private Action<BingSearchQueryResult> callback;

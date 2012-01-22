@@ -1,10 +1,8 @@
-﻿//TODO: copyright info
+﻿using System;
+using System.Net;
 
 namespace BingApisLib.BingMapsRestApi
 {
-    using System;
-    using System.Net;
-
     internal class BingMapsQueryAsyncCallback
     {
         private Action<BingMapsQueryResult> callback;

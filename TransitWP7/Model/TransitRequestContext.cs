@@ -1,14 +1,11 @@
-﻿//TODO: copyright info
-
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Device.Location;
 
 namespace TransitWP7
 {
-    using System;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Device.Location;
-
     public class TransitRequestContext : INotifyPropertyChanged
     {
         private GeoCoordinate userGeoCoordinate;

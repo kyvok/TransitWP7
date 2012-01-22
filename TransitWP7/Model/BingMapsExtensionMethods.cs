@@ -1,13 +1,11 @@
-﻿//TODO: copyright info
+﻿using System.Collections.Generic;
+using System.Device.Location;
+using System.Linq;
+using BingApisLib.BingMapsRestApi;
+using Microsoft.Phone.Controls.Maps;
 
 namespace TransitWP7
 {
-    using System.Collections.Generic;
-    using System.Device.Location;
-    using System.Linq;
-    using BingApisLib.BingMapsRestApi;
-    using Microsoft.Phone.Controls.Maps;
-
     public static class BingMapsExtensionMethods
     {
         public static LocationRect AsLocationRect(this BoundingBox bb)

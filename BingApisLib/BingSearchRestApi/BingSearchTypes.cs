@@ -1,10 +1,8 @@
-﻿//TODO: copyright info
+﻿using System.Diagnostics;
+using System.Xml.Serialization;
 
 namespace BingApisLib.BingSearchRestApi
 {
-    using System.Diagnostics;
-    using System.Xml.Serialization;
-
     /// <summary>
     /// All types defined from http://msdn.microsoft.com/en-us/library/dd250882.aspx
     /// </summary>

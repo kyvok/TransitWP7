@@ -1,13 +1,11 @@
-﻿//TODO: copyright info
+﻿using System;
+using System.Collections.Generic;
+using System.Device.Location;
+using System.Text;
+using Microsoft.Phone.Controls.Maps;
 
 namespace BingApisLib.BingMapsRestApi
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Device.Location;
-    using System.Text;
-    using Microsoft.Phone.Controls.Maps;
-
     //TODO: this needs review
     public class LocationByPoint
     {

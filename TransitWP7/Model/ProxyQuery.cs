@@ -1,15 +1,13 @@
-﻿//TODO: copyright info
+﻿using System;
+using System.Collections.Generic;
+using System.Device.Location;
+using BingApisLib.BingMapsRestApi;
+using BingApisLib.BingSearchRestApi;
 
 //TODO: show total travel time for trips
 //TODO: walk does not need start and stop time
 namespace TransitWP7
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Device.Location;
-    using BingApisLib.BingMapsRestApi;
-    using BingApisLib.BingSearchRestApi;
-
     /// <summary>
     /// Calls REST APIs and isolate their type mapping by converting to transitive types.
     /// </summary>

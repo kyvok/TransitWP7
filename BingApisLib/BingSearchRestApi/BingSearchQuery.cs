@@ -1,14 +1,12 @@
-﻿//TODO: copyright info
+﻿using System;
+using System.Device.Location;
+using System.Net;
+using System.Text;
+using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace BingApisLib.BingSearchRestApi
 {
-    using System;
-    using System.Device.Location;
-    using System.Net;
-    using System.Text;
-    using System.Xml.Serialization;
-    using Newtonsoft.Json;
-
     /// <summary>
     /// Helper class to query BingMaps resources.
     /// </summary>

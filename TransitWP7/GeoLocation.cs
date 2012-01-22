@@ -1,5 +1,4 @@
-﻿//TODO: copyright info
-using System.Device.Location;
+﻿using System.Device.Location;
 
 namespace TransitWP7
 {

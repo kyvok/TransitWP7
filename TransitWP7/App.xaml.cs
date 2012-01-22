@@ -1,15 +1,12 @@
-﻿//TODO: copyright info
-
+﻿using System;
+using System.Windows;
+using System.Windows.Navigation;
 using GalaSoft.MvvmLight.Threading;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 
 namespace TransitWP7
 {
-    using System;
-    using System.Windows;
-    using System.Windows.Navigation;
-    using Microsoft.Phone.Controls;
-    using Microsoft.Phone.Shell;
-
     public partial class App : Application
     {
         /// <summary>
