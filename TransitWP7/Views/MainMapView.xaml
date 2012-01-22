@@ -19,7 +19,21 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <maps:Map Name="mainMap" />
+        <maps:Map Name="mainMap">
+            <maps:MapLayer>
+                <!--<maps:Pushpin Name="meIndicator"/>-->
+                <maps:MapPolyline Name="routePath"
+                                StrokeLineJoin="Round"
+                                Stroke="Blue"
+                                StrokeThickness="4"
+                                StrokeStartLineCap="Round"
+                                StrokeEndLineCap="Round"
+                                Locations=""
+                                Opacity="0.7" />
+            </maps:MapLayer>
+            <maps:MapLayer x:Name="pushpinStepsLayer">
+            </maps:MapLayer>
+        </maps:Map>
 
         <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Top">
             <StackPanel>
@@ -110,15 +124,38 @@
                        HorizontalAlignment="Center" VerticalAlignment="Bottom"/>-->
         </Grid>
 
-        <Grid Name="bottomGrid" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Bottom" Visibility="Collapsed">
+        <Grid Name="bottomGrid" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Bottom" Visibility="Visible">
             <StackPanel>
-                <ListBox Name="transitList"
-                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ListBox Name="transitTripsList" Margin="6,6,0,0" Width="444"
+                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                         VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                         SelectionChanged="transitTripsList_SelectionChanged"
+                         ItemsSource="{Binding Path=FormattedTransitTrips}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel>
-                                <TextBlock Text="{Binding DisplayName}" Padding="12,6,0,0" Style="{StaticResource PhoneTextTitle2Style}" />
-                                <TextBlock Text="{Binding FormattedAddress}" Padding="12,2,0,0" Style="{StaticResource PhoneTextSubtleStyle}" />
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Duration}" FontSize="40" />
+                                <StackPanel>
+                                    <ItemsControl ItemsSource="{Binding Path=Steps}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ContentControl Content="{Binding Image}" Height="32" Width="32"/>
+                                                    <TextBlock Text="{Binding Str}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                        <TextBlock Text="{Binding DepartsAt}" FontSize="20"/>
+                                        <TextBlock Text="{Binding ArrivesAt}" FontSize="20"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -47,30 +47,10 @@ namespace TransitWP7
             this.StateOrProvince = result.StateOrProvince;
         }
 
-        //public LocationDescription(WP7Contrib.Services.BingMaps.Model.LocationData result)
-        //{
-        //    this.DisplayName = result.Name;
-        //    this.GeoCoordinate = result.Point;
-        //    this.PostalCode = result.formattedAddress.PostalCode;
-        //    this.formattedAddress = result.formattedAddress.FormattedAddress;
-        //city
-        //    this.Confidence = result.Confidence.ToString();
-        //    this.StateOrProvince = result.address.AdminDistrict;
-        //}
-
-        //public LocationDescription(WP7Contrib.Services.BingMaps.Model.SearchData result)
-        //{
-        //    this.DisplayName = result.Title;
-        //    this.GeoCoordinate = result.Location;
-        //    this.PostalCode = result.PostalCode;
-        //city
-        //    this.formattedAddress = String.Format(
-        //                "{0} {1}, {2}",
-        //                result.address,
-        //                result.City,
-        //                result.PostalCode);
-        //    this.Confidence = "High";
-        //}
+        public LocationDescription(GeoCoordinate coordinate)
+        {
+            this.GeoCoordinate = coordinate;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

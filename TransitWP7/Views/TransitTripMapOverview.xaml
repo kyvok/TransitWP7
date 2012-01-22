@@ -12,7 +12,7 @@
     
     <Grid x:Name="LayoutRoot">
         <!-- Map layer -->
-        <my:Map Grid.Row="0" HorizontalAlignment="Stretch" Name="mainMap" VerticalAlignment="Stretch" ZoomLevel="15.0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+        <my:Map Grid.Row="0" HorizontalAlignment="Stretch" Name="mainMap" VerticalAlignment="Stretch" ZoomLevel="4.0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <my:MapLayer>
                 <my:Pushpin Name="meIndicator"/>
                 <my:MapPolyline Name="routePath"

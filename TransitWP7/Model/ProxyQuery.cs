@@ -151,14 +151,16 @@ namespace TransitWP7
             }
             else
             {
-                if (queryState.SavedException != null)
-                {
-                    proxyQueryResult.Error = queryState.SavedException;
-                }
-                else
-                {
-                    proxyQueryResult.Error = new Exception("no results");
-                }
+                //TODO: probably try to do spelling correction here.
+                proxyQueryResult.Error = new Exception(String.Format("Could not locate a result for {0} within 80 miles of your location.", queryState.Query));
+                //if (queryState.SavedException != null)
+                //{
+                //    proxyQueryResult.Error = queryState.SavedException;
+                //}
+                //else
+                //{
+                //    proxyQueryResult.Error = new Exception("no results");
+                //}
             }
 
             queryState.UserCallback(proxyQueryResult);
@@ -226,14 +228,15 @@ namespace TransitWP7
             }
             else
             {
-                if (queryState.SavedException != null)
-                {
-                    proxyQueryResult.Error = queryState.SavedException;
-                }
-                else
-                {
-                    proxyQueryResult.Error = new Exception("no results");
-                }
+                proxyQueryResult.Error = new Exception("No transit or less then 90 minutes walk could be found.");
+                //if (queryState.SavedException != null)
+                //{
+                //    proxyQueryResult.Error = queryState.SavedException;
+                //}
+                //else
+                //{
+                //    proxyQueryResult.Error = new Exception("no results");
+                //}
             }
 
             queryState.UserCallback(proxyQueryResult);

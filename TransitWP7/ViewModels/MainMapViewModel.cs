@@ -1,24 +1,25 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Device.Location;
-using System;
-using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
-using System.Collections.Generic;
 
 namespace TransitWP7.ViewModels
 {
     public class MainMapViewModel : ViewModelBase
     {
-        //private WP7Contrib.Services.BingMaps.BingMapsService bingMapsService;
         private string _startLocationText;
         private bool _isStartLocationStale = true;
         private string _endLocationText;
         private bool _isEndLocationStale = true;
 
-        public List<TransitDescription> TransitTrips; 
+        public List<TransitDescription> TransitTrips;
+        public ObservableCollection<SummaryTransitData> FormattedTransitTrips = new ObservableCollection<SummaryTransitData>();
 
         public MainMapViewModel()
         {
@@ -34,6 +35,7 @@ namespace TransitWP7.ViewModels
                             this.StartLocationText = this.Context._possibleStartLocations[selectedIndex.Content].DisplayName;
                             this._isStartLocationStale = false;
                             this.Context.SelectedStartingLocation = this.Context._possibleStartLocations[selectedIndex.Content];
+                            TryResolveEndpoints();
                         });
                     }
                     else
@@ -43,16 +45,13 @@ namespace TransitWP7.ViewModels
                             this.EndLocationText = this.Context._possibleEndLocations[selectedIndex.Content].DisplayName;
                             this._isEndLocationStale = false;
                             this.Context.SelectedEndingLocation = this.Context._possibleEndLocations[selectedIndex.Content];
+                            TryResolveEndpoints();
                         });
                     }
-
-                    TryResolveEndpoints();
                 });
 
-            //this.bingMapsService = new WP7Contrib.Services.BingMaps.BingMapsService(
-            //    new WP7Contrib.Communications.ResourceClientFactory(),
-            //    new WP7Contrib.Communications.UrlEncoder(),
-            //    new WP7Contrib.Services.BingMaps.Settings(ApiKeys.BingMapsKey, ApiKeys.BingSearchKey));
+            this.Context.DateTime = DateTime.Now;
+            this.Context.TimeType = TimeCondition.Now;
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
@@ -64,15 +63,6 @@ namespace TransitWP7.ViewModels
 
             // Poll bing maps about the location
             //ProxyQuery.GetLocationAddress(TransitRequestContext.Current.UserGeoCoordinate, LocationCallback, null);
-            //bingMapsService.SearchForLocationUsingPoint(
-            //    WP7Contrib.Services.BingMaps.CriterionFactory.CreateLocationSearchForPoint(e.Position.Location))
-            //    .ObserveOnDispatcher()
-            //    .Subscribe(result =>
-            //                   {
-            //                       TransitRequestContext.Current.UserCurrentLocation =
-            //                           new LocationDescription(result.Locations[0]);
-            //                   }
-            //    );
         }
 
         private static void LocationCallback(ProxyQueryResult result)
@@ -156,26 +146,30 @@ namespace TransitWP7.ViewModels
                 return;
             }
 
-            if (Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
+            if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
             {
                 DispatcherHelper.UIDispatcher.BeginInvoke(
                     () =>
                     {
                         this.StartLocationText = Globals.MyCurrentLocationText;
                         this._isStartLocationStale = false;
-                        //TODO: location in context not set.
+                        this.Context.SelectedStartingLocation = new LocationDescription(Context.UserGeoCoordinate);
+                        TryResolveEndpoints();
                     });
+                return;
             }
 
-            if (Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
+            if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
             {
                 DispatcherHelper.UIDispatcher.BeginInvoke(
                     () =>
                     {
                         this.EndLocationText = Globals.MyCurrentLocationText;
                         this._isEndLocationStale = false;
-                        //TODO: location in context not set.
+                        this.Context.SelectedEndingLocation = new LocationDescription(Context.UserGeoCoordinate);
+                        TryResolveEndpoints();
                     });
+                return;
             }
 
             if (this._isStartLocationStale)
@@ -200,6 +194,7 @@ namespace TransitWP7.ViewModels
                 return;
             }
 
+            //TOdo: fix initial context state note set.
             ProxyQuery.GetTransitDirections(
                 this.Context.SelectedStartingLocation.GeoCoordinate,
                 this.Context.SelectedEndingLocation.GeoCoordinate,
@@ -227,6 +222,7 @@ namespace TransitWP7.ViewModels
                             this.StartLocationText = result.LocationDescriptions[0].DisplayName;
                             this._isStartLocationStale = false;
                             this.Context.SelectedStartingLocation = result.LocationDescriptions[0];
+                            TryResolveEndpoints();
                         });
                 }
                 else
@@ -237,6 +233,7 @@ namespace TransitWP7.ViewModels
                             this.EndLocationText = result.LocationDescriptions[0].DisplayName;
                             this._isEndLocationStale = false;
                             this.Context.SelectedEndingLocation = result.LocationDescriptions[0];
+                            TryResolveEndpoints();
                         });
                 }
             }
@@ -265,8 +262,56 @@ namespace TransitWP7.ViewModels
                 return;
             }
 
-            this.TransitTrips = result.TransitDescriptions;
-            //now display the results.
+            this.Context.TransitDescriptionCollection = new ObservableCollection<TransitDescription>(result.TransitDescriptions);
+            DisplayTransitTripSummaries();
+        }
+
+        private void DisplayTransitTripSummaries()
+        {
+            foreach (var transitOption in TransitRequestContext.Current.TransitDescriptionCollection)
+            {
+                var atd = new SummaryTransitData();
+                bool isWalk = false;
+                for (int x = 0; x < transitOption.ItinerarySteps.Count; x++)
+                {
+                    ItineraryStep item = transitOption.ItinerarySteps[x];
+                    if (item.IconType != "")
+                    {
+                        if (item.IconType.StartsWith("W"))
+                        {
+                            if (!isWalk)
+                            {
+                                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                                {
+                                    Image img = new Image();
+                                    img.Source = new BitmapImage(new Uri("/images/walk_lo.png", UriKind.Relative));
+                                    atd.Steps.Add(new TransitStep("", img));
+                                });
+                            }
+                        }
+                        else if (item.IconType.StartsWith("B"))
+                        {
+                            Deployment.Current.Dispatcher.BeginInvoke(() =>
+                            {
+                                Image img = new Image();
+                                img.Source = new BitmapImage(new Uri("/images/bus_lo.png", UriKind.Relative));
+                                atd.Steps.Add(new TransitStep(item.BusNumber, img));
+                            });
+                        }
+                        isWalk = item.TravelMode.StartsWith("W") ? true : false;
+                    }
+                }
+                atd.Duration = ((int)(transitOption.TravelDuration / 60)).ToString() + " min";
+                atd.ArrivesAt = transitOption.ArrivalTime;
+                atd.DepartsAt = transitOption.DepartureTime;
+
+                Deployment.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    FormattedTransitTrips.Add(atd);
+                });
+
+                Messenger.Default.Send(new NotificationMessage("transit"));
+            }
         }
 
         private static void ProcessErrorMessage(string errorMsg)
@@ -278,5 +323,31 @@ namespace TransitWP7.ViewModels
                          };
             Messenger.Default.Send(dm);
         }
+    }
+
+    //TODO: get rid of these 2 classes!
+    public class SummaryTransitData
+    {
+        public SummaryTransitData()
+        {
+            this.Steps = new List<TransitStep>();
+        }
+
+        public List<TransitStep> Steps { get; set; }
+        public string Duration { get; set; }
+        public string DepartsAt { get; set; }
+        public string ArrivesAt { get; set; }
+    }
+
+    public class TransitStep
+    {
+        public TransitStep(string str, Image image)
+        {
+            this.Str = str;
+            this.Image = image;
+        }
+
+        public string Str { get; set; }
+        public Image Image { get; set; }
     }
 }

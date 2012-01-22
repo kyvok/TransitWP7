@@ -4,10 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
-using GalaSoft.MvvmLight.Messaging;
 
 namespace TransitWP7
 {
@@ -18,7 +18,6 @@ namespace TransitWP7
         public MainMapView()
         {
             InitializeComponent();
-            DispatcherHelper.Initialize();
             this.DataContext = this._viewModel;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
@@ -26,16 +25,40 @@ namespace TransitWP7
             Messenger.Default.Register<DialogMessage>(this,
                 msg =>
                 {
-                    var result = MessageBox.Show(msg.Content, msg.Caption, msg.Button);
-                    msg.ProcessCallback(result);
+                    DispatcherHelper.UIDispatcher.BeginInvoke(
+                        () =>
+                        {
+                            var result = MessageBox.Show(msg.Content, msg.Caption, msg.Button);
+                            msg.ProcessCallback(result);
+                        }
+                        );
+
+
                 });
 
             Messenger.Default.Register<NotificationMessage>(this,
-                msg => DispatcherHelper.UIDispatcher.BeginInvoke(
-                    () => NavigationService.Navigate(
-                        new Uri(
-                            String.Format("/Views/LocationSelectionView.xaml?endpoint={0}", msg.Notification),
-                            UriKind.Relative))));
+                msg =>
+                {
+                    if (msg.Notification != "transit")
+                    {
+                        DispatcherHelper.UIDispatcher.BeginInvoke(
+                            () => NavigationService.Navigate(
+                                new Uri(
+                                    String.Format("/Views/LocationSelectionView.xaml?endpoint={0}", msg.Notification),
+                                    UriKind.Relative)));
+                    }
+                    else
+                    {
+                        DispatcherHelper.UIDispatcher.BeginInvoke(
+                            () =>
+                            {
+                                this.bottomGrid.Visibility = Visibility.Visible;
+                                this.transitTripsList.ItemsSource = _viewModel.FormattedTransitTrips;
+                                this.bottomGrid.Height = 800-this.topGrid.ActualHeight - 32;
+                            });
+                    }
+                }
+        );
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
@@ -117,6 +140,43 @@ namespace TransitWP7
         {
             //TODO: if not location enabled, ask permission
             this.mainMap.SetView(this._viewModel.Context.UserGeoCoordinate, 14);
+        }
+
+        private void transitTripsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.bottomGrid.Visibility = Visibility.Collapsed;
+            this.topGrid.Visibility = Visibility.Collapsed;
+
+            this._viewModel.Context.SelectedTransitTrip =
+                _viewModel.Context.TransitDescriptionCollection[this.transitTripsList.SelectedIndex];
+
+            TransitDescription description = TransitRequestContext.Current.SelectedTransitTrip;
+
+            if (description != null)
+            {
+                foreach (var step in description.ItinerarySteps)
+                {
+                    string instructContent = string.Empty;
+                    if (step.IconType != "")
+                    {
+                        instructContent = step.IconType.Substring(0, 1);
+                        if (step.IconType.StartsWith("B"))
+                        {
+                            instructContent += step.BusNumber;
+                        }
+                    }
+
+                    this.pushpinStepsLayer.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = instructContent });
+                }
+
+                routePath.Locations.Clear();
+                foreach (var pathPoint in description.PathPoints)
+                {
+                    this.routePath.Locations.Add(pathPoint);
+                }
+
+                this.mainMap.SetView(description.MapView);
+            }
         }
 
         //private void Button_Click_1(object sender, RoutedEventArgs e)

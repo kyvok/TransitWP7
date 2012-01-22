@@ -1,5 +1,7 @@
 ﻿//TODO: copyright info
 
+using GalaSoft.MvvmLight.Threading;
+
 namespace TransitWP7
 {
     using System.Windows;
@@ -57,6 +59,7 @@ namespace TransitWP7
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
             //PersistedInfo.Load();
+            DispatcherHelper.Initialize();
         }
 
         // Code to execute when the application is activated (brought to foreground)
