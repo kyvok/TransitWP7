@@ -11,6 +11,7 @@ using GalaSoft.MvvmLight.Threading;
 
 namespace TransitWP7.ViewModels
 {
+    //TODO: progressindicator native to be enabled when calculation in progress. NATIVE, not the progressbar one.
     public class MainMapViewModel : ViewModelBase
     {
         private string _startLocationText;
