@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Device.Location;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -59,23 +60,7 @@ namespace TransitWP7.ViewModels
         void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             TransitRequestContext.Current.UserGeoCoordinate = e.Position.Location;
-
             //this.mainMap.SetView(e.Position.Location, 15.0);
-
-            // Poll bing maps about the location
-            //ProxyQuery.GetLocationAddress(TransitRequestContext.Current.UserGeoCoordinate, LocationCallback, null);
-        }
-
-        private static void LocationCallback(ProxyQueryResult result)
-        {
-            if (result.Error != null)
-            {
-                MessageBox.Show(result.Error.Message, "LocationCallback obtained an error!", MessageBoxButton.OK);
-            }
-            else
-            {
-                TransitRequestContext.Current.UserCurrentLocation = result.LocationDescriptions[0];
-            }
         }
 
         public TransitRequestContext Context
@@ -135,13 +120,13 @@ namespace TransitWP7.ViewModels
 
         public void TryResolveEndpoints()
         {
-            if (this._isStartLocationStale && String.IsNullOrWhiteSpace(this.StartLocationText))
+            if (String.IsNullOrWhiteSpace(this.StartLocationText))
             {
                 ProcessErrorMessage("Where are you starting from?");
                 return;
             }
 
-            if (this._isEndLocationStale && String.IsNullOrWhiteSpace(this.EndLocationText))
+            if (String.IsNullOrWhiteSpace(this.EndLocationText))
             {
                 ProcessErrorMessage("Where do you want to go?");
                 return;
@@ -167,7 +152,7 @@ namespace TransitWP7.ViewModels
                     {
                         this.EndLocationText = Globals.MyCurrentLocationText;
                         this._isEndLocationStale = false;
-                        this.Context.SelectedEndingLocation = new LocationDescription(Context.UserGeoCoordinate);
+                        this.Context.SelectedEndingLocation = new LocationDescription(Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText };
                         TryResolveEndpoints();
                     });
                 return;
@@ -195,7 +180,7 @@ namespace TransitWP7.ViewModels
                 return;
             }
 
-            //TOdo: fix initial context state note set.
+            //TODO: fix initial context state not set. Hacked up in view startup.
             ProxyQuery.GetTransitDirections(
                 this.Context.SelectedStartingLocation.GeoCoordinate,
                 this.Context.SelectedEndingLocation.GeoCoordinate,
@@ -272,44 +257,43 @@ namespace TransitWP7.ViewModels
             foreach (var transitOption in TransitRequestContext.Current.TransitDescriptionCollection)
             {
                 var atd = new SummaryTransitData();
-                bool isWalk = false;
-                for (int x = 0; x < transitOption.ItinerarySteps.Count; x++)
+                var isWalk = false;
+                foreach (ItineraryStep item in transitOption.ItinerarySteps)
                 {
-                    ItineraryStep item = transitOption.ItinerarySteps[x];
                     if (item.IconType != "")
                     {
                         if (item.IconType.StartsWith("W"))
                         {
                             if (!isWalk)
                             {
-                                Deployment.Current.Dispatcher.BeginInvoke(() =>
-                                {
-                                    Image img = new Image();
-                                    img.Source = new BitmapImage(new Uri("/images/walk_lo.png", UriKind.Relative));
-                                    atd.Steps.Add(new TransitStep("", img));
-                                });
+                                Deployment.Current.Dispatcher.BeginInvoke(
+                                    () =>
+                                    {
+                                        var img = new Image();
+                                        img.Source = new BitmapImage(new Uri("/images/walk_lo.png", UriKind.Relative));
+                                        atd.Steps.Add(new TransitStep("", img));
+                                    });
                             }
                         }
                         else if (item.IconType.StartsWith("B"))
                         {
-                            Deployment.Current.Dispatcher.BeginInvoke(() =>
-                            {
-                                Image img = new Image();
-                                img.Source = new BitmapImage(new Uri("/images/bus_lo.png", UriKind.Relative));
-                                atd.Steps.Add(new TransitStep(item.BusNumber, img));
-                            });
+                            var item1 = item;
+                            Deployment.Current.Dispatcher.BeginInvoke(
+                                () =>
+                                {
+                                    var img = new Image();
+                                    img.Source = new BitmapImage(new Uri("/images/bus_lo.png", UriKind.Relative));
+                                    atd.Steps.Add(new TransitStep(item1.BusNumber, img));
+                                });
                         }
                         isWalk = item.TravelMode.StartsWith("W") ? true : false;
                     }
                 }
-                atd.Duration = ((int)(transitOption.TravelDuration / 60)).ToString() + " min";
+                atd.Duration = ((int)(transitOption.TravelDuration / 60)).ToString(CultureInfo.InvariantCulture) + " min";
                 atd.ArrivesAt = transitOption.ArrivalTime;
                 atd.DepartsAt = transitOption.DepartureTime;
 
-                Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    FormattedTransitTrips.Add(atd);
-                });
+                Deployment.Current.Dispatcher.BeginInvoke(() => FormattedTransitTrips.Add(atd));
 
                 Messenger.Default.Send(new NotificationMessage("transit"));
             }

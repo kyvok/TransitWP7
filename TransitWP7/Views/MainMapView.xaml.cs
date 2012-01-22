@@ -23,16 +23,13 @@ namespace TransitWP7
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
             Messenger.Default.Register<DialogMessage>(this,
-                msg =>
-                {
-                    DispatcherHelper.UIDispatcher.BeginInvoke(
-                        () =>
-                        {
-                            var result = MessageBox.Show(msg.Content, msg.Caption, msg.Button);
-                            msg.ProcessCallback(result);
-                        }
-                        );
-                });
+                msg => DispatcherHelper.UIDispatcher.BeginInvoke(
+                    () =>
+                    {
+                        var result = MessageBox.Show(msg.Content, msg.Caption, msg.Button);
+                        msg.ProcessCallback(result);
+                    }
+                           ));
 
             Messenger.Default.Register<NotificationMessage>(this,
                 msg =>

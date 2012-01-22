@@ -19,6 +19,7 @@ namespace TransitWP7.ViewModels
     {
         public string endpointName;
 
+        //TODO: calculate distance of origin or current location to each point
         public LocationSelectionViewModel()
         {
         }
