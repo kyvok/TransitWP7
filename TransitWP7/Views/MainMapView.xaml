@@ -19,9 +19,9 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <maps:Map Name="mainMap">
+        <maps:Map Name="mainMap" ScaleVisibility="Visible">
             <maps:MapLayer>
-                <!--<maps:Pushpin Name="meIndicator"/>-->
+                <maps:Pushpin Name="meIndicator" Location="{Binding Path=Context.UserGeoCoordinate}" PositionOrigin="Center" Style="{StaticResource PushpinStyle}" />
                 <maps:MapPolyline Name="routePath"
                                 StrokeLineJoin="Round"
                                 Stroke="Blue"

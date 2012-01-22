@@ -32,8 +32,6 @@ namespace TransitWP7
                             msg.ProcessCallback(result);
                         }
                         );
-
-
                 });
 
             Messenger.Default.Register<NotificationMessage>(this,
@@ -54,7 +52,7 @@ namespace TransitWP7
                             {
                                 this.bottomGrid.Visibility = Visibility.Visible;
                                 this.transitTripsList.ItemsSource = _viewModel.FormattedTransitTrips;
-                                this.bottomGrid.Height = 800-this.topGrid.ActualHeight - 32;
+                                this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
                             });
                     }
                 }

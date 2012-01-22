@@ -7,8 +7,6 @@ namespace BingApisLib.BingMapsRestApi
     using System.Net;
     using System.Text;
     using System.Xml.Serialization;
-    using System.Reactive;
-    using System.Reactive.Linq;
 
     /// <summary>
     /// Helper class to query BingMaps resources.

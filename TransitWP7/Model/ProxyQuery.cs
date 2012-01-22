@@ -9,8 +9,6 @@ namespace TransitWP7
     using System.Device.Location;
     using BingApisLib.BingMapsRestApi;
     using BingApisLib.BingSearchRestApi;
-    using System.Reactive;
-    using System.Reactive.Linq;
 
     /// <summary>
     /// Calls REST APIs and isolate their type mapping by converting to transitive types.
