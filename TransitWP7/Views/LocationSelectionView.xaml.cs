@@ -1,20 +1,17 @@
 ﻿//TODO: copyright info
+using System;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using System.Collections.Generic;
 
 namespace TransitWP7
 {
-    using System;
-    using Microsoft.Phone.Controls;
-    using Microsoft.Phone.Shell;
-    using System.Collections.Generic;
-
     //TODO: distance of the item from origin
     //TODO: calculate results from origin for endpoint, not current userlocation!!!
     public partial class LocationSelectionView : PhoneApplicationPage
     {
         private readonly ViewModels.LocationSelectionViewModel _viewModel = new ViewModels.LocationSelectionViewModel();
-
-        List<LocationDescription> resultSet = null;
-        bool isStartResult = true;
+        private const string PageTitleStringFormat = "Which {0} location did you mean?";
 
         public LocationSelectionView()
         {
@@ -25,36 +22,19 @@ namespace TransitWP7
         {
             base.OnNavigatedTo(arg);
 
-            // check to see if we have a title
-            object titleText = null;
-            if (PhoneApplicationService.Current.State.TryGetValue("theQuery", out titleText))
-            {
-                this.PageTitle.Text = (string)titleText;
-            }
+            _viewModel.endpointName = this.NavigationContext.QueryString["endpoint"];
 
-
-            // check to see if we have results
-            if (PhoneApplicationService.Current.State.ContainsKey("theResultSet"))
-            {
-                resultSet = (List<LocationDescription>)PhoneApplicationService.Current.State["theResultSet"];
-                this.resultsList.ItemsSource = this.resultSet;
-            }
-
-            // check to see if we're the starting result or end result
-            if (PhoneApplicationService.Current.State.ContainsKey("isStartResult"))
-            {
-                this.isStartResult = (bool)PhoneApplicationService.Current.State["isStartResult"];
-            }
-            else
-            {
-                throw new Exception("should never be here");
-            }
+            this.PageTitle.Text = String.Format(PageTitleStringFormat, _viewModel.endpointName);
+            this.resultsList.ItemsSource = _viewModel.endpointName == "start"
+                                               ? _viewModel.Context._possibleStartLocations
+                                               : _viewModel.Context._possibleEndLocations;
         }
+
+        //TODO: backing up from here what happens?
 
         private void resultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            PhoneApplicationService.Current.State["isFromResultSelection"] = true;
-            PhoneApplicationService.Current.State["selectedResult"] = this.resultSet[this.resultsList.SelectedIndex];
+            _viewModel.SelectionMade(this.resultsList.SelectedIndex);
             this.NavigationService.GoBack();
         }
     }

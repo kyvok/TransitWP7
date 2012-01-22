@@ -1,15 +1,16 @@
-﻿
+﻿using System;
+using System.Device.Location;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using GalaSoft.MvvmLight.Threading;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Controls.Maps;
+using GalaSoft.MvvmLight.Messaging;
+
 namespace TransitWP7
 {
-    using System;
-    using System.Device.Location;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using Microsoft.Phone.Controls;
-    using Microsoft.Phone.Controls.Maps;
-
     public partial class MainMapView : PhoneApplicationPage
     {
         private readonly ViewModels.MainMapViewModel _viewModel = new ViewModels.MainMapViewModel();
@@ -17,8 +18,24 @@ namespace TransitWP7
         public MainMapView()
         {
             InitializeComponent();
+            DispatcherHelper.Initialize();
+            this.DataContext = this._viewModel;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
+
+            Messenger.Default.Register<DialogMessage>(this,
+                msg =>
+                {
+                    var result = MessageBox.Show(msg.Content, msg.Caption, msg.Button);
+                    msg.ProcessCallback(result);
+                });
+
+            Messenger.Default.Register<NotificationMessage>(this,
+                msg => DispatcherHelper.UIDispatcher.BeginInvoke(
+                    () => NavigationService.Navigate(
+                        new Uri(
+                            String.Format("/Views/LocationSelectionView.xaml?endpoint={0}", msg.Notification),
+                            UriKind.Relative))));
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
@@ -54,28 +71,24 @@ namespace TransitWP7
                 switch (timeTypePicker.SelectedIndex)
                 {
                     case 0:
-                        _viewModel.Context.DateTime = DateTime.Now;
-                        _viewModel.Context.TimeType = TimeCondition.Now;
-                        datePicker.Visibility = Visibility.Collapsed;
-                        timePicker.Visibility = Visibility.Collapsed;
+                        _viewModel.EnsureDateTimeSyncInContext(DateTime.Now, DateTime.Now, TimeCondition.Now);
+                        datePicker.IsEnabled = false;
+                        timePicker.IsEnabled = false;
                         break;
                     case 1:
-                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value);
-                        _viewModel.Context.TimeType = TimeCondition.DepartingAt;
-                        datePicker.Visibility = Visibility.Visible;
-                        timePicker.Visibility = Visibility.Visible;
+                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.DepartingAt);
+                        datePicker.IsEnabled = true;
+                        timePicker.IsEnabled = true;
                         break;
                     case 2:
-                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value);
-                        _viewModel.Context.TimeType = TimeCondition.ArrivingAt;
-                        datePicker.Visibility = Visibility.Visible;
-                        timePicker.Visibility = Visibility.Visible;
+                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.ArrivingAt);
+                        datePicker.IsEnabled = true;
+                        timePicker.IsEnabled = true;
                         break;
                     case 3:
-                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value);
-                        _viewModel.Context.TimeType = TimeCondition.LastArrivalTime;
-                        datePicker.Visibility = Visibility.Visible;
-                        timePicker.Visibility = Visibility.Collapsed;
+                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.LastArrivalTime);
+                        datePicker.IsEnabled = true;
+                        timePicker.IsEnabled = false;
                         break;
                 }
             }
@@ -85,52 +98,12 @@ namespace TransitWP7
         {
             var inputBox = sender as TextBlock;
             dateTimeStackPanel.Visibility = dateTimeStackPanel.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
-            inputBox.Text = dateTimeStackPanel.Visibility == Visibility.Collapsed ? "More options" : "Less options";
+            inputBox.Text = dateTimeStackPanel.Visibility == Visibility.Collapsed ? "Show options" : "Hide options";
         }
 
-        private bool startSolved = false;
-        private bool endSolved = false;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!startSolved)
-            {
-                ProxyQuery.GetLocationsAndBusiness(this.startingInput.Text, TransitRequestContext.Current.UserGeoCoordinate, StartingCallbackForBingApiQuery, null);
-            }
-        }
-
-        private void StartingCallbackForBingApiQuery(ProxyQueryResult result)
-        {
-            if (result.Error != null)
-            {
-                System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    this.startingInput.Focus();
-                    MessageBox.Show(result.Error.Message);
-                });
-            }
-            else
-            {
-                if (result.LocationDescriptions.Count == 1)
-                {
-
-                }
-                else
-                {
-                    System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-                    {
-                        //this.queryNameTextBlock.Text = this.startingInput.Text;
-                        //this.resultsList.ItemsSource = result.LocationDescriptions;
-                        this.bottomGrid.Height = Application.Current.Host.Content.ActualHeight - this.topGrid.ActualHeight;
-                        this.bottomGrid.Visibility = Visibility.Visible;
-                    });
-                }
-            }
-        }
-
-        private void resultsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //TransitRequestContext.Current.SelectedStartingLocation = (LocationDescription)this.resultsList.Items[this.resultsList.SelectedIndex];
-            this.bottomGrid.Visibility = Visibility.Collapsed;
+            this._viewModel.TryResolveEndpoints();
         }
 
         private void TextBlock_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
@@ -139,5 +112,16 @@ namespace TransitWP7
             this.startingInput.Text = this.endingInput.Text;
             this.endingInput.Text = temp;
         }
+
+        private void ApplicationBarIconButton_Click(object sender, EventArgs e)
+        {
+            //TODO: if not location enabled, ask permission
+            this.mainMap.SetView(this._viewModel.Context.UserGeoCoordinate, 14);
+        }
+
+        //private void Button_Click_1(object sender, RoutedEventArgs e)
+        //{
+        //    dateTimeStackPanel.Visibility = dateTimeStackPanel.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        //}
     }
 }

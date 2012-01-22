@@ -1,5 +1,7 @@
 ﻿//TODO: copyright info
 
+using System.Collections.Generic;
+
 namespace TransitWP7
 {
     using System;
@@ -16,6 +18,10 @@ namespace TransitWP7
         private LocationDescription userCurrentLocation;
         private LocationDescription selectedStartingLocation;
         private LocationDescription selectedEndingLocation;
+
+        //TODO: move this out of the transitcontext
+        public List<LocationDescription> _possibleStartLocations;
+        public List<LocationDescription> _possibleEndLocations;
 
         public static TransitRequestContext Current = new TransitRequestContext();
 
