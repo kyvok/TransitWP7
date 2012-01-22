@@ -148,12 +148,6 @@ namespace TransitWP7.ViewModels
                 return;
             }
 
-            if (this.Context.SelectedStartingLocation.GeoCoordinate.Equals(this.Context.SelectedEndingLocation.GeoCoordinate))
-            {
-                ProcessErrorMessage("You already are at destination!");
-                return;
-            }
-
             //TODO: fix initial context state not set. Hacked up in view startup.
             ProxyQuery.GetTransitDirections(
                 this.Context.SelectedStartingLocation.GeoCoordinate,
