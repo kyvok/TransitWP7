@@ -5,8 +5,8 @@ namespace TransitWP7
     using System.Collections.Generic;
     using System.Device.Location;
     using System.Linq;
-    using Microsoft.Phone.Controls.Maps;
     using BingApisLib.BingMapsRestApi;
+    using Microsoft.Phone.Controls.Maps;
 
     public static class BingMapsExtensionMethods
     {
