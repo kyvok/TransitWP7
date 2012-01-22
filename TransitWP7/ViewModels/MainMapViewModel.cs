@@ -32,23 +32,11 @@ namespace TransitWP7.ViewModels
                 {
                     if (selectedIndex.Notification.Equals("start"))
                     {
-                        DispatcherHelper.UIDispatcher.BeginInvoke(() =>
-                        {
-                            this.StartLocationText = this.Context._possibleStartLocations[selectedIndex.Content].DisplayName;
-                            this._isStartLocationStale = false;
-                            this.Context.SelectedStartingLocation = this.Context._possibleStartLocations[selectedIndex.Content];
-                            TryResolveEndpoints();
-                        });
+                        this.UpdateLocation("start", this.Context._possibleStartLocations[selectedIndex.Content]);
                     }
                     else
                     {
-                        DispatcherHelper.UIDispatcher.BeginInvoke(() =>
-                        {
-                            this.EndLocationText = this.Context._possibleEndLocations[selectedIndex.Content].DisplayName;
-                            this._isEndLocationStale = false;
-                            this.Context.SelectedEndingLocation = this.Context._possibleEndLocations[selectedIndex.Content];
-                            TryResolveEndpoints();
-                        });
+                        this.UpdateLocation("end", this.Context._possibleEndLocations[selectedIndex.Content]);
                     }
                 });
 
@@ -134,27 +122,13 @@ namespace TransitWP7.ViewModels
 
             if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
             {
-                DispatcherHelper.UIDispatcher.BeginInvoke(
-                    () =>
-                    {
-                        this.StartLocationText = Globals.MyCurrentLocationText;
-                        this._isStartLocationStale = false;
-                        this.Context.SelectedStartingLocation = new LocationDescription(Context.UserGeoCoordinate);
-                        TryResolveEndpoints();
-                    });
+                this.UpdateLocation("start", new LocationDescription(Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
                 return;
             }
 
             if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
             {
-                DispatcherHelper.UIDispatcher.BeginInvoke(
-                    () =>
-                    {
-                        this.EndLocationText = Globals.MyCurrentLocationText;
-                        this._isEndLocationStale = false;
-                        this.Context.SelectedEndingLocation = new LocationDescription(Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText };
-                        TryResolveEndpoints();
-                    });
+                this.UpdateLocation("end", new LocationDescription(Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
                 return;
             }
 
@@ -200,28 +174,7 @@ namespace TransitWP7.ViewModels
 
             if (result.LocationDescriptions.Count == 1)
             {
-                if (result.UserState.Equals("start"))
-                {
-                    DispatcherHelper.UIDispatcher.BeginInvoke(
-                        () =>
-                        {
-                            this.StartLocationText = result.LocationDescriptions[0].DisplayName;
-                            this._isStartLocationStale = false;
-                            this.Context.SelectedStartingLocation = result.LocationDescriptions[0];
-                            TryResolveEndpoints();
-                        });
-                }
-                else
-                {
-                    DispatcherHelper.UIDispatcher.BeginInvoke(
-                        () =>
-                        {
-                            this.EndLocationText = result.LocationDescriptions[0].DisplayName;
-                            this._isEndLocationStale = false;
-                            this.Context.SelectedEndingLocation = result.LocationDescriptions[0];
-                            TryResolveEndpoints();
-                        });
-                }
+                this.UpdateLocation(result.UserState as string, result.LocationDescriptions[0]);
             }
             else
             {
@@ -238,6 +191,27 @@ namespace TransitWP7.ViewModels
 
                 Messenger.Default.Send(nm);
             }
+        }
+
+        private void UpdateLocation(string endpoint, LocationDescription location)
+        {
+            DispatcherHelper.UIDispatcher.BeginInvoke(
+                    () =>
+                    {
+                        if (endpoint == "start")
+                        {
+                            this.StartLocationText = location.DisplayName;
+                            this._isStartLocationStale = false;
+                            this.Context.SelectedStartingLocation = location;
+                        }
+                        else
+                        {
+                            this.EndLocationText = location.DisplayName;
+                            this._isEndLocationStale = false;
+                            this.Context.SelectedEndingLocation = location;
+                        }
+                        TryResolveEndpoints();
+                    });
         }
 
         private void GetTransitDirectionsCallback(ProxyQueryResult result)
