@@ -25,11 +25,11 @@
                 <maps:MapPolyline Name="routePath"
                                 StrokeLineJoin="Round"
                                 Stroke="Blue"
-                                StrokeThickness="4"
+                                StrokeThickness="8"
                                 StrokeStartLineCap="Round"
                                 StrokeEndLineCap="Round"
                                 Locations=""
-                                Opacity="0.7" />
+                                Opacity="0.5" />
             </maps:MapLayer>
             <maps:MapLayer x:Name="pushpinStepsLayer">
             </maps:MapLayer>
@@ -57,7 +57,7 @@
                 </StackPanel>                
                 <!-- End section -->
                 <StackPanel Orientation="Horizontal">
-                    <!-- Maps application uses #8593 for up arrow. -->
+                    <!-- Maps application uses #8593 for up arrow. (or similar) -->
                     <!-- We consider using #8645 for up arrow. -->
                     <TextBlock Width="60" Padding="0,20,0,0"
                            Text="&#8645;End" TextAlignment="Right"
@@ -116,12 +116,6 @@
 
             </StackPanel>
 
-
-            <!-- Current location debug info -->
-            <!--<TextBlock Name="currentLocation"
-                       Text="{Binding Path=CurrentLocation}"
-                       Height="40" Width="330"
-                       HorizontalAlignment="Center" VerticalAlignment="Bottom"/>-->
         </Grid>
 
         <Grid Name="bottomGrid" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Bottom" Visibility="Visible">
@@ -170,8 +164,10 @@
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.questionmark.rest.png" Text="Locate Me" Click="ApplicationBarIconButton_Click"/>
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.questionmark.rest.png" Text="Button 2"/>
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
+                <shell:ApplicationBarMenuItem Text="directions list"/>
+                <shell:ApplicationBarMenuItem Text="show transit options"/>
+                <shell:ApplicationBarMenuItem Text="clear map"/>
+                <shell:ApplicationBarMenuItem Text="settings"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

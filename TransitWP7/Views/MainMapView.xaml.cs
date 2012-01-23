@@ -11,6 +11,7 @@ using Microsoft.Phone.Controls.Maps;
 
 namespace TransitWP7
 {
+    // TODO: Localize this app properly. Will need a resource file.
     public partial class MainMapView : PhoneApplicationPage
     {
         private readonly ViewModels.MainMapViewModel _viewModel = new ViewModels.MainMapViewModel();
@@ -22,6 +23,11 @@ namespace TransitWP7
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
+            RegisterNotifications();
+        }
+
+        private void RegisterNotifications()
+        {
             Messenger.Default.Register<DialogMessage>(
                 this,
                 msg => DispatcherHelper.UIDispatcher.BeginInvoke(
@@ -160,7 +166,14 @@ namespace TransitWP7
                         }
                     }
 
-                    this.pushpinStepsLayer.Children.Add(new Pushpin() { Location = step.GeoCoordinate, Content = instructContent });
+                    this.pushpinStepsLayer.Children.Add(
+                        new Pushpin()
+                        {
+                            Location = step.GeoCoordinate,
+                            Content = instructContent,
+                            Style = (Style)(Application.Current.Resources["TransitStepPushpinStyle"]),
+                            PositionOrigin = PositionOrigin.Center
+                        });
                 }
 
                 routePath.Locations.Clear();

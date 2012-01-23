@@ -20,6 +20,21 @@
             <Setter Property="Foreground" Value="White" />
             <Setter Property="FontSize" Value="18" />
         </Style>
+        <Style TargetType="m:Pushpin" x:Key="TransitStepPushpinStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="m:Pushpin">
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Ellipse Fill="Black" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Text="A" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,0,0,0" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>
