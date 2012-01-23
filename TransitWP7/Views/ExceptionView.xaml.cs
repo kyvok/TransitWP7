@@ -1,5 +1,4 @@
-﻿
-namespace TransitWP7
+﻿namespace TransitWP7
 {
     using System.Windows;
     using System.Windows.Navigation;
@@ -13,7 +12,7 @@ namespace TransitWP7
             InitializeComponent();
         }
 
-        protected override void  OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.exceptionText.Text = (string)PhoneApplicationService.Current.State["exception"];
             base.OnNavigatedTo(e);

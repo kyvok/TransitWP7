@@ -1,5 +1,4 @@
-﻿
-namespace TransitWP7
+﻿namespace TransitWP7
 {
     public static class Globals
     {

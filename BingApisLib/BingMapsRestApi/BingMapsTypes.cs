@@ -190,7 +190,7 @@ namespace BingApisLib.BingMapsRestApi
         public Instruction Instruction { get; set; }
         public Point ManeuverPoint { get; set; }
         public SideOfStreet SideOfStreet { get; set; }
-        public string Sign { get; set; } //TODO: collection?
+        public string Sign { get; set; } // TODO: collection?
         public System.DateTime Time { get; set; }
         public string TollZone { get; set; }
         public string TowardsRoadName { get; set; }

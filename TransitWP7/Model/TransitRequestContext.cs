@@ -16,7 +16,7 @@ namespace TransitWP7
         private LocationDescription selectedStartingLocation;
         private LocationDescription selectedEndingLocation;
 
-        //TODO: move this out of the transitcontext
+        // TODO: move this out of the transitcontext
         public List<LocationDescription> _possibleStartLocations;
         public List<LocationDescription> _possibleEndLocations;
 
@@ -30,6 +30,7 @@ namespace TransitWP7
             {
                 return this.userGeoCoordinate;
             }
+
             set
             {
                 if (value != this.userGeoCoordinate)
@@ -46,6 +47,7 @@ namespace TransitWP7
             {
                 return this.dateTime;
             }
+
             set
             {
                 if (value != this.dateTime)
@@ -62,6 +64,7 @@ namespace TransitWP7
             {
                 return this.timeType;
             }
+
             set
             {
                 if (value != this.timeType)
@@ -78,6 +81,7 @@ namespace TransitWP7
             {
                 return this.selectedTransitTrip;
             }
+
             set
             {
                 if (value != this.selectedTransitTrip)
@@ -94,6 +98,7 @@ namespace TransitWP7
             {
                 return this.selectedStartingLocation;
             }
+
             set
             {
                 if (value != this.selectedStartingLocation)
@@ -110,6 +115,7 @@ namespace TransitWP7
             {
                 return this.selectedEndingLocation;
             }
+
             set
             {
                 if (value != this.selectedEndingLocation)
@@ -126,6 +132,7 @@ namespace TransitWP7
             {
                 return this.userCurrentLocation;
             }
+
             set
             {
                 if (value != this.userCurrentLocation)

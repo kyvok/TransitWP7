@@ -12,7 +12,7 @@ using GalaSoft.MvvmLight.Threading;
 
 namespace TransitWP7.ViewModels
 {
-    //TODO: progressindicator native to be enabled when calculation in progress. NATIVE, not the progressbar one.
+    // TODO: progressindicator native to be enabled when calculation in progress. NATIVE, not the progressbar one.
     public class MainMapViewModel : ViewModelBase
     {
         private string _startLocationText;
@@ -27,7 +27,8 @@ namespace TransitWP7.ViewModels
         {
             GeoLocation.Instance.GeoWatcher.PositionChanged += this.watcher_PositionChanged;
 
-            Messenger.Default.Register<NotificationMessage<int>>(this,
+            Messenger.Default.Register<NotificationMessage<int>>(
+                this,
                 selectedIndex =>
                 {
                     if (selectedIndex.Notification.Equals("start"))
@@ -45,10 +46,10 @@ namespace TransitWP7.ViewModels
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
-        void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        private void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             TransitRequestContext.Current.UserGeoCoordinate = e.Position.Location;
-            //this.mainMap.SetView(e.Position.Location, 15.0);
+            ////this.mainMap.SetView(e.Position.Location, 15.0);
         }
 
         public TransitRequestContext Context
@@ -61,7 +62,11 @@ namespace TransitWP7.ViewModels
 
         public string StartLocationText
         {
-            get { return this._startLocationText; }
+            get
+            {
+                return this._startLocationText;
+            }
+
             set
             {
                 if (value != this._startLocationText)
@@ -75,7 +80,11 @@ namespace TransitWP7.ViewModels
 
         public string EndLocationText
         {
-            get { return this._endLocationText; }
+            get
+            {
+                return this._endLocationText;
+            }
+
             set
             {
                 if (value != this._endLocationText)
@@ -89,32 +98,31 @@ namespace TransitWP7.ViewModels
 
         public void EnsureDateTimeSyncInContext(DateTime? datePart, DateTime? timePart)
         {
-            EnsureDateTimeSyncInContext(datePart, timePart, Context.TimeType);
+            this.EnsureDateTimeSyncInContext(datePart, timePart, this.Context.TimeType);
         }
 
         public void EnsureDateTimeSyncInContext(DateTime? datePart, DateTime? timePart, TimeCondition timeCondition)
         {
-            Context.DateTime = new DateTime(
+            this.Context.DateTime = new DateTime(
                 datePart.Value.Year,
                 datePart.Value.Month,
                 datePart.Value.Day,
                 timePart.Value.Hour,
                 timePart.Value.Minute,
-                timePart.Value.Second
-                );
+                timePart.Value.Second);
 
-            Context.TimeType = timeCondition;
+            this.Context.TimeType = timeCondition;
         }
 
         public void TryResolveEndpoints()
         {
-            if (String.IsNullOrWhiteSpace(this.StartLocationText))
+            if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
                 ProcessErrorMessage("Where are you starting from?");
                 return;
             }
 
-            if (String.IsNullOrWhiteSpace(this.EndLocationText))
+            if (string.IsNullOrWhiteSpace(this.EndLocationText))
             {
                 ProcessErrorMessage("Where do you want to go?");
                 return;
@@ -122,39 +130,43 @@ namespace TransitWP7.ViewModels
 
             if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
             {
-                this.UpdateLocation("start", new LocationDescription(Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                this.UpdateLocation("start", new LocationDescription(this.Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
                 return;
             }
 
             if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
             {
-                this.UpdateLocation("end", new LocationDescription(Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                this.UpdateLocation("end", new LocationDescription(this.Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
                 return;
             }
 
             if (this._isStartLocationStale)
             {
-                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText,
-                                                   TransitRequestContext.Current.UserGeoCoordinate,
-                                                   GetLocationsAndBusinessCallback, "start");
+                ProxyQuery.GetLocationsAndBusiness(
+                    this.StartLocationText,
+                    TransitRequestContext.Current.UserGeoCoordinate,
+                    this.GetLocationsAndBusinessCallback,
+                    "start");
                 return;
             }
 
             if (this._isEndLocationStale)
             {
-                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText,
-                                                   TransitRequestContext.Current.UserGeoCoordinate,
-                                                   GetLocationsAndBusinessCallback, "end");
+                ProxyQuery.GetLocationsAndBusiness(
+                    this.EndLocationText,
+                    TransitRequestContext.Current.UserGeoCoordinate,
+                    this.GetLocationsAndBusinessCallback,
+                    "end");
                 return;
             }
 
-            //TODO: fix initial context state not set. Hacked up in view startup.
+            // TODO: fix initial context state not set. Hacked up in view startup.
             ProxyQuery.GetTransitDirections(
                 this.Context.SelectedStartingLocation.GeoCoordinate,
                 this.Context.SelectedEndingLocation.GeoCoordinate,
                 this.Context.DateTime,
                 this.Context.TimeType,
-                GetTransitDirectionsCallback,
+                this.GetTransitDirectionsCallback,
                 null);
         }
 
@@ -204,6 +216,7 @@ namespace TransitWP7.ViewModels
                             this._isEndLocationStale = false;
                             this.Context.SelectedEndingLocation = location;
                         }
+
                         TryResolveEndpoints();
                     });
         }
@@ -217,7 +230,7 @@ namespace TransitWP7.ViewModels
             }
 
             this.Context.TransitDescriptionCollection = new ObservableCollection<TransitDescription>(result.TransitDescriptions);
-            DisplayTransitTripSummaries();
+            this.DisplayTransitTripSummaries();
         }
 
         private void DisplayTransitTripSummaries()
@@ -228,7 +241,7 @@ namespace TransitWP7.ViewModels
                 var isWalk = false;
                 foreach (ItineraryStep item in transitOption.ItinerarySteps)
                 {
-                    if (item.IconType != "")
+                    if (item.IconType != string.Empty)
                     {
                         if (item.IconType.StartsWith("W"))
                         {
@@ -239,7 +252,7 @@ namespace TransitWP7.ViewModels
                                     {
                                         var img = new Image();
                                         img.Source = new BitmapImage(new Uri("/images/walk_lo.png", UriKind.Relative));
-                                        atd.Steps.Add(new TransitStep("", img));
+                                        atd.Steps.Add(new TransitStep(string.Empty, img));
                                     });
                             }
                         }
@@ -254,14 +267,16 @@ namespace TransitWP7.ViewModels
                                     atd.Steps.Add(new TransitStep(item1.BusNumber, img));
                                 });
                         }
+
                         isWalk = item.TravelMode.StartsWith("W") ? true : false;
                     }
                 }
+
                 atd.Duration = ((int)(transitOption.TravelDuration / 60)).ToString(CultureInfo.InvariantCulture) + " min";
                 atd.ArrivesAt = transitOption.ArrivalTime;
                 atd.DepartsAt = transitOption.DepartureTime;
 
-                Deployment.Current.Dispatcher.BeginInvoke(() => FormattedTransitTrips.Add(atd));
+                Deployment.Current.Dispatcher.BeginInvoke(() => this.FormattedTransitTrips.Add(atd));
 
                 Messenger.Default.Send(new NotificationMessage("transit"));
             }
@@ -278,7 +293,7 @@ namespace TransitWP7.ViewModels
         }
     }
 
-    //TODO: get rid of these 2 classes!
+    // TODO: get rid of these 2 classes!
     public class SummaryTransitData
     {
         public SummaryTransitData()

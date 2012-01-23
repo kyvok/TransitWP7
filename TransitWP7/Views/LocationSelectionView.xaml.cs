@@ -3,8 +3,8 @@ using Microsoft.Phone.Controls;
 
 namespace TransitWP7
 {
-    //TODO: distance of the item from origin
-    //TODO: calculate results from origin for endpoint, not current userlocation!!!
+    // TODO: distance of the item from origin
+    // TODO: calculate results from origin for endpoint, not current userlocation!!!
     public partial class LocationSelectionView : PhoneApplicationPage
     {
         private readonly ViewModels.LocationSelectionViewModel _viewModel = new ViewModels.LocationSelectionViewModel();
@@ -19,19 +19,18 @@ namespace TransitWP7
         {
             base.OnNavigatedTo(arg);
 
-            _viewModel.endpointName = this.NavigationContext.QueryString["endpoint"];
+            this._viewModel.EndpointName = this.NavigationContext.QueryString["endpoint"];
 
-            this.PageTitle.Text = String.Format(PageTitleStringFormat, _viewModel.endpointName);
-            this.resultsList.ItemsSource = _viewModel.endpointName == "start"
-                                               ? _viewModel.Context._possibleStartLocations
-                                               : _viewModel.Context._possibleEndLocations;
+            this.PageTitle.Text = string.Format(PageTitleStringFormat, this._viewModel.EndpointName);
+            this.resultsList.ItemsSource = this._viewModel.EndpointName == "start"
+                                               ? this._viewModel.Context._possibleStartLocations
+                                               : this._viewModel.Context._possibleEndLocations;
         }
 
-        //TODO: backing up from here what happens?
-
+        // TODO: backing up from here what happens?
         private void resultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            _viewModel.SelectionMade(this.resultsList.SelectedIndex);
+            this._viewModel.SelectionMade(this.resultsList.SelectedIndex);
             this.NavigationService.GoBack();
         }
     }

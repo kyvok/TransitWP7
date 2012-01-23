@@ -164,7 +164,7 @@ namespace BingApisLib.BingSearchRestApi
             builder.Append("&Query=");
             builder.Append(this.Query);
             builder.Append("&Sources=");
-            //TODO: This can be multiple sources
+            // TODO: This can be multiple sources
             builder.Append(this.Sources[0].ToString());
             if (!String.IsNullOrWhiteSpace(this.Version))
             {
@@ -176,7 +176,7 @@ namespace BingApisLib.BingSearchRestApi
                 builder.Append("&Market=");
                 builder.Append(this.Market);
             }
-            //TODO: insert AdultOption
+            // TODO: insert AdultOption
             if (!String.IsNullOrWhiteSpace(this.UILanguage))
             {
                 builder.Append("&UILanguage=");
@@ -197,7 +197,7 @@ namespace BingApisLib.BingSearchRestApi
                 builder.Append("&Radius=");
                 builder.Append(this.Radius.Value.ToString("G9"));
             }
-            //TODO: insert SearchOption
+            // TODO: insert SearchOption
 
             return builder.ToString();
         }
@@ -210,7 +210,7 @@ namespace BingApisLib.BingSearchRestApi
         public uint? Offset { get; set; } // count+offset should not go over 1000
         public string FileType { get; set; } //do not use
         public PhonebookSortOption? SortBy { get; set; }
-        //TODO: do we want this LocID parameter?
+        // TODO: do we want this LocID parameter?
         //public string LocID { get; set; } //lookup a specific phonebook entry by id.
 
         public override string ToString()
@@ -231,7 +231,7 @@ namespace BingApisLib.BingSearchRestApi
                 builder.Append("&Phonebook.SortBy=");
                 builder.Append(this.SortBy.ToString());
             }
-            //TODO: insert FileType
+            // TODO: insert FileType
 
             return base.ToString() + builder.ToString();
         }

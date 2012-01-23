@@ -21,13 +21,13 @@ namespace TransitWP7
         public App()
         {
             // Global handler for uncaught exceptions. 
-            UnhandledException += Application_UnhandledException;
+            this.UnhandledException += this.Application_UnhandledException;
 
             // Standard Silverlight initialization
             InitializeComponent();
 
             // Phone-specific initialization
-            InitializePhoneApplication();
+            this.InitializePhoneApplication();
 
             // Show graphics profiling information while debugging.
             if (System.Diagnostics.Debugger.IsAttached)
@@ -36,11 +36,11 @@ namespace TransitWP7
                 Application.Current.Host.Settings.EnableFrameRateCounter = true;
 
                 // Show the areas of the app that are being redrawn in each frame.
-                //Application.Current.Host.Settings.EnableRedrawRegions = true;
+                ////Application.Current.Host.Settings.EnableRedrawRegions = true;
 
                 // Enable non-production analysis visualization mode, 
                 // which shows areas of a page that are handed off to GPU with a colored overlay.
-                //Application.Current.Host.Settings.EnableCacheVisualization = true;
+                ////Application.Current.Host.Settings.EnableCacheVisualization = true;
 
                 // Disable the application idle detection by setting the UserIdleDetectionMode property of the
                 // application's PhoneApplicationService object to Disabled.
@@ -48,14 +48,13 @@ namespace TransitWP7
                 // and consume battery power when the user is not using the phone.
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
-
         }
 
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            //PersistedInfo.Load();
+            ////PersistedInfo.Load();
             DispatcherHelper.Initialize();
         }
 
@@ -63,21 +62,21 @@ namespace TransitWP7
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
-            //PersistedInfo.Load();
+            ////PersistedInfo.Load();
         }
 
         // Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
-            //PersistedInfo.Save();
+            ////PersistedInfo.Save();
         }
 
         // Code to execute when the application is closing (eg, user hit Back)
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
-            //PersistedInfo.Save();
+            ////PersistedInfo.Save();
         }
 
         // Code to execute if a navigation fails
@@ -103,9 +102,9 @@ namespace TransitWP7
                 // handle the exception
                 e.Handled = true;
 
-                //Navigate to the error page
+                // Navigate to the error page
                 PhoneApplicationService.Current.State["exception"] = e.ExceptionObject.ToString();
-                RootFrame.Navigate(new Uri("/ExceptionPage.xaml", UriKind.Relative));
+                this.RootFrame.Navigate(new Uri("/ExceptionPage.xaml", UriKind.Relative));
             }
         }
 
@@ -117,30 +116,34 @@ namespace TransitWP7
         // Do not add any additional code to this method
         private void InitializePhoneApplication()
         {
-            if (phoneApplicationInitialized)
+            if (this.phoneApplicationInitialized)
+            {
                 return;
+            }
 
             // Create the frame but don't set it as RootVisual yet; this allows the splash
             // screen to remain active until the application is ready to render.
-            RootFrame = new PhoneApplicationFrame();
-            RootFrame.Navigated += CompleteInitializePhoneApplication;
+            this.RootFrame = new PhoneApplicationFrame();
+            this.RootFrame.Navigated += this.CompleteInitializePhoneApplication;
 
             // Handle navigation failures
-            RootFrame.NavigationFailed += RootFrame_NavigationFailed;
+            this.RootFrame.NavigationFailed += this.RootFrame_NavigationFailed;
 
             // Ensure we don't initialize again
-            phoneApplicationInitialized = true;
+            this.phoneApplicationInitialized = true;
         }
 
         // Do not add any additional code to this method
         private void CompleteInitializePhoneApplication(object sender, NavigationEventArgs e)
         {
             // Set the root visual to allow the application to render
-            if (RootVisual != RootFrame)
-                RootVisual = RootFrame;
+            if (RootVisual != this.RootFrame)
+            {
+                RootVisual = this.RootFrame;
+            }
 
             // Remove this handler since it is no longer needed
-            RootFrame.Navigated -= CompleteInitializePhoneApplication;
+            this.RootFrame.Navigated -= this.CompleteInitializePhoneApplication;
         }
 
         #endregion

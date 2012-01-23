@@ -19,7 +19,9 @@ namespace TransitWP7
         private ObservableCollection<ItineraryStep> itinerarySteps;
         private ObservableCollection<GeoCoordinate> pathPoints;
 
-        public TransitDescription() { }
+        public TransitDescription()
+        {
+        }
 
         public TransitDescription(Route route)
         {
@@ -29,7 +31,7 @@ namespace TransitWP7
             this.ArrivalTime = route.RouteLegs[0].EndTime.ToShortTimeString();
             this.DepartureTime = route.RouteLegs[0].StartTime.ToShortTimeString();
 
-            //TODO: need to add endpoint to the step list?
+            // TODO: need to add endpoint to the step list?
             this.ItinerarySteps = new ObservableCollection<ItineraryStep>();
             foreach (var topLeg in route.RouteLegs[0].ItineraryItems)
             {
@@ -53,6 +55,7 @@ namespace TransitWP7
             {
                 return this.startLocation;
             }
+
             set
             {
                 if (value != this.startLocation)
@@ -69,6 +72,7 @@ namespace TransitWP7
             {
                 return this.endLocation;
             }
+
             set
             {
                 if (value != this.endLocation)
@@ -85,6 +89,7 @@ namespace TransitWP7
             {
                 return this.mapView;
             }
+
             set
             {
                 if (value != this.mapView)
@@ -101,6 +106,7 @@ namespace TransitWP7
             {
                 return this.travelDuration;
             }
+
             set
             {
                 if (value != this.travelDuration)
@@ -117,6 +123,7 @@ namespace TransitWP7
             {
                 return this.arrivalTime;
             }
+
             set
             {
                 if (value != this.arrivalTime)
@@ -133,6 +140,7 @@ namespace TransitWP7
             {
                 return this.departureTime;
             }
+
             set
             {
                 if (value != this.departureTime)
@@ -149,6 +157,7 @@ namespace TransitWP7
             {
                 return this.itinerarySteps;
             }
+
             set
             {
                 if (value != this.itinerarySteps)
@@ -165,6 +174,7 @@ namespace TransitWP7
             {
                 return this.pathPoints;
             }
+
             set
             {
                 if (value != this.pathPoints)

@@ -22,16 +22,17 @@ namespace TransitWP7
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
-            Messenger.Default.Register<DialogMessage>(this,
+            Messenger.Default.Register<DialogMessage>(
+                this,
                 msg => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () =>
                     {
                         var result = MessageBox.Show(msg.Content, msg.Caption, msg.Button);
                         msg.ProcessCallback(result);
-                    }
-                           ));
+                    }));
 
-            Messenger.Default.Register<NotificationMessage>(this,
+            Messenger.Default.Register<NotificationMessage>(
+                this,
                 msg =>
                 {
                     if (msg.Notification != "transit")
@@ -39,7 +40,7 @@ namespace TransitWP7
                         DispatcherHelper.UIDispatcher.BeginInvoke(
                             () => NavigationService.Navigate(
                                 new Uri(
-                                    String.Format("/Views/LocationSelectionView.xaml?endpoint={0}", msg.Notification),
+                                    string.Format("/Views/LocationSelectionView.xaml?endpoint={0}", msg.Notification),
                                     UriKind.Relative)));
                     }
                     else
@@ -52,8 +53,7 @@ namespace TransitWP7
                                 this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
                             });
                     }
-                }
-        );
+                });
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
@@ -73,12 +73,12 @@ namespace TransitWP7
 
         private void DatePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
         {
-            _viewModel.EnsureDateTimeSyncInContext(e.NewDateTime.Value, _viewModel.Context.DateTime);
+            this._viewModel.EnsureDateTimeSyncInContext(e.NewDateTime.Value, this._viewModel.Context.DateTime);
         }
 
         private void TimePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
         {
-            _viewModel.EnsureDateTimeSyncInContext(_viewModel.Context.DateTime, e.NewDateTime.Value);
+            this._viewModel.EnsureDateTimeSyncInContext(this._viewModel.Context.DateTime, e.NewDateTime.Value);
         }
 
         private void ListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -89,22 +89,22 @@ namespace TransitWP7
                 switch (timeTypePicker.SelectedIndex)
                 {
                     case 0:
-                        _viewModel.EnsureDateTimeSyncInContext(DateTime.Now, DateTime.Now, TimeCondition.Now);
+                        this._viewModel.EnsureDateTimeSyncInContext(DateTime.Now, DateTime.Now, TimeCondition.Now);
                         datePicker.IsEnabled = false;
                         timePicker.IsEnabled = false;
                         break;
                     case 1:
-                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.DepartingAt);
+                        this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.DepartingAt);
                         datePicker.IsEnabled = true;
                         timePicker.IsEnabled = true;
                         break;
                     case 2:
-                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.ArrivingAt);
+                        this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.ArrivingAt);
                         datePicker.IsEnabled = true;
                         timePicker.IsEnabled = true;
                         break;
                     case 3:
-                        _viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.LastArrivalTime);
+                        this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.LastArrivalTime);
                         datePicker.IsEnabled = true;
                         timePicker.IsEnabled = false;
                         break;
@@ -133,7 +133,7 @@ namespace TransitWP7
 
         private void ApplicationBarIconButton_Click(object sender, EventArgs e)
         {
-            //TODO: if not location enabled, ask permission
+            // TODO: if not location enabled, ask permission
             this.mainMap.SetView(this._viewModel.Context.UserGeoCoordinate, 14);
         }
 
@@ -142,8 +142,7 @@ namespace TransitWP7
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Collapsed;
 
-            this._viewModel.Context.SelectedTransitTrip =
-                _viewModel.Context.TransitDescriptionCollection[this.transitTripsList.SelectedIndex];
+            this._viewModel.Context.SelectedTransitTrip = this._viewModel.Context.TransitDescriptionCollection[this.transitTripsList.SelectedIndex];
 
             TransitDescription description = TransitRequestContext.Current.SelectedTransitTrip;
 
@@ -152,7 +151,7 @@ namespace TransitWP7
                 foreach (var step in description.ItinerarySteps)
                 {
                     string instructContent = string.Empty;
-                    if (step.IconType != "")
+                    if (step.IconType != string.Empty)
                     {
                         instructContent = step.IconType.Substring(0, 1);
                         if (step.IconType.StartsWith("B"))
@@ -174,9 +173,9 @@ namespace TransitWP7
             }
         }
 
-        //private void Button_Click_1(object sender, RoutedEventArgs e)
-        //{
-        //    dateTimeStackPanel.Visibility = dateTimeStackPanel.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
-        //}
+        ////private void Button_Click_1(object sender, RoutedEventArgs e)
+        ////{
+        ////    dateTimeStackPanel.Visibility = dateTimeStackPanel.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        ////}
     }
 }

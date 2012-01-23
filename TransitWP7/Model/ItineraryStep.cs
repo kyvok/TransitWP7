@@ -19,16 +19,18 @@ namespace TransitWP7
         private string busNumber;
         private string iconType;
 
-        public ItineraryStep() { }
+        public ItineraryStep()
+        {
+        }
 
         public ItineraryStep(ItineraryItem item)
         {
             this.GeoCoordinate = item.ManeuverPoint.AsGeoCoordinate();
             this.Instruction = item.Instruction.Value;
             this.Time = item.Time;
-            this.TravelMode = item.Detail.Mode != null ? item.Detail.Mode : "";
-            this.BusNumber = item.TransitLine != null ? item.TransitLine.AbbreviatedName : "";
-            this.IconType = item.IconType.ToString().StartsWith("N") ? "" : item.IconType.ToString();
+            this.TravelMode = item.Detail.Mode != null ? item.Detail.Mode : string.Empty;
+            this.BusNumber = item.TransitLine != null ? item.TransitLine.AbbreviatedName : string.Empty;
+            this.IconType = item.IconType.ToString().StartsWith("N") ? string.Empty : item.IconType.ToString();
 
             this.hints = new ObservableCollection<string>();
             if (item.Hint != null)
@@ -57,6 +59,7 @@ namespace TransitWP7
             {
                 return this.geoCoordinate;
             }
+
             set
             {
                 if (value != this.geoCoordinate)
@@ -73,6 +76,7 @@ namespace TransitWP7
             {
                 return this.instruction;
             }
+
             set
             {
                 if (value != this.instruction)
@@ -89,6 +93,7 @@ namespace TransitWP7
             {
                 return this.hints;
             }
+
             set
             {
                 if (value != this.hints)
@@ -105,6 +110,7 @@ namespace TransitWP7
             {
                 return this.time;
             }
+
             set
             {
                 if (value != this.time)
@@ -121,6 +127,7 @@ namespace TransitWP7
             {
                 return this.travelMode;
             }
+
             set
             {
                 if (value != this.travelMode)
@@ -137,6 +144,7 @@ namespace TransitWP7
             {
                 return this.busNumber;
             }
+
             set
             {
                 if (value != this.busNumber)
@@ -153,6 +161,7 @@ namespace TransitWP7
             {
                 return this.iconType;
             }
+
             set
             {
                 if (value != this.iconType)
@@ -169,6 +178,7 @@ namespace TransitWP7
             {
                 return this.childItinerarySteps;
             }
+
             set
             {
                 if (value != this.childItinerarySteps)

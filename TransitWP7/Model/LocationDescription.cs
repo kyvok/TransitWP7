@@ -18,7 +18,9 @@ namespace TransitWP7
         private string confidence;
         private GeoCoordinate geoCoordinate;
 
-        public LocationDescription() { }
+        public LocationDescription()
+        {
+        }
 
         public LocationDescription(Location result)
         {
@@ -36,7 +38,7 @@ namespace TransitWP7
             this.DisplayName = result.Title;
             this.GeoCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
             this.PostalCode = result.PostalCode;
-            this.FormattedAddress = String.Format(
+            this.FormattedAddress = string.Format(
                         "{0}, {1}, {2}, {3}",
                         result.Address,
                         result.City,
@@ -60,6 +62,7 @@ namespace TransitWP7
             {
                 return this.displayName;
             }
+
             set
             {
                 if (value != this.displayName)
@@ -76,6 +79,7 @@ namespace TransitWP7
             {
                 return this.formattedAddress;
             }
+
             set
             {
                 if (value != this.formattedAddress)
@@ -92,6 +96,7 @@ namespace TransitWP7
             {
                 return this.city;
             }
+
             set
             {
                 if (value != this.city)
@@ -108,6 +113,7 @@ namespace TransitWP7
             {
                 return this.stateOrProvince;
             }
+
             set
             {
                 if (value != this.stateOrProvince)
@@ -124,6 +130,7 @@ namespace TransitWP7
             {
                 return this.postalCode;
             }
+
             set
             {
                 if (value != this.postalCode)
@@ -140,6 +147,7 @@ namespace TransitWP7
             {
                 return this.confidence;
             }
+
             set
             {
                 if (value != this.confidence)
@@ -156,6 +164,7 @@ namespace TransitWP7
             {
                 return this.geoCoordinate;
             }
+
             set
             {
                 if (value != this.geoCoordinate)

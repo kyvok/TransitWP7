@@ -6,11 +6,11 @@ using Microsoft.Phone.Controls.Maps;
 
 namespace BingApisLib.BingMapsRestApi
 {
-    //TODO: this needs review
+    // TODO: this needs review
     public class LocationByPoint
     {
         public Point Point { get; set; }
-        //TODO: this only supports a subset of the actual enum
+        // TODO: this only supports a subset of the actual enum
         public List<EntityType> IncludeEntityTypes { get; set; }
 
         public LocationByPoint(Point point)
@@ -24,7 +24,7 @@ namespace BingApisLib.BingMapsRestApi
         }
     }
     
-    //TODO: this needs review
+    // TODO: this needs review
     public class LocationQueryParameters
     {
         public string Query { get; set; }

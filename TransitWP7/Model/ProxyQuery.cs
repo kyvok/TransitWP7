@@ -4,8 +4,8 @@ using System.Device.Location;
 using BingApisLib.BingMapsRestApi;
 using BingApisLib.BingSearchRestApi;
 
-//TODO: show total travel time for trips
-//TODO: walk does not need start and stop time
+// TODO: show total travel time for trips
+// TODO: walk does not need start and stop time
 namespace TransitWP7
 {
     /// <summary>
@@ -110,7 +110,7 @@ namespace TransitWP7
                 queryState.SavedException = result.Error;
             }
 
-            //chain querying for business
+            // chain querying for business
             BingSearchQuery.GetBusinessInfo(
                 queryState.Query,
                 queryState.UserLocation,
@@ -124,14 +124,14 @@ namespace TransitWP7
 
             if (result.Error == null)
             {
-                foreach (var pbResult in result.Response.Phonebook.Results)
+                foreach (var phonebookResult in result.Response.Phonebook.Results)
                 {
                     if (queryState.LocationDescriptions == null)
                     {
                         queryState.LocationDescriptions = new List<LocationDescription>();
                     }
 
-                    queryState.LocationDescriptions.Add(new LocationDescription(pbResult));
+                    queryState.LocationDescriptions.Add(new LocationDescription(phonebookResult));
                 }
             }
             else
@@ -139,7 +139,7 @@ namespace TransitWP7
                 queryState.SavedException = result.Error;
             }
 
-            //call user callback
+            // call user callback
             var proxyQueryResult = new ProxyQueryResult() { UserState = queryState.UserState };
             if (queryState.LocationDescriptions != null && queryState.LocationDescriptions.Count > 0)
             {
@@ -147,16 +147,16 @@ namespace TransitWP7
             }
             else
             {
-                //TODO: probably try to do spelling correction here.
-                proxyQueryResult.Error = new Exception(String.Format("Could not locate a result for {0} within 80 miles of your location.", queryState.Query));
-                //if (queryState.SavedException != null)
-                //{
-                //    proxyQueryResult.Error = queryState.SavedException;
-                //}
-                //else
-                //{
-                //    proxyQueryResult.Error = new Exception("no results");
-                //}
+                // TODO: probably try to do spelling correction here.
+                proxyQueryResult.Error = new Exception(string.Format("Could not locate a result for {0} within 80 miles of your location.", queryState.Query));
+                ////if (queryState.SavedException != null)
+                ////{
+                ////    proxyQueryResult.Error = queryState.SavedException;
+                ////}
+                ////else
+                ////{
+                ////    proxyQueryResult.Error = new Exception("no results");
+                ////}
             }
 
             queryState.UserCallback(proxyQueryResult);
@@ -183,7 +183,7 @@ namespace TransitWP7
                 queryState.SavedException = result.Error;
             }
 
-            //chain immediately to get walking directions
+            // chain immediately to get walking directions
             BingMapsQuery.GetWalkingRoute(queryState.StartLocation, queryState.EndLocation, GetWalkingDirectionsCallback, queryState);
         }
 
@@ -216,7 +216,7 @@ namespace TransitWP7
                 queryState.SavedException = result.Error;
             }
 
-            //call user callback
+            // call user callback
             var proxyQueryResult = new ProxyQueryResult() { UserState = queryState.UserState };
             if (queryState.TransitDescriptions != null && queryState.TransitDescriptions.Count > 0)
             {
@@ -225,14 +225,14 @@ namespace TransitWP7
             else
             {
                 proxyQueryResult.Error = new Exception("No transit or less then 90 minutes walk could be found.");
-                //if (queryState.SavedException != null)
-                //{
-                //    proxyQueryResult.Error = queryState.SavedException;
-                //}
-                //else
-                //{
-                //    proxyQueryResult.Error = new Exception("no results");
-                //}
+                ////if (queryState.SavedException != null)
+                ////{
+                ////    proxyQueryResult.Error = queryState.SavedException;
+                ////}
+                ////else
+                ////{
+                ////    proxyQueryResult.Error = new Exception("no results");
+                ////}
             }
 
             queryState.UserCallback(proxyQueryResult);
