@@ -21,10 +21,10 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <maps:Map Name="mainMap" ScaleVisibility="Visible">
             <maps:MapLayer>
-                <maps:Pushpin Name="meIndicator" Location="{Binding Path=Context.UserGeoCoordinate}" PositionOrigin="Center" Style="{StaticResource PushpinStyle}" />
+                <maps:Pushpin Name="meIndicator" Location="{Binding Path=Context.UserGeoCoordinate}" PositionOrigin="Center" Style="{StaticResource CurrentLocationPushpinStyle}" />
                 <maps:MapPolyline Name="routePath"
                                 StrokeLineJoin="Round"
-                                Stroke="Blue"
+                                Stroke="DarkCyan"
                                 StrokeThickness="8"
                                 StrokeStartLineCap="Round"
                                 StrokeEndLineCap="Round"
@@ -162,12 +162,12 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="{StaticResource PhoneSemitransparentColor}" Opacity="0.99"  IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.questionmark.rest.png" Text="Locate Me" Click="ApplicationBarIconButton_Click"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar.questionmark.rest.png" Text="Button 2"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="directions list"/>
                 <shell:ApplicationBarMenuItem Text="show transit options"/>
                 <shell:ApplicationBarMenuItem Text="clear map"/>
                 <shell:ApplicationBarMenuItem Text="settings"/>
+                <shell:ApplicationBarMenuItem Text="about"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

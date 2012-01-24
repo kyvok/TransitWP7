@@ -8,32 +8,44 @@
 
     <!--Application Resources-->
     <Application.Resources>
-        <Style TargetType="m:Pushpin" x:Key="PushpinStyle">
+        <Style TargetType="m:Pushpin" x:Key="CurrentLocationPushpinStyle">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
-                        <Ellipse Fill="Red" Width="7" Height="7" HorizontalAlignment="Left"/>
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Rectangle Fill="Black"
+                                       Stroke="White" StrokeThickness="2" 
+                                       Width="28" Height="28"
+                                       RenderTransformOrigin="0.5,0.5">
+                                <Rectangle.RenderTransform>
+                                    <RotateTransform Angle="45"/>
+                                </Rectangle.RenderTransform>
+                            </Rectangle>
+                            <Ellipse Fill="{StaticResource PhoneAccentBrush}"
+                                     Width="14" Height="14"/>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Background" Value="Black" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="18" />
         </Style>
         <Style TargetType="m:Pushpin" x:Key="TransitStepPushpinStyle">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
                         <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Ellipse Fill="Black" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBlock Text="A" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,0,0,0" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                            <Ellipse Fill="Black"
+                                     Width="30" Height="30"
+                                     HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}" Margin="4"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Setter Property="Background" Value="Black" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="18" />
         </Style>
     </Application.Resources>
 

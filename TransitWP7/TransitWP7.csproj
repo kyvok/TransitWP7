@@ -83,6 +83,10 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\LocationSelectionViewModel.cs" />
+    <Compile Include="ViewModels\DirectionsViewModel.cs" />
+    <Compile Include="Views\DirectionsView.xaml.cs">
+      <DependentUpon>DirectionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ExceptionView.xaml.cs">
       <DependentUpon>ExceptionView.xaml</DependentUpon>
     </Compile>
@@ -112,6 +116,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="Views\DirectionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ExceptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
