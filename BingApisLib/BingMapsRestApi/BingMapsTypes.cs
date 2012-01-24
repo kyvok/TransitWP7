@@ -12,10 +12,15 @@ namespace BingApisLib.BingMapsRestApi
     public class Response
     {
         public int StatusCode { get; set; }
+
         public string StatusDescription { get; set; }
+        
         public AuthenticationResultCode AuthenticationResultCode { get; set; }
+        
         public string TraceId { get; set; }
+        
         public string Copyright { get; set; }
+        
         public string BrandLogoUri { get; set; }
 
         [XmlArrayItem("ResourceSet")]
@@ -45,10 +50,9 @@ namespace BingApisLib.BingMapsRestApi
     [XmlType(AnonymousType = true, Namespace = "http://schemas.microsoft.com/search/local/ws/rest/v1")]
     public class Point
     {
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-
-        public Point() { }
+        public Point()
+        {
+        }
 
         public Point(double latitute, double longitude)
         {
@@ -56,9 +60,14 @@ namespace BingApisLib.BingMapsRestApi
             this.Longitude = longitude;
         }
 
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
+
         public override string ToString()
         {
-            return string.Format("{0},{1}",
+            return string.Format(
+                "{0},{1}",
                 this.Latitude.ToString("G9"),
                 this.Longitude.ToString("G9"));
         }
@@ -71,12 +80,9 @@ namespace BingApisLib.BingMapsRestApi
     [XmlType(AnonymousType = true, Namespace = "http://schemas.microsoft.com/search/local/ws/rest/v1")]
     public class BoundingBox
     {
-        public double SouthLatitude { get; set; }
-        public double WestLongitude { get; set; }
-        public double NorthLatitude { get; set; }
-        public double EastLongitude { get; set; }
-
-        public BoundingBox() { }
+        public BoundingBox()
+        {
+        }
 
         public BoundingBox(double southLatitude, double westLongitude, double northLatitude, double eastLongitude)
         {
@@ -86,9 +92,18 @@ namespace BingApisLib.BingMapsRestApi
             this.EastLongitude = eastLongitude;
         }
 
+        public double SouthLatitude { get; set; }
+
+        public double WestLongitude { get; set; }
+        
+        public double NorthLatitude { get; set; }
+        
+        public double EastLongitude { get; set; }
+
         public override string ToString()
         {
-            return string.Format("{0},{1},{2},{3}",
+            return string.Format(
+                "{0},{1},{2},{3}",
                 this.SouthLatitude.ToString("G9"),
                 this.WestLongitude.ToString("G9"),
                 this.NorthLatitude.ToString("G9"),
@@ -104,11 +119,17 @@ namespace BingApisLib.BingMapsRestApi
     public class Address
     {
         public string AddressLine { get; set; }
+
         public string Locality { get; set; }
+        
         public string AdminDistrict { get; set; }
+        
         public string AdminDistrict2 { get; set; }
+        
         public string FormattedAddress { get; set; }
+        
         public string PostalCode { get; set; }
+        
         public string CountryRegion { get; set; }
     }
 
@@ -120,10 +141,15 @@ namespace BingApisLib.BingMapsRestApi
     public class Location
     {
         public string Name { get; set; }
+        
         public Point Point { get; set; }
+        
         public BoundingBox BoundingBox { get; set; }
+        
         public EntityType EntityType { get; set; }
+        
         public Address Address { get; set; }
+        
         public ConfidenceLevel Confidence { get; set; }
     }
 
@@ -135,10 +161,15 @@ namespace BingApisLib.BingMapsRestApi
     public class Route
     {
         public string Id { get; set; }
+        
         public BoundingBox BoundingBox { get; set; }
+        
         public string DistanceUnit { get; set; }
+        
         public string DurationUnit { get; set; }
+        
         public double TravelDistance { get; set; }
+        
         public double TravelDuration { get; set; }
 
         [XmlElement("RouteLeg")]
@@ -156,16 +187,22 @@ namespace BingApisLib.BingMapsRestApi
     public class RouteLeg
     {
         public double TravelDistance { get; set; }
+
         public double TravelDuration { get; set; }
+        
         public Point ActualStart { get; set; }
+        
         public Point ActualEnd { get; set; }
+        
         public Location StartLocation { get; set; }
+        
         public Location EndLocation { get; set; }
 
         [XmlElement("ItineraryItem")]
         public ItineraryItem[] ItineraryItems { get; set; }
 
         public System.DateTime StartTime { get; set; }
+        
         public System.DateTime EndTime { get; set; }
     }
 
@@ -180,26 +217,43 @@ namespace BingApisLib.BingMapsRestApi
         public ItineraryItem[] ChildItineraryItems { get; set; }
 
         public string CompassDirection { get; set; }
+     
         public Detail Detail { get; set; }
+        
         public string Exit { get; set; }
 
         [XmlElement("Hint")]
         public string[] Hint { get; set; }
 
         public IconType IconType { get; set; }
+        
         public Instruction Instruction { get; set; }
+        
         public Point ManeuverPoint { get; set; }
+        
         public SideOfStreet SideOfStreet { get; set; }
-        public string Sign { get; set; } // TODO: collection?
+
+        // TODO: collection?
+        public string Sign { get; set; }
+        
         public System.DateTime Time { get; set; }
+        
         public string TollZone { get; set; }
+        
         public string TowardsRoadName { get; set; }
+        
         public TransitLine TransitLine { get; set; }
+        
         public string TransitStopId { get; set; }
+        
         public string TransitTerminus { get; set; }
+        
         public double TravelDistance { get; set; }
+        
         public double TravelDuration { get; set; }
+        
         public string TravelMode { get; set; }
+        
         public WarningType WarningType { get; set; }
     }
 
@@ -210,10 +264,10 @@ namespace BingApisLib.BingMapsRestApi
     [XmlType(AnonymousType = true, Namespace = "http://schemas.microsoft.com/search/local/ws/rest/v1")]
     public class Instruction
     {
-        [XmlAttribute()]
+        [XmlAttribute]
         public string maneuverType { get; set; }
 
-        [XmlText()]
+        [XmlText]
         public string Value { get; set; }
     }
 
@@ -225,14 +279,23 @@ namespace BingApisLib.BingMapsRestApi
     public class Detail
     {
         public string CompassDegrees { get; set; }
+
         public string ManeuverType { get; set; }
+        
         public string Name { get; set; }
+        
         public string StartPathIndex { get; set; }
+        
         public string EndPathIndex { get; set; }
+        
         public string RoadType { get; set; }
+        
         public string LocationCode { get; set; }
+        
         public string Mode { get; set; }
+        
         public string PreviousEntityId { get; set; }
+        
         public string NextEntityId { get; set; }
     }
 
@@ -244,13 +307,21 @@ namespace BingApisLib.BingMapsRestApi
     public class TransitLine
     {
         public string VerboseName { get; set; }
+
         public string AbbreviatedName { get; set; }
+        
         public string AgencyId { get; set; }
+        
         public string AgencyName { get; set; }
+        
         public string LineColor { get; set; }
+        
         public string LineTextColor { get; set; }
+        
         public string Uri { get; set; }
+        
         public string PhoneNumber { get; set; }
+        
         public string ProviderInfo { get; set; }
     }
 

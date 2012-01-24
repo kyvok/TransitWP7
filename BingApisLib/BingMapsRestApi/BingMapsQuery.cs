@@ -39,7 +39,7 @@ namespace BingApisLib.BingMapsRestApi
         {
             var queryUri = ConstructQueryUri(
                 "Locations",
-                "q=" + query + (userContext != null ? userContext.ToString() : String.Empty));
+                "q=" + query + (userContext != null ? userContext.ToString() : string.Empty));
             ExecuteQuery(queryUri, callback, userState);
         }
 
@@ -117,26 +117,26 @@ namespace BingApisLib.BingMapsRestApi
             var httpRequest = WebRequest.Create(queryUri) as HttpWebRequest;
             var context = new BingMapsRequestContext(httpRequest, new BingMapsQueryAsyncCallback(callback, userState));
 
-            //Observable.FromAsyncPattern<WebResponse>(httpRequest.BeginGetResponse, httpRequest.EndGetResponse)()
-            //    .Subscribe<WebResponse>(httpResponse =>
-            //            {
-            //                var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
-            //                if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
-            //                {
-            //                    var exceptionMessage = new StringBuilder();
-            //                    exceptionMessage.AppendLine("One or more error were returned by the query:");
-            //                    foreach (var errorDetail in response.ErrorDetails)
-            //                    {
-            //                        exceptionMessage.Append("  ");
-            //                        exceptionMessage.AppendLine(errorDetail);
-            //                    }
-            //                    context.AsyncCallback.Notify(new Exception(exceptionMessage.ToString()));
-            //                }
-            //                else
-            //                {
-            //                    context.AsyncCallback.Notify(response);
-            //                }
-            //            });
+            ////Observable.FromAsyncPattern<WebResponse>(httpRequest.BeginGetResponse, httpRequest.EndGetResponse)()
+            ////    .Subscribe<WebResponse>(httpResponse =>
+            ////            {
+            ////                var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+            ////                if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
+            ////                {
+            ////                    var exceptionMessage = new StringBuilder();
+            ////                    exceptionMessage.AppendLine("One or more error were returned by the query:");
+            ////                    foreach (var errorDetail in response.ErrorDetails)
+            ////                    {
+            ////                        exceptionMessage.Append("  ");
+            ////                        exceptionMessage.AppendLine(errorDetail);
+            ////                    }
+            ////                    context.AsyncCallback.Notify(new Exception(exceptionMessage.ToString()));
+            ////                }
+            ////                else
+            ////                {
+            ////                    context.AsyncCallback.Notify(response);
+            ////                }
+            ////            });
 
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
@@ -162,6 +162,7 @@ namespace BingApisLib.BingMapsRestApi
                         exceptionMessage.Append("  ");
                         exceptionMessage.AppendLine(errorDetail);
                     }
+
                     context.AsyncCallback.Notify(new Exception(exceptionMessage.ToString()));
                 }
                 else
@@ -177,14 +178,15 @@ namespace BingApisLib.BingMapsRestApi
 
         private class BingMapsRequestContext
         {
-            public HttpWebRequest HttpRequest { get; private set; }
-            public BingMapsQueryAsyncCallback AsyncCallback { get; private set; }
-
             public BingMapsRequestContext(HttpWebRequest httpRequest, BingMapsQueryAsyncCallback callback)
             {
                 this.HttpRequest = httpRequest;
                 this.AsyncCallback = callback;
             }
+
+            public HttpWebRequest HttpRequest { get; private set; }
+
+            public BingMapsQueryAsyncCallback AsyncCallback { get; private set; }
         }
     }
 }

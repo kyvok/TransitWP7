@@ -9,7 +9,7 @@
     {
         public ExceptionView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

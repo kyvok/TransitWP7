@@ -9,9 +9,9 @@ namespace TransitWP7.Views
 
         public DirectionsView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this._viewModel = new DirectionsViewModel();
-            this.directionsList.DataContext = _viewModel.Context;
+            this.directionsList.DataContext = this._viewModel.Context;
         }
     }
 }

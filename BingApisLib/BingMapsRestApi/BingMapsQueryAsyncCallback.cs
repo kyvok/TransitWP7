@@ -5,7 +5,7 @@ namespace BingApisLib.BingMapsRestApi
 {
     internal class BingMapsQueryAsyncCallback
     {
-        private Action<BingMapsQueryResult> callback;
+        private readonly Action<BingMapsQueryResult> callback;
         private object userState;
 
         public BingMapsQueryAsyncCallback(Action<BingMapsQueryResult> callback, object userState)
@@ -27,7 +27,7 @@ namespace BingApisLib.BingMapsRestApi
         /// <param name="exception">The exception that occured.</param>
         public void Notify(Exception exception)
         {
-            this.callback(new BingMapsQueryResult(exception, userState));
+            this.callback(new BingMapsQueryResult(exception, this.userState));
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace BingApisLib.BingMapsRestApi
         /// <param name="response">The Bing Maps response object.</param>
         public void Notify(Response response)
         {
-            this.callback(new BingMapsQueryResult(response, userState));
+            this.callback(new BingMapsQueryResult(response, this.userState));
         }
     }
 }

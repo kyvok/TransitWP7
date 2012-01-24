@@ -10,6 +10,7 @@ namespace BingApisLib.BingMapsRestApi
     public class LocationByPoint
     {
         public Point Point { get; set; }
+
         // TODO: this only supports a subset of the actual enum
         public List<EntityType> IncludeEntityTypes { get; set; }
 
@@ -52,100 +53,109 @@ namespace BingApisLib.BingMapsRestApi
         }
 
         public List<Point> Waypoints { get; set; }
+
         public List<AvoidType> Avoid { get; set; }
+        
         public int? DistanceBeforeFirstTurn { get; set; }
+        
         public int? Heading { get; set; }
+        
         public OptimizeFor? Optimize { get; set; }
+        
         public RoutePathOutput? RoutePathOutput { get; set; }
+        
         public List<double> Tolerances { get; set; }
+        
         public DistanceUnit? DistanceUnit { get; set; }
+        
         public DateTime? DateTime { get; set; }
+        
         public TimeType? TimeType { get; set; }
 
         public override string ToString()
         {
             var builder = new StringBuilder();
 
-            for (int i = 0; i < Waypoints.Count; i++)
+            for (int i = 0; i < this.Waypoints.Count; i++)
             {
                 builder.Append("&wp.");
                 builder.Append(i);
                 builder.Append("=");
-                builder.Append(Waypoints[i]);
+                builder.Append(this.Waypoints[i]);
             }
 
-            if (Avoid != null && Avoid.Count != 0)
+            if (this.Avoid != null && this.Avoid.Count != 0)
             {
                 builder.Append("&avoid=");
                 bool moreThanOne = false;
-                for (int i = 0; i < Avoid.Count; i++)
+                for (int i = 0; i < this.Avoid.Count; i++)
                 {
                     if (moreThanOne)
                     {
                         builder.Append(",");
                     }
 
-                    builder.Append(Avoid[i]);
+                    builder.Append(this.Avoid[i]);
                     moreThanOne = true;
                 }
             }
 
-            if (DistanceBeforeFirstTurn.HasValue)
+            if (this.DistanceBeforeFirstTurn.HasValue)
             {
                 builder.Append("&dbft=");
-                builder.Append(DistanceBeforeFirstTurn);
+                builder.Append(this.DistanceBeforeFirstTurn);
             }
 
-            if (Heading.HasValue)
+            if (this.Heading.HasValue)
             {
                 builder.Append("&hd=");
-                builder.Append(Heading);
+                builder.Append(this.Heading);
             }
 
-            if (Optimize.HasValue)
+            if (this.Optimize.HasValue)
             {
                 builder.Append("&optmz=");
-                builder.Append(Optimize);
+                builder.Append(this.Optimize);
             }
 
-            if (RoutePathOutput.HasValue)
+            if (this.RoutePathOutput.HasValue)
             {
                 builder.Append("&rpo=");
-                builder.Append(RoutePathOutput);
+                builder.Append(this.RoutePathOutput);
             }
 
-            if (Tolerances != null && Tolerances.Count != 0)
+            if (this.Tolerances != null && this.Tolerances.Count != 0)
             {
                 builder.Append("&tl=");
                 bool moreThanOne = false;
-                for (int i = 0; i < Tolerances.Count; i++)
+                for (int i = 0; i < this.Tolerances.Count; i++)
                 {
                     if (moreThanOne)
                     {
                         builder.Append(",");
                     }
 
-                    builder.Append(Tolerances[i].ToString("G9"));
+                    builder.Append(this.Tolerances[i].ToString("G9"));
                     moreThanOne = true;
                 }
             }
 
-            if (DistanceUnit.HasValue)
+            if (this.DistanceUnit.HasValue)
             {
                 builder.Append("&du=");
-                builder.Append(DistanceUnit);
+                builder.Append(this.DistanceUnit);
             }
 
-            if (DateTime.HasValue)
+            if (this.DateTime.HasValue)
             {
                 builder.Append("&dt=");
-                builder.Append(DateTime);
+                builder.Append(this.DateTime);
             }
 
-            if (TimeType.HasValue)
+            if (this.TimeType.HasValue)
             {
                 builder.Append("&tt=");
-                builder.Append(TimeType);
+                builder.Append(this.TimeType);
             }
 
             return builder.ToString();
@@ -171,7 +181,8 @@ namespace BingApisLib.BingMapsRestApi
             this.TimeType = timeType;
         }
 
-        public int? MaxSolutions { get; set; } //maxSolns
+        // maxSolns
+        public int? MaxSolutions { get; set; }
 
         public override string ToString()
         {
@@ -191,10 +202,15 @@ namespace BingApisLib.BingMapsRestApi
     /// </summary>
     public class UserContextParameters
     {
-        public LocationRect MapView { get; set; } //mv
-        public GeoCoordinate UserLocation { get; set; } //ul
+        // mv
+        public LocationRect MapView { get; set; }
 
-        public UserContextParameters() { }
+        // ul
+        public GeoCoordinate UserLocation { get; set; }
+
+        public UserContextParameters()
+        {
+        }
 
         public UserContextParameters(LocationRect mapView)
             : this(mapView, null)
@@ -236,10 +252,13 @@ namespace BingApisLib.BingMapsRestApi
     /// </summary>
     public class OutputParameters
     {
-        public OutputFormat? OutputFormat { get; set; } //o
-        public bool? SuppressStatus { get; set; } //ss
+        public OutputFormat? OutputFormat { get; set; } // o
 
-        public OutputParameters() { }
+        public bool? SuppressStatus { get; set; } // ss
+
+        public OutputParameters()
+        {
+        }
 
         public OutputParameters(OutputFormat format)
         {
@@ -297,12 +316,15 @@ namespace BingApisLib.BingMapsRestApi
     public enum OutputFormat
     {
         Xml,
-        Json //default
+
+        // default
+        Json
     }
 
     public enum TravelMode
     {
-        Driving, //default if unspecified in resource path for Routes resource
+        // default if unspecified in resource path for Routes resource
+        Driving,
         Walking,
         Transit
     }
@@ -310,26 +332,32 @@ namespace BingApisLib.BingMapsRestApi
     public enum OptimizeFor
     {
         Distance,
-        Time, //default
+
+        // default
+        Time,
         TimeWithTraffic
     }
 
     public enum RoutePathOutput
     {
-        None, //default
+        // default
+        None,
         Points
     }
 
     public enum DistanceUnit
     {
-        Kilometer, //default
+        // default
+        Kilometer,
         Mile
     }
 
     public enum TimeType
     {
         Arrival,
-        Departure, //default
+
+        // default
+        Departure,
         LastAvailable
     }
 

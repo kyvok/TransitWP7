@@ -23,7 +23,7 @@ namespace TransitWP7
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
-            RegisterNotifications();
+            this.RegisterNotifications();
         }
 
         private void RegisterNotifications()
@@ -96,23 +96,23 @@ namespace TransitWP7
                 {
                     case 0:
                         this._viewModel.EnsureDateTimeSyncInContext(DateTime.Now, DateTime.Now, TimeCondition.Now);
-                        datePicker.IsEnabled = false;
-                        timePicker.IsEnabled = false;
+                        this.datePicker.IsEnabled = false;
+                        this.timePicker.IsEnabled = false;
                         break;
                     case 1:
                         this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.DepartingAt);
-                        datePicker.IsEnabled = true;
-                        timePicker.IsEnabled = true;
+                        this.datePicker.IsEnabled = true;
+                        this.timePicker.IsEnabled = true;
                         break;
                     case 2:
                         this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.ArrivingAt);
-                        datePicker.IsEnabled = true;
-                        timePicker.IsEnabled = true;
+                        this.datePicker.IsEnabled = true;
+                        this.timePicker.IsEnabled = true;
                         break;
                     case 3:
                         this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.LastArrivalTime);
-                        datePicker.IsEnabled = true;
-                        timePicker.IsEnabled = false;
+                        this.datePicker.IsEnabled = true;
+                        this.timePicker.IsEnabled = false;
                         break;
                 }
             }

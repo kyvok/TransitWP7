@@ -12,7 +12,7 @@ namespace TransitWP7
 
         public LocationSelectionView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs arg)

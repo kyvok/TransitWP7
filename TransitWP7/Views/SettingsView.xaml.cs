@@ -6,7 +6,7 @@ namespace TransitWP7
     {
         public SettingsView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

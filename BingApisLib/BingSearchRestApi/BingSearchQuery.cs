@@ -90,12 +90,13 @@ namespace BingApisLib.BingSearchRestApi
             try
             {
                 var httpResponse = context.HttpRequest.EndGetResponse(asyncResult);
-                //var response = (SearchResponse)BingSearchResponseSerializer.Deserialize(httpResponse.GetResponseStream());
-                string jsonString = String.Empty;
+                ////var response = (SearchResponse)BingSearchResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+                string jsonString = string.Empty;
                 using (System.IO.StreamReader reader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
                 {
                     jsonString = reader.ReadToEnd();
                 }
+
                 var wrapper = JsonConvert.DeserializeObject<BingSearchWrapper>(jsonString);
                 var response = wrapper.SearchResponse;
                 if (response.Errors != null && response.Errors.Length > 0)
@@ -107,6 +108,7 @@ namespace BingApisLib.BingSearchRestApi
                         exceptionMessage.Append("  ");
                         exceptionMessage.AppendLine(errorDetail.Message);
                     }
+
                     context.AsyncCallback.Notify(new Exception(exceptionMessage.ToString()));
                 }
                 else
@@ -122,14 +124,15 @@ namespace BingApisLib.BingSearchRestApi
 
         private class BingSearchRequestContext
         {
-            public HttpWebRequest HttpRequest { get; private set; }
-            public BingSearchQueryAsyncCallback AsyncCallback { get; private set; }
-
             public BingSearchRequestContext(HttpWebRequest httpRequest, BingSearchQueryAsyncCallback callback)
             {
                 this.HttpRequest = httpRequest;
                 this.AsyncCallback = callback;
             }
+
+            public HttpWebRequest HttpRequest { get; private set; }
+
+            public BingSearchQueryAsyncCallback AsyncCallback { get; private set; }
         }
     }
 
@@ -140,19 +143,28 @@ namespace BingApisLib.BingSearchRestApi
 
     public class SearchRequest
     {
-        //required
+        // required
         public string AppId { get; set; }
+      
         public string Query { get; set; }
+        
         public SourceType[] Sources { get; set; }
 
-        //optional
+        // optional
         public string Version { get; set; }
+
         public string Market { get; set; }
+        
         public AdultOption? Adult { get; set; }
+        
         public string UILanguage { get; set; }
+        
         public double? Latitude { get; set; }
+        
         public double? Longitude { get; set; }
+        
         public double? Radius { get; set; }
+        
         public SearchOption[] Options { get; set; }
 
         public override string ToString()
@@ -164,54 +176,67 @@ namespace BingApisLib.BingSearchRestApi
             builder.Append("&Query=");
             builder.Append(this.Query);
             builder.Append("&Sources=");
+
             // TODO: This can be multiple sources
             builder.Append(this.Sources[0].ToString());
-            if (!String.IsNullOrWhiteSpace(this.Version))
+            if (!string.IsNullOrWhiteSpace(this.Version))
             {
                 builder.Append("&Version=");
                 builder.Append(this.Version);
             }
-            if (!String.IsNullOrWhiteSpace(this.Market))
+
+            if (!string.IsNullOrWhiteSpace(this.Market))
             {
                 builder.Append("&Market=");
                 builder.Append(this.Market);
             }
+
             // TODO: insert AdultOption
-            if (!String.IsNullOrWhiteSpace(this.UILanguage))
+            if (!string.IsNullOrWhiteSpace(this.UILanguage))
             {
                 builder.Append("&UILanguage=");
                 builder.Append(this.UILanguage);
             }
+
             if (this.Latitude.HasValue)
             {
                 builder.Append("&Latitude=");
                 builder.Append(this.Latitude.Value.ToString("G9"));
             }
+
             if (this.Longitude.HasValue)
             {
                 builder.Append("&Longitude=");
                 builder.Append(this.Longitude.Value.ToString("G9"));
             }
+
             if (this.Radius.HasValue)
             {
                 builder.Append("&Radius=");
                 builder.Append(this.Radius.Value.ToString("G9"));
             }
-            // TODO: insert SearchOption
 
+            // TODO: insert SearchOption
             return builder.ToString();
         }
     }
 
     public class PhonebookRequest : SearchRequest
     {
-        //optional
-        public uint? Count { get; set; } //max 25, min 1, default 10
-        public uint? Offset { get; set; } // count+offset should not go over 1000
-        public string FileType { get; set; } //do not use
+        // optional
+        // max 25, min 1, default 10
+        public uint? Count { get; set; }
+
+        // count+offset should not go over 1000
+        public uint? Offset { get; set; }
+
+        // do not use
+        public string FileType { get; set; }
+        
         public PhonebookSortOption? SortBy { get; set; }
+
         // TODO: do we want this LocID parameter?
-        //public string LocID { get; set; } //lookup a specific phonebook entry by id.
+        ////public string LocID { get; set; } //lookup a specific phonebook entry by id.
 
         public override string ToString()
         {
@@ -221,18 +246,20 @@ namespace BingApisLib.BingSearchRestApi
                 builder.Append("&Phonebook.Count=");
                 builder.Append(this.Count);
             }
+
             if (this.Offset.HasValue)
             {
                 builder.Append("&Phonebook.Offset=");
                 builder.Append(this.Offset);
             }
+
             if (this.SortBy.HasValue)
             {
                 builder.Append("&Phonebook.SortBy=");
                 builder.Append(this.SortBy.ToString());
             }
-            // TODO: insert FileType
 
+            // TODO: insert FileType
             return base.ToString() + builder.ToString();
         }
     }

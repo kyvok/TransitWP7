@@ -24,7 +24,7 @@ namespace TransitWP7
             this.UnhandledException += this.Application_UnhandledException;
 
             // Standard Silverlight initialization
-            InitializeComponent();
+            this.InitializeComponent();
 
             // Phone-specific initialization
             this.InitializePhoneApplication();

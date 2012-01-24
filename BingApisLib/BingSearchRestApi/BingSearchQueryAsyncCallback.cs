@@ -27,7 +27,7 @@ namespace BingApisLib.BingSearchRestApi
         /// <param name="exception">The exception that occured.</param>
         public void Notify(Exception exception)
         {
-            this.callback(new BingSearchQueryResult(exception, userState));
+            this.callback(new BingSearchQueryResult(exception, this.userState));
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace BingApisLib.BingSearchRestApi
         /// <param name="response">The Bing Maps response object.</param>
         public void Notify(SearchResponse response)
         {
-            this.callback(new BingSearchQueryResult(response, userState));
+            this.callback(new BingSearchQueryResult(response, this.userState));
         }
     }
 }
