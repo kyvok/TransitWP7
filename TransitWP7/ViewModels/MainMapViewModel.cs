@@ -29,15 +29,15 @@ namespace TransitWP7.ViewModels
 
             Messenger.Default.Register<NotificationMessage<int>>(
                 this,
-                selectedIndex =>
+                notificationMessage =>
                 {
-                    if (selectedIndex.Notification.Equals("start"))
+                    if (notificationMessage.Notification.Equals("start"))
                     {
-                        this.UpdateLocation("start", this.Context._possibleStartLocations[selectedIndex.Content]);
+                        this.UpdateLocation("start", this.Context._possibleStartLocations[notificationMessage.Content]);
                     }
                     else
                     {
-                        this.UpdateLocation("end", this.Context._possibleEndLocations[selectedIndex.Content]);
+                        this.UpdateLocation("end", this.Context._possibleEndLocations[notificationMessage.Content]);
                     }
                 });
 
@@ -116,6 +116,9 @@ namespace TransitWP7.ViewModels
 
         public void TryResolveEndpoints()
         {
+            // Notify calcul in progress
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."));
+
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
                 ProcessErrorMessage("Where are you starting from?");
@@ -159,6 +162,9 @@ namespace TransitWP7.ViewModels
                     "end");
                 return;
             }
+
+            // Notify calcul in progress
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Calculating transit trips..."));
 
             // TODO: fix initial context state not set. Hacked up in view startup.
             ProxyQuery.GetTransitDirections(
@@ -223,6 +229,9 @@ namespace TransitWP7.ViewModels
 
         private void GetTransitDirectionsCallback(ProxyQueryResult result)
         {
+            // Notify progress bar calcul is done
+            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty));
+
             if (result.Error != null)
             {
                 ProcessErrorMessage(result.Error.Message);
@@ -233,6 +242,7 @@ namespace TransitWP7.ViewModels
             this.DisplayTransitTripSummaries();
         }
 
+        // TODO: Add Start and Endpoint to the list of steps. Transit missing end pushpin always.
         private void DisplayTransitTripSummaries()
         {
             foreach (var transitOption in TransitRequestContext.Current.TransitDescriptionCollection)
@@ -290,6 +300,9 @@ namespace TransitWP7.ViewModels
                              Button = MessageBoxButton.OK
                          };
             Messenger.Default.Send(dm);
+
+            // collapse the progress indicator
+            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty));
         }
     }
 

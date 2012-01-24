@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
+using Microsoft.Phone.Shell;
 
 namespace TransitWP7
 {
@@ -37,11 +38,18 @@ namespace TransitWP7
                         msg.ProcessCallback(result);
                     }));
 
+            // TODO: Fixup the notification system to be more predictable. We assume nobody else passes bool here.
+            Messenger.Default.Register<NotificationMessage<bool>>(
+                this,
+                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                    () => this.SetProgressBarState(notificationMessage.Notification, notificationMessage.Content)));
+
+            // TODO: Fixup the mess in these notification messages. To much strong verification.
             Messenger.Default.Register<NotificationMessage>(
                 this,
                 msg =>
                 {
-                    if (msg.Notification != "transit")
+                    if (msg.Notification == "start" || msg.Notification == "end")
                     {
                         DispatcherHelper.UIDispatcher.BeginInvoke(
                             () => NavigationService.Navigate(
@@ -49,7 +57,7 @@ namespace TransitWP7
                                     string.Format("/Views/LocationSelectionView.xaml?endpoint={0}", msg.Notification),
                                     UriKind.Relative)));
                     }
-                    else
+                    else if (msg.Notification == "transit")
                     {
                         DispatcherHelper.UIDispatcher.BeginInvoke(
                             () =>
@@ -140,9 +148,17 @@ namespace TransitWP7
         private void ApplicationBarIconButton_Click(object sender, EventArgs e)
         {
             // TODO: if not location enabled, ask permission
-            this.mainMap.SetView(this._viewModel.Context.UserGeoCoordinate, 14);
+            this.mainMap.SetView(this._viewModel.Context.UserGeoCoordinate, 16);
         }
 
+        private void SetProgressBarState(string message, bool state)
+        {
+            SystemTray.ProgressIndicator.Text = message;
+            SystemTray.ProgressIndicator.IsIndeterminate = state;
+            SystemTray.ProgressIndicator.IsVisible = state;
+        }
+
+        // TODO: This is not MVVM friendly. Needs refactoring.
         private void transitTripsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.bottomGrid.Visibility = Visibility.Collapsed;

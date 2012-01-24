@@ -14,6 +14,7 @@ namespace TransitWP7
             // TODO: geoposition granted access or not
             // TODO: monitor geoposition status
             // TODO: use default accuracy
+            // TODO: the initialization phase should be reflected through viewmodels to indicate progress.
             this.highGeowatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
             this.highGeowatcher.MovementThreshold = 20;
             this.highGeowatcher.Start();
