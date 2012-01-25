@@ -170,27 +170,46 @@ namespace TransitWP7
 
             if (description != null)
             {
+                int stepNumber = 0;
                 foreach (var step in description.ItinerarySteps)
                 {
-                    string instructContent = string.Empty;
-                    if (step.IconType != string.Empty)
-                    {
-                        instructContent = step.IconType.Substring(0, 1);
-                        if (step.IconType.StartsWith("B"))
-                        {
-                            instructContent += step.BusNumber;
-                        }
-                    }
-
-                    this.pushpinStepsLayer.Children.Add(
-                        new Pushpin()
+                    stepNumber++;
+                    var pushpin = new Pushpin()
                         {
                             Location = step.GeoCoordinate,
-                            Content = instructContent,
+                            Content = stepNumber,
                             Style = (Style)(Application.Current.Resources["TransitStepPushpinStyle"]),
-                            PositionOrigin = PositionOrigin.Center
-                        });
+                            PositionOrigin = PositionOrigin.Center,
+                            Tag = stepNumber - 1,
+                        };
+
+                    pushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(pushpin_Tap);
+                    this.pushpinStepsLayer.Children.Add(pushpin);
                 }
+
+
+                var startPushpin = new Pushpin()
+                    {
+                        Location = description.PathPoints[0],
+                        Content = "A",
+                        Style = (Style)(Application.Current.Resources["TransitEndpointPushpinStyle"]),
+                        PositionOrigin = PositionOrigin.Center,
+                        Tag = 0
+                    };
+                startPushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(pushpin_Tap);
+
+                var endPushpin = new Pushpin()
+                    {
+                        Location = description.PathPoints[description.PathPoints.Count - 1],
+                        Content = "B",
+                        Style = (Style)(Application.Current.Resources["TransitEndpointPushpinStyle"]),
+                        PositionOrigin = PositionOrigin.Center,
+                        Tag = stepNumber - 1
+                    };
+                endPushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(pushpin_Tap);
+
+                this.pushpinStepsLayer.Children.Add(startPushpin);
+                this.pushpinStepsLayer.Children.Add(endPushpin);
 
                 routePath.Locations.Clear();
                 foreach (var pathPoint in description.PathPoints)
@@ -200,6 +219,17 @@ namespace TransitWP7
 
                 this.mainMap.SetView(description.MapView);
             }
+        }
+
+        void pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            var pushpin = sender as Pushpin;
+            NavigationService.Navigate(new Uri(string.Format("/Views/DirectionsView.xaml?selectedIndex={0}", pushpin.Tag), UriKind.Relative));
+        }
+
+        private void ApplicationBarMenuItem_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Views/DirectionsView.xaml", UriKind.Relative));
         }
 
         ////private void Button_Click_1(object sender, RoutedEventArgs e)

@@ -114,6 +114,7 @@ namespace TransitWP7.ViewModels
             this.Context.TimeType = timeCondition;
         }
 
+        // TODO: When pressing back button from location selection page, the progress indicator stays on. Need better decoupling.
         public void TryResolveEndpoints()
         {
             // Notify calcul in progress
@@ -249,44 +250,50 @@ namespace TransitWP7.ViewModels
             {
                 var atd = new SummaryTransitData();
                 var isWalk = false;
-                foreach (ItineraryStep item in transitOption.ItinerarySteps)
+                foreach (var item in transitOption.ItinerarySteps)
                 {
-                    if (item.IconType != string.Empty)
+                    if (item.IconType == string.Empty)
                     {
-                        if (item.IconType.StartsWith("W"))
+                        continue;
+                    }
+
+                    if (item.IconType.StartsWith("W"))
+                    {
+                        if (!isWalk)
                         {
-                            if (!isWalk)
-                            {
-                                Deployment.Current.Dispatcher.BeginInvoke(
-                                    () =>
-                                    {
-                                        var img = new Image();
-                                        img.Source = new BitmapImage(new Uri("/images/walk_lo.png", UriKind.Relative));
-                                        atd.Steps.Add(new TransitStep(string.Empty, img));
-                                    });
-                            }
-                        }
-                        else if (item.IconType.StartsWith("B"))
-                        {
-                            var item1 = item;
                             Deployment.Current.Dispatcher.BeginInvoke(
                                 () =>
                                 {
-                                    var img = new Image();
-                                    img.Source = new BitmapImage(new Uri("/images/bus_lo.png", UriKind.Relative));
-                                    atd.Steps.Add(new TransitStep(item1.BusNumber, img));
+                                    var img = new Image
+                                                  {
+                                                      Source = new BitmapImage(new Uri("/images/walk_lo.png", UriKind.Relative))
+                                                  };
+                                    atd.Steps.Add(new TransitStep(string.Empty, img));
                                 });
                         }
-
-                        isWalk = item.TravelMode.StartsWith("W") ? true : false;
                     }
+                    else if (item.IconType.StartsWith("B"))
+                    {
+                        var item1 = item;
+                        Deployment.Current.Dispatcher.BeginInvoke(
+                            () =>
+                            {
+                                var img = new Image
+                                              {
+                                                  Source = new BitmapImage(new Uri("/images/bus_lo.png", UriKind.Relative))
+                                              };
+                                atd.Steps.Add(new TransitStep(item1.BusNumber, img));
+                            });
+                    }
+
+                    isWalk = item.TravelMode.StartsWith("W") ? true : false;
                 }
 
                 atd.Duration = ((int)(transitOption.TravelDuration / 60)).ToString(CultureInfo.InvariantCulture) + " min";
                 atd.ArrivesAt = transitOption.ArrivalTime;
                 atd.DepartsAt = transitOption.DepartureTime;
 
-                Deployment.Current.Dispatcher.BeginInvoke(() => this.FormattedTransitTrips.Add(atd));
+                DispatcherHelper.UIDispatcher.BeginInvoke(() => this.FormattedTransitTrips.Add(atd));
 
                 Messenger.Default.Send(new NotificationMessage("transit"));
             }
@@ -301,7 +308,7 @@ namespace TransitWP7.ViewModels
                          };
             Messenger.Default.Send(dm);
 
-            // collapse the progress indicator
+            // collapse any pending progressIndicator
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty));
         }
     }
