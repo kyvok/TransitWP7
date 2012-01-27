@@ -4,4 +4,13 @@
     {
         public const string MyCurrentLocationText = "My location";
     }
+
+    public enum MessengerToken
+    {
+        ErrorPopup,
+        MainMapProgressIndicator,
+        TransitTripsReady,
+        EndpointResolutionPopup,
+        SelectedEndpoint
+    }
 }

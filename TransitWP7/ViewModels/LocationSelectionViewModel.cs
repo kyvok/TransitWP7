@@ -22,8 +22,8 @@ namespace TransitWP7.ViewModels
 
         public void SelectionMade(int selectedIndex)
         {
-            var nm = new NotificationMessage<int>(selectedIndex, this.EndpointName);
-            Messenger.Default.Send(nm);
+            var notificationMessage = new NotificationMessage<int>(selectedIndex, this.EndpointName);
+            Messenger.Default.Send(notificationMessage, MessengerToken.SelectedEndpoint);
         }
     }
 }

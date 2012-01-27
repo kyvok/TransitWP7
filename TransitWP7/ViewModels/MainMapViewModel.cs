@@ -12,7 +12,6 @@ using GalaSoft.MvvmLight.Threading;
 
 namespace TransitWP7.ViewModels
 {
-    // TODO: progressindicator native to be enabled when calculation in progress. NATIVE, not the progressbar one.
     public class MainMapViewModel : ViewModelBase
     {
         private string _startLocationText;
@@ -29,6 +28,7 @@ namespace TransitWP7.ViewModels
 
             Messenger.Default.Register<NotificationMessage<int>>(
                 this,
+                MessengerToken.SelectedEndpoint,
                 notificationMessage =>
                 {
                     if (notificationMessage.Notification.Equals("start"))
@@ -118,7 +118,7 @@ namespace TransitWP7.ViewModels
         public void TryResolveEndpoints()
         {
             // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."));
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
 
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
@@ -165,7 +165,7 @@ namespace TransitWP7.ViewModels
             }
 
             // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Calculating transit trips..."));
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Calculating transit trips..."), MessengerToken.MainMapProgressIndicator);
 
             // TODO: fix initial context state not set. Hacked up in view startup.
             ProxyQuery.GetTransitDirections(
@@ -200,9 +200,7 @@ namespace TransitWP7.ViewModels
                     this.Context._possibleEndLocations = result.LocationDescriptions;
                 }
 
-                var nm = new NotificationMessage(result.UserState as string);
-
-                Messenger.Default.Send(nm);
+                Messenger.Default.Send(new NotificationMessage(result.UserState as string), MessengerToken.EndpointResolutionPopup);
             }
         }
 
@@ -231,7 +229,7 @@ namespace TransitWP7.ViewModels
         private void GetTransitDirectionsCallback(ProxyQueryResult result)
         {
             // Notify progress bar calcul is done
-            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty));
+            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
 
             if (result.Error != null)
             {
@@ -295,21 +293,20 @@ namespace TransitWP7.ViewModels
 
                 DispatcherHelper.UIDispatcher.BeginInvoke(() => this.FormattedTransitTrips.Add(atd));
 
-                Messenger.Default.Send(new NotificationMessage("transit"));
+                Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
             }
         }
 
         private static void ProcessErrorMessage(string errorMsg)
         {
-            var dm = new DialogMessage(errorMsg, null)
+            var dialogMessage = new DialogMessage(errorMsg, null)
                          {
                              Caption = "Oups!",
                              Button = MessageBoxButton.OK
                          };
-            Messenger.Default.Send(dm);
+            Messenger.Default.Send(dialogMessage, MessengerToken.ErrorPopup);
 
-            // collapse any pending progressIndicator
-            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty));
+            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
         }
     }
 

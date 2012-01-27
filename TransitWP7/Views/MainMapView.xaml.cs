@@ -31,43 +31,39 @@ namespace TransitWP7
         {
             Messenger.Default.Register<DialogMessage>(
                 this,
-                msg => DispatcherHelper.UIDispatcher.BeginInvoke(
+                MessengerToken.ErrorPopup,
+                dialogMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () =>
                     {
-                        var result = MessageBox.Show(msg.Content, msg.Caption, msg.Button);
-                        msg.ProcessCallback(result);
+                        var result = MessageBox.Show(dialogMessage.Content, dialogMessage.Caption, dialogMessage.Button);
+                        dialogMessage.ProcessCallback(result);
                     }));
 
-            // TODO: Fixup the notification system to be more predictable. We assume nobody else passes bool here.
             Messenger.Default.Register<NotificationMessage<bool>>(
                 this,
+                MessengerToken.MainMapProgressIndicator,
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () => this.SetProgressBarState(notificationMessage.Notification, notificationMessage.Content)));
 
-            // TODO: Fixup the mess in these notification messages. To much strong verification.
             Messenger.Default.Register<NotificationMessage>(
                 this,
-                msg =>
-                {
-                    if (msg.Notification == "start" || msg.Notification == "end")
+                MessengerToken.EndpointResolutionPopup,
+                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                    () => NavigationService.Navigate(
+                        new Uri(
+                            string.Format("/Views/LocationSelectionView.xaml?endpoint={0}", notificationMessage.Notification),
+                            UriKind.Relative))));
+
+            Messenger.Default.Register<NotificationMessage>(
+                this,
+                MessengerToken.TransitTripsReady,
+                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                    () =>
                     {
-                        DispatcherHelper.UIDispatcher.BeginInvoke(
-                            () => NavigationService.Navigate(
-                                new Uri(
-                                    string.Format("/Views/LocationSelectionView.xaml?endpoint={0}", msg.Notification),
-                                    UriKind.Relative)));
-                    }
-                    else if (msg.Notification == "transit")
-                    {
-                        DispatcherHelper.UIDispatcher.BeginInvoke(
-                            () =>
-                            {
-                                this.bottomGrid.Visibility = Visibility.Visible;
-                                this.transitTripsList.ItemsSource = _viewModel.FormattedTransitTrips;
-                                this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
-                            });
-                    }
-                });
+                        this.bottomGrid.Visibility = Visibility.Visible;
+                        this.transitTripsList.ItemsSource = _viewModel.FormattedTransitTrips;
+                        this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
+                    }));
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
@@ -183,7 +179,7 @@ namespace TransitWP7
                             Tag = stepNumber - 1,
                         };
 
-                    pushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(pushpin_Tap);
+                    pushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(this.pushpin_Tap);
                     this.pushpinStepsLayer.Children.Add(pushpin);
                 }
 
@@ -196,7 +192,7 @@ namespace TransitWP7
                         PositionOrigin = PositionOrigin.Center,
                         Tag = 0
                     };
-                startPushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(pushpin_Tap);
+                startPushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(this.pushpin_Tap);
 
                 var endPushpin = new Pushpin()
                     {
@@ -206,7 +202,7 @@ namespace TransitWP7
                         PositionOrigin = PositionOrigin.Center,
                         Tag = stepNumber - 1
                     };
-                endPushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(pushpin_Tap);
+                endPushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(this.pushpin_Tap);
 
                 this.pushpinStepsLayer.Children.Add(startPushpin);
                 this.pushpinStepsLayer.Children.Add(endPushpin);
