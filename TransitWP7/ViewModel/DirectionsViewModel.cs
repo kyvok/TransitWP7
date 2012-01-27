@@ -1,4 +1,4 @@
-﻿namespace TransitWP7.ViewModels
+﻿namespace TransitWP7.ViewModel
 {
     public class DirectionsViewModel
     {

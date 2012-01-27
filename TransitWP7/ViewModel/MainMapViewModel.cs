@@ -10,7 +10,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 
-namespace TransitWP7.ViewModels
+namespace TransitWP7.ViewModel
 {
     public class MainMapViewModel : ViewModelBase
     {

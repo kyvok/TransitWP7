@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.Phone.Controls;
-using TransitWP7.ViewModels;
+using TransitWP7.ViewModel;
 
-namespace TransitWP7.Views
+namespace TransitWP7.View
 {
     public partial class DirectionsView : PhoneApplicationPage
     {

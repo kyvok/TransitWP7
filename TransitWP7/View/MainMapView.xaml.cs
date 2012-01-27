@@ -9,13 +9,14 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
+using TransitWP7.ViewModel;
 
-namespace TransitWP7
+namespace TransitWP7.View
 {
     // TODO: Localize this app properly. Will need a resource file.
     public partial class MainMapView : PhoneApplicationPage
     {
-        private readonly ViewModels.MainMapViewModel _viewModel = new ViewModels.MainMapViewModel();
+        private readonly MainMapViewModel _viewModel = new MainMapViewModel();
 
         public MainMapView()
         {

@@ -1,4 +1,4 @@
-﻿namespace TransitWP7
+﻿namespace TransitWP7.View
 {
     using System.Windows;
     using System.Windows.Navigation;

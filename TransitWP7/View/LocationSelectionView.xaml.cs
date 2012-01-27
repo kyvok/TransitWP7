@@ -1,13 +1,14 @@
 ﻿using System;
 using Microsoft.Phone.Controls;
+using TransitWP7.ViewModel;
 
-namespace TransitWP7
+namespace TransitWP7.View
 {
     // TODO: distance of the item from origin
     // TODO: calculate results from origin for endpoint, not current userlocation!!!
     public partial class LocationSelectionView : PhoneApplicationPage
     {
-        private readonly ViewModels.LocationSelectionViewModel _viewModel = new ViewModels.LocationSelectionViewModel();
+        private readonly LocationSelectionViewModel _viewModel = new LocationSelectionViewModel();
         private const string PageTitleStringFormat = "Which {0} location did you mean?";
 
         public LocationSelectionView()

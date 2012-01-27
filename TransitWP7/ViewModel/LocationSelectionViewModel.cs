@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 
-namespace TransitWP7.ViewModels
+namespace TransitWP7.ViewModel
 {
     public class LocationSelectionViewModel : ViewModelBase
     {
