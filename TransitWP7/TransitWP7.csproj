@@ -26,6 +26,7 @@
     <SilverlightAppEntry>TransitWP7.App</SilverlightAppEntry>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,11 +52,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GalaSoft.MvvmLight.Extras.WP71, Version=3.0.0.19987, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.3.1.1\lib\sl4-windowsphone71\GalaSoft.MvvmLight.Extras.WP71.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.Extras.WP71">
+      <HintPath>..\packages\MvvmLight.3.1.1\lib\sl4-windowsphone71\GalaSoft.MvvmLight.Extras.WP71.dll</HintPath>
     </Reference>
-    <Reference Include="GalaSoft.MvvmLight.WP71, Version=3.0.0.19988, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.3.1.1\lib\sl4-windowsphone71\GalaSoft.MvvmLight.WP71.dll</HintPath>
+    <Reference Include="GalaSoft.MvvmLight.WP71">
+      <HintPath>..\packages\MvvmLight.3.1.1\lib\sl4-windowsphone71\GalaSoft.MvvmLight.WP71.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
@@ -69,7 +70,7 @@
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Interactivity, Version=3.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.3.1.1\lib\sl4-windowsphone71\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MvvmLight.3.1.1\lib\sl4-windowsphone71\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="mscorlib.extensions" />
@@ -85,6 +86,8 @@
     </Compile>
     <Compile Include="ViewModels\LocationSelectionViewModel.cs" />
     <Compile Include="ViewModels\DirectionsViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\DirectionsView.xaml.cs">
       <DependentUpon>DirectionsView.xaml</DependentUpon>
     </Compile>
