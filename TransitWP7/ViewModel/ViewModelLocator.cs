@@ -36,6 +36,10 @@ namespace TransitWP7.ViewModel
             ////{
             ////    // Create run time services and view models
             ////}
+            
+            CreateMainMapViewModel();
+            CreateLocationSelectionViewModel();
+            CreateDirectionsViewModel();
         }
 
         public static MainMapViewModel MainMapViewModelStatic

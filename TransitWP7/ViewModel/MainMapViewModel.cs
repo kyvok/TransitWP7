@@ -26,18 +26,18 @@ namespace TransitWP7.ViewModel
         {
             GeoLocation.Instance.GeoWatcher.PositionChanged += this.watcher_PositionChanged;
 
-            Messenger.Default.Register<NotificationMessage<int>>(
+            Messenger.Default.Register<NotificationMessage<LocationDescription>>(
                 this,
                 MessengerToken.SelectedEndpoint,
                 notificationMessage =>
                 {
                     if (notificationMessage.Notification.Equals("start"))
                     {
-                        this.UpdateLocation("start", this.Context._possibleStartLocations[notificationMessage.Content]);
+                        this.UpdateLocation("start", notificationMessage.Content);
                     }
                     else
                     {
-                        this.UpdateLocation("end", this.Context._possibleEndLocations[notificationMessage.Content]);
+                        this.UpdateLocation("end", notificationMessage.Content);
                     }
                 });
 
@@ -191,15 +191,7 @@ namespace TransitWP7.ViewModel
             }
             else
             {
-                if (result.UserState.Equals("start"))
-                {
-                    this.Context._possibleStartLocations = result.LocationDescriptions;
-                }
-                else
-                {
-                    this.Context._possibleEndLocations = result.LocationDescriptions;
-                }
-
+                Messenger.Default.Send(new NotificationMessage<List<LocationDescription>>(result.LocationDescriptions, result.UserState as string), MessengerToken.EndpointResolutionPopup);
                 Messenger.Default.Send(new NotificationMessage(result.UserState as string), MessengerToken.EndpointResolutionPopup);
             }
         }

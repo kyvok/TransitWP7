@@ -24,9 +24,7 @@ namespace TransitWP7.View
             this._viewModel.EndpointName = this.NavigationContext.QueryString["endpoint"];
 
             this.PageTitle.Text = string.Format(PageTitleStringFormat, this._viewModel.EndpointName);
-            this.resultsList.ItemsSource = this._viewModel.EndpointName == "start"
-                                               ? this._viewModel.Context._possibleStartLocations
-                                               : this._viewModel.Context._possibleEndLocations;
+            this.resultsList.ItemsSource = this._viewModel.LocationDescriptions;
         }
 
         // TODO: backing up from here what happens?
