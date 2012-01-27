@@ -63,7 +63,7 @@ namespace TransitWP7.View
                     () =>
                     {
                         this.bottomGrid.Visibility = Visibility.Visible;
-                        this.transitTripsList.ItemsSource = _viewModel.FormattedTransitTrips;
+                        this.transitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
                         this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
                     }));
         }
@@ -162,7 +162,7 @@ namespace TransitWP7.View
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Collapsed;
 
-            this._viewModel.Context.SelectedTransitTrip = this._viewModel.Context.TransitDescriptionCollection[this.transitTripsList.SelectedIndex];
+            this._viewModel.Context.SelectedTransitTrip = this._viewModel.TransitDescriptionCollection[this.transitTripsList.SelectedIndex];
 
             TransitDescription description = TransitRequestContext.Current.SelectedTransitTrip;
 

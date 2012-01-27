@@ -20,7 +20,7 @@ namespace TransitWP7.ViewModel
         private bool _isEndLocationStale = true;
 
         public List<TransitDescription> TransitTrips;
-        public ObservableCollection<SummaryTransitData> FormattedTransitTrips = new ObservableCollection<SummaryTransitData>();
+        public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
 
         public MainMapViewModel()
         {
@@ -229,64 +229,13 @@ namespace TransitWP7.ViewModel
                 return;
             }
 
-            this.Context.TransitDescriptionCollection = new ObservableCollection<TransitDescription>(result.TransitDescriptions);
-            this.DisplayTransitTripSummaries();
-        }
-
-        // TODO: Add Start and Endpoint to the list of steps. Transit missing end pushpin always.
-        private void DisplayTransitTripSummaries()
-        {
-            foreach (var transitOption in TransitRequestContext.Current.TransitDescriptionCollection)
+            this.TransitDescriptionCollection.Clear();
+            foreach (var transit in result.TransitDescriptions)
             {
-                var atd = new SummaryTransitData();
-                var isWalk = false;
-                foreach (var item in transitOption.ItinerarySteps)
-                {
-                    if (item.IconType == string.Empty)
-                    {
-                        continue;
-                    }
-
-                    if (item.IconType.StartsWith("W"))
-                    {
-                        if (!isWalk)
-                        {
-                            Deployment.Current.Dispatcher.BeginInvoke(
-                                () =>
-                                {
-                                    var img = new Image
-                                                  {
-                                                      Source = new BitmapImage(new Uri("/images/walk_lo.png", UriKind.Relative))
-                                                  };
-                                    atd.Steps.Add(new TransitStep(string.Empty, img));
-                                });
-                        }
-                    }
-                    else if (item.IconType.StartsWith("B"))
-                    {
-                        var item1 = item;
-                        Deployment.Current.Dispatcher.BeginInvoke(
-                            () =>
-                            {
-                                var img = new Image
-                                              {
-                                                  Source = new BitmapImage(new Uri("/images/bus_lo.png", UriKind.Relative))
-                                              };
-                                atd.Steps.Add(new TransitStep(item1.BusNumber, img));
-                            });
-                    }
-
-                    isWalk = item.TravelMode.StartsWith("W") ? true : false;
-                }
-
-                atd.Duration = ((int)(transitOption.TravelDuration / 60)).ToString(CultureInfo.InvariantCulture) + " min";
-                atd.ArrivesAt = transitOption.ArrivalTime;
-                atd.DepartsAt = transitOption.DepartureTime;
-
-                DispatcherHelper.UIDispatcher.BeginInvoke(() => this.FormattedTransitTrips.Add(atd));
-
-                Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
+                this.TransitDescriptionCollection.Add(transit);
             }
+
+            Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
         }
 
         private static void ProcessErrorMessage(string errorMsg)
@@ -300,31 +249,5 @@ namespace TransitWP7.ViewModel
 
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
         }
-    }
-
-    // TODO: get rid of these 2 classes!
-    public class SummaryTransitData
-    {
-        public SummaryTransitData()
-        {
-            this.Steps = new List<TransitStep>();
-        }
-
-        public List<TransitStep> Steps { get; set; }
-        public string Duration { get; set; }
-        public string DepartsAt { get; set; }
-        public string ArrivesAt { get; set; }
-    }
-
-    public class TransitStep
-    {
-        public TransitStep(string str, Image image)
-        {
-            this.Str = str;
-            this.Image = image;
-        }
-
-        public string Str { get; set; }
-        public Image Image { get; set; }
     }
 }

@@ -15,7 +15,8 @@
     shell:SystemTray.Opacity="0.67"
     shell:SystemTray.BackgroundColor="{StaticResource PhoneSemitransparentColor}"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    xmlns:maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps">
+    xmlns:maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+    xmlns:converters="clr-namespace:TransitWP7.Converters">
 
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsVisible="False" IsIndeterminate="False" Text="" />
@@ -23,6 +24,12 @@
     
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
+        
+        <Grid.Resources>
+            <converters:TravelDurationConverter x:Key="TravelDurationConverter"/>
+            <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
+        </Grid.Resources>
+        
         <maps:Map Name="mainMap" ScaleVisibility="Visible">
             <maps:MapLayer>
                 <maps:MapPolyline Name="routePath"
@@ -128,13 +135,13 @@
                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                          VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                          SelectionChanged="transitTripsList_SelectionChanged"
-                         ItemsSource="{Binding Path=FormattedTransitTrips}">
+                         ItemsSource="{Binding Path=TransitDescriptionCollection}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Duration}" FontSize="40" />
+                                <TextBlock Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}" FontSize="36" />
                                 <StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Path=Steps}">
+                                    <ItemsControl ItemsSource="{Binding Path=ItinerarySteps}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
@@ -143,15 +150,17 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <ContentControl Content="{Binding Image}" Height="32" Width="32"/>
-                                                    <TextBlock Text="{Binding Str}"/>
+                                                    <ContentControl Height="32" Width="32">
+                                                        <Image Source="{Binding IconType, Converter={StaticResource ItineraryStepsToImageConverter}}" />
+                                                    </ContentControl>
+                                                    <TextBlock Text="{Binding BusNumber}"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                                        <TextBlock Text="{Binding DepartsAt}" FontSize="20"/>
-                                        <TextBlock Text="{Binding ArrivesAt}" FontSize="20"/>
+                                        <TextBlock Text="{Binding DepartureTime}" FontSize="20"/>
+                                        <TextBlock Text="{Binding ArrivalTime}" FontSize="20"/>
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>

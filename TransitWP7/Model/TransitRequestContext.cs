@@ -139,10 +139,6 @@ namespace TransitWP7
             }
         }
 
-        public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
-        public ObservableCollection<LocationDescription> StartingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
-        public ObservableCollection<LocationDescription> EndingLocationDescriptionCollection = new ObservableCollection<LocationDescription>();
-
         private void RaisePropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)
