@@ -1,6 +1,8 @@
-﻿namespace TransitWP7.ViewModel
+﻿using GalaSoft.MvvmLight;
+
+namespace TransitWP7.ViewModel
 {
-    public class DirectionsViewModel
+    public class DirectionsViewModel : ViewModelBase
     {
         public TransitRequestContext Context
         {

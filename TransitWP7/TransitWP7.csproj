@@ -87,7 +87,6 @@
     </Compile>
     <Compile Include="ViewModel\LocationSelectionViewModel.cs" />
     <Compile Include="ViewModel\DirectionsViewModel.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\DirectionsView.xaml.cs">
       <DependentUpon>DirectionsView.xaml</DependentUpon>

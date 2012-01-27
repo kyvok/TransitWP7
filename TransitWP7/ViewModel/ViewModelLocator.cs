@@ -22,11 +22,10 @@ namespace TransitWP7.ViewModel
     /// </summary>
     public class ViewModelLocator
     {
-        private static MainViewModel _main;
+        private static DirectionsViewModel _directionsViewModel;
+        private static MainMapViewModel _mainMapViewModel;
+        private static LocationSelectionViewModel _locationSelectionViewModel;
 
-        /// <summary>
-        /// Initializes a new instance of the ViewModelLocator class.
-        /// </summary>
         public ViewModelLocator()
         {
             ////if (ViewModelBase.IsInDesignModeStatic)
@@ -37,22 +36,127 @@ namespace TransitWP7.ViewModel
             ////{
             ////    // Create run time services and view models
             ////}
-
-            _main = new MainViewModel();
         }
 
-        /// <summary>
-        /// Gets the Main property which defines the main viewmodel.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
-            "CA1822:MarkMembersAsStatic",
-            Justification = "This non-static member is needed for data binding purposes.")]
-        public MainViewModel Main
+        public static MainMapViewModel MainMapViewModelStatic
         {
             get
             {
-                return _main;
+                if (_mainMapViewModel == null)
+                {
+                    CreateMainMapViewModel();
+                }
+
+                return _mainMapViewModel;
             }
+        }
+
+        public static LocationSelectionViewModel LocationSelectionViewModelStatic
+        {
+            get
+            {
+                if (_locationSelectionViewModel == null)
+                {
+                    CreateLocationSelectionViewModel();
+                }
+
+                return _locationSelectionViewModel;
+            }
+        }
+
+        public static DirectionsViewModel DirectionsViewModelStatic
+        {
+            get
+            {
+                if (_directionsViewModel == null)
+                {
+                    CreateDirectionsViewModel();
+                }
+
+                return _directionsViewModel;
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public MainMapViewModel MainMapViewModel
+        {
+            get
+            {
+                return MainMapViewModelStatic;
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public LocationSelectionViewModel LocationSelectionViewModel
+        {
+            get
+            {
+                return LocationSelectionViewModelStatic;
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public DirectionsViewModel DirectionsViewModel
+        {
+            get
+            {
+                return DirectionsViewModelStatic;
+            }
+        }
+
+        public static void CreateMainMapViewModel()
+        {
+            if (_mainMapViewModel == null)
+            {
+                _mainMapViewModel = new MainMapViewModel();
+            }
+        }
+
+        public static void CreateLocationSelectionViewModel()
+        {
+            if (_locationSelectionViewModel == null)
+            {
+                _locationSelectionViewModel = new LocationSelectionViewModel();
+            }
+        }
+
+        public static void CreateDirectionsViewModel()
+        {
+            if (_directionsViewModel == null)
+            {
+                _directionsViewModel = new DirectionsViewModel();
+            }
+        }
+
+        public static void ClearMainMapViewModel()
+        {
+            _mainMapViewModel.Cleanup();
+            _mainMapViewModel = null;
+        }
+
+        public static void ClearLocationSelectionViewModel()
+        {
+            _locationSelectionViewModel.Cleanup();
+            _locationSelectionViewModel = null;
+        }
+
+        public static void ClearDirectionsViewModel()
+        {
+            _directionsViewModel.Cleanup();
+            _directionsViewModel = null;
+        }
+
+        public static void Cleanup()
+        {
+            ClearDirectionsViewModel();
+            ClearMainMapViewModel();
+            ClearLocationSelectionViewModel();
         }
     }
 }
