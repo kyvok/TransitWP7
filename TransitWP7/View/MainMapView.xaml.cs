@@ -16,11 +16,12 @@ namespace TransitWP7.View
     // TODO: Localize this app properly. Will need a resource file.
     public partial class MainMapView : PhoneApplicationPage
     {
-        private readonly MainMapViewModel _viewModel = new MainMapViewModel();
+        private readonly MainMapViewModel _viewModel;
 
         public MainMapView()
         {
             InitializeComponent();
+            this._viewModel = ViewModelLocator.MainMapViewModelStatic;
             this.DataContext = this._viewModel;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
@@ -52,7 +53,7 @@ namespace TransitWP7.View
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () => NavigationService.Navigate(
                         new Uri(
-                            string.Format("/Views/LocationSelectionView.xaml?endpoint={0}", notificationMessage.Notification),
+                            string.Format("{0}?endpoint={1}", PhonePageUri.LocationSelectionView, notificationMessage.Notification),
                             UriKind.Relative))));
 
             Messenger.Default.Register<NotificationMessage>(
@@ -221,12 +222,12 @@ namespace TransitWP7.View
         void pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var pushpin = sender as Pushpin;
-            NavigationService.Navigate(new Uri(string.Format("/Views/DirectionsView.xaml?selectedIndex={0}", pushpin.Tag), UriKind.Relative));
+            NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView ,pushpin.Tag), UriKind.Relative));
         }
 
         private void ApplicationBarMenuItem_Click(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new Uri("/Views/DirectionsView.xaml", UriKind.Relative));
+            NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
         }
 
         ////private void Button_Click_1(object sender, RoutedEventArgs e)

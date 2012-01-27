@@ -8,12 +8,13 @@ namespace TransitWP7.View
     // TODO: calculate results from origin for endpoint, not current userlocation!!!
     public partial class LocationSelectionView : PhoneApplicationPage
     {
-        private readonly LocationSelectionViewModel _viewModel = new LocationSelectionViewModel();
+        private readonly LocationSelectionViewModel _viewModel;
         private const string PageTitleStringFormat = "Which {0} location did you mean?";
 
         public LocationSelectionView()
         {
             this.InitializeComponent();
+            this._viewModel = ViewModelLocator.LocationSelectionViewModelStatic;
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs arg)
