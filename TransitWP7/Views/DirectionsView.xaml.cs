@@ -20,7 +20,8 @@ namespace TransitWP7.Views
             base.OnNavigatedTo(arg);
 
             int selectedIndex;
-            if (Int32.TryParse(this.NavigationContext.QueryString["selectedIndex"], out selectedIndex))
+            if (this.NavigationContext.QueryString.ContainsKey("selectedIndex")
+                && Int32.TryParse(this.NavigationContext.QueryString["selectedIndex"], out selectedIndex))
             {
                 this.directionsList.SelectedIndex = selectedIndex;
             }

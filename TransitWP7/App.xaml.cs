@@ -104,7 +104,7 @@ namespace TransitWP7
 
                 // Navigate to the error page
                 PhoneApplicationService.Current.State["exception"] = e.ExceptionObject.ToString();
-                this.RootFrame.Navigate(new Uri("/ExceptionPage.xaml", UriKind.Relative));
+                this.RootFrame.Navigate(new Uri("/Views/ExceptionView.xaml", UriKind.Relative));
             }
         }
 
