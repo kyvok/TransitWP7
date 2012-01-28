@@ -53,6 +53,8 @@
     <Reference Include="System.Device" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Xml.Serialization" />
@@ -64,11 +66,31 @@
       <DependentUpon>ApiKeys.resx</DependentUpon>
     </Compile>
     <Compile Include="BingMapsExtensionMethods.cs" />
+    <Compile Include="BingMapsRestApi\Address.cs" />
+    <Compile Include="BingMapsRestApi\AuthenticationResultCode.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQuery.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQueryAsyncCallback.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQueryResult.cs" />
-    <Compile Include="BingMapsRestApi\BingMapsTypes.cs" />
+    <Compile Include="BingMapsRestApi\SideOfStreet.cs" />
     <Compile Include="BingMapsRestApi\BingMapsUriParameters.cs" />
+    <Compile Include="BingMapsRestApi\BoundingBox.cs" />
+    <Compile Include="BingMapsRestApi\ConfidenceLevel.cs" />
+    <Compile Include="BingMapsRestApi\Detail.cs" />
+    <Compile Include="BingMapsRestApi\EntityType.cs" />
+    <Compile Include="BingMapsRestApi\IconType.cs" />
+    <Compile Include="BingMapsRestApi\Instruction.cs" />
+    <Compile Include="BingMapsRestApi\ItineraryItem.cs" />
+    <Compile Include="BingMapsRestApi\Location.cs" />
+    <Compile Include="BingMapsRestApi\ManeuverType.cs" />
+    <Compile Include="BingMapsRestApi\Point.cs" />
+    <Compile Include="BingMapsRestApi\ResourceSet.cs" />
+    <Compile Include="BingMapsRestApi\Response.cs" />
+    <Compile Include="BingMapsRestApi\Route.cs" />
+    <Compile Include="BingMapsRestApi\RouteLeg.cs" />
+    <Compile Include="BingMapsRestApi\RoutePath.cs" />
+    <Compile Include="BingMapsRestApi\RoutePathGeneralization.cs" />
+    <Compile Include="BingMapsRestApi\TransitLine.cs" />
+    <Compile Include="BingMapsRestApi\WarningType.cs" />
     <Compile Include="BingSearchRestApi\BingSearchQuery.cs" />
     <Compile Include="BingSearchRestApi\BingSearchQueryAsyncCallback.cs" />
     <Compile Include="BingSearchRestApi\BingSearchQueryResult.cs" />

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Device.Location;
+using System.IO;
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace BingApisLib.BingMapsRestApi
 {
@@ -153,6 +156,14 @@ namespace BingApisLib.BingMapsRestApi
             {
                 var httpResponse = context.HttpRequest.EndGetResponse(asyncResult);
                 var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+                ////var jsonSerializer = new JsonSerializer();
+                ////var streamReader = new StreamReader(httpResponse.GetResponseStream());
+                ////var stringReader = new StringReader(streamReader.ReadToEnd());
+                ////var jsonTextReader = new JsonTextReader(stringReader);
+                ////var response = jsonSerializer.Deserialize<Response>(jsonTextReader);
+                ////var dcjs = new DataContractJsonSerializer(typeof (Response));
+                ////var responseObj = dcjs.ReadObject(httpResponse.GetResponseStream());
+                ////var response = responseObj as Response;
                 if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
                 {
                     var exceptionMessage = new StringBuilder();
