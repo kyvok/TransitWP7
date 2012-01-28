@@ -184,7 +184,15 @@ namespace TransitWP7
             }
 
             // chain immediately to get walking directions
-            BingMapsQuery.GetWalkingRoute(queryState.StartLocation, queryState.EndLocation, GetWalkingDirectionsCallback, queryState);
+            // but only if the walking distance is less than 6 miles.
+            if (queryState.StartLocation.GetDistanceTo(queryState.EndLocation) / 1600 <= 6)
+            {
+                BingMapsQuery.GetWalkingRoute(queryState.StartLocation, queryState.EndLocation, GetWalkingDirectionsCallback, queryState);
+            }
+            else
+            {
+                GetWalkingDirectionsCallback(new BingMapsQueryResult(new Exception("For walking, distance is over 6 miles.")));
+            }
         }
 
         private static void GetWalkingDirectionsCallback(BingMapsQueryResult result)
