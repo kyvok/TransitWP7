@@ -73,7 +73,7 @@ namespace BingApisLib.BingMapsRestApi
                 "Routes/Transit",
                 new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint(), time, timeType)
                 {
-                    MaxSolutions = 3,
+                    MaxSolutions = 5,
                     RoutePathOutput = RoutePathOutput.Points
                 }.ToString());
             ExecuteQuery(queryUri, callback, userState);
