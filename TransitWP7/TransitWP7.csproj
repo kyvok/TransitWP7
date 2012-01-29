@@ -108,7 +108,6 @@
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\TransitDescription.cs" />
-    <Compile Include="Model\TransitRequestContext.cs" />
     <Compile Include="Model\BingMapsExtensionMethods.cs" />
     <Compile Include="GeoLocation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

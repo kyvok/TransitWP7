@@ -12,7 +12,7 @@ namespace TransitWP7.View
         {
             this.InitializeComponent();
             this._viewModel = ViewModelLocator.DirectionsViewModelStatic;
-            this.directionsList.DataContext = this._viewModel.Context;
+            this.directionsList.DataContext = this._viewModel.TransitDescription;
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs arg)

@@ -29,7 +29,7 @@
             <ListBox HorizontalAlignment="Stretch" Name="directionsList"
                      VerticalAlignment="Stretch" Width="444"
                      VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                     ItemsSource="{Binding Path=SelectedTransitTrip.ItinerarySteps}">
+                     ItemsSource="{Binding Path=ItinerarySteps}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>

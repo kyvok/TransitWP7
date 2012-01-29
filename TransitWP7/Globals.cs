@@ -20,6 +20,7 @@
         MainMapProgressIndicator,
         TransitTripsReady,
         EndpointResolutionPopup,
-        SelectedEndpoint
+        SelectedEndpoint,
+        SelectedTransitTrip
     }
 }

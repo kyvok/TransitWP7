@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Device.Location;
-using System.Globalization;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
@@ -18,8 +15,13 @@ namespace TransitWP7.ViewModel
         private bool _isStartLocationStale = true;
         private string _endLocationText;
         private bool _isEndLocationStale = true;
+        private LocationDescription _selectedStartLocation;
+        private LocationDescription _selectedEndLocation;
+        private TransitDescription _selectedTransitDescription;
+        private DateTime _dateTime;
+        private TimeCondition _timeType;
+        private GeoCoordinate _userGeoCoordinate;
 
-        public List<TransitDescription> TransitTrips;
         public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
 
         public MainMapViewModel()
@@ -41,23 +43,15 @@ namespace TransitWP7.ViewModel
                     }
                 });
 
-            this.Context.DateTime = DateTime.Now;
-            this.Context.TimeType = TimeCondition.Now;
+            this.DateTime = DateTime.Now;
+            this.TimeType = TimeCondition.Now;
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
         private void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            TransitRequestContext.Current.UserGeoCoordinate = e.Position.Location;
+            this.UserGeoCoordinate = e.Position.Location;
             ////this.mainMap.SetView(e.Position.Location, 15.0);
-        }
-
-        public TransitRequestContext Context
-        {
-            get
-            {
-                return TransitRequestContext.Current;
-            }
         }
 
         public string StartLocationText
@@ -96,14 +90,82 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public DateTime DateTime
+        {
+            get
+            {
+                return this._dateTime;
+            }
+
+            set
+            {
+                if (value != this._dateTime)
+                {
+                    this._dateTime = value;
+                    this.RaisePropertyChanged("DateTime");
+                }
+            }
+        }
+
+        public TimeCondition TimeType
+        {
+            get
+            {
+                return this._timeType;
+            }
+
+            set
+            {
+                if (value != this._timeType)
+                {
+                    this._timeType = value;
+                    this.RaisePropertyChanged("TimeType");
+                }
+            }
+        }
+
+        public TransitDescription SelectedTransitTrip
+        {
+            get
+            {
+                return this._selectedTransitDescription;
+            }
+
+            set
+            {
+                if (value != this._selectedTransitDescription)
+                {
+                    this._selectedTransitDescription = value;
+                    this.RaisePropertyChanged("SelectedTransitTrip");
+                }
+            }
+        }
+
+        public GeoCoordinate UserGeoCoordinate
+        {
+            get
+            {
+                return this._userGeoCoordinate;
+            }
+
+            set
+            {
+                if (value != this._userGeoCoordinate)
+                {
+                    this._userGeoCoordinate = value;
+                    this.RaisePropertyChanged("UserGeoCoordinate");
+                }
+            }
+        }
+
         public void EnsureDateTimeSyncInContext(DateTime? datePart, DateTime? timePart)
         {
-            this.EnsureDateTimeSyncInContext(datePart, timePart, this.Context.TimeType);
+            this.EnsureDateTimeSyncInContext(datePart, timePart, this.TimeType);
         }
 
         public void EnsureDateTimeSyncInContext(DateTime? datePart, DateTime? timePart, TimeCondition timeCondition)
         {
-            this.Context.DateTime = new DateTime(
+            this.DateTime = new DateTime(
                 datePart.Value.Year,
                 datePart.Value.Month,
                 datePart.Value.Day,
@@ -111,7 +173,7 @@ namespace TransitWP7.ViewModel
                 timePart.Value.Minute,
                 timePart.Value.Second);
 
-            this.Context.TimeType = timeCondition;
+            this.TimeType = timeCondition;
         }
 
         // TODO: When pressing back button from location selection page, the progress indicator stays on. Need better decoupling.
@@ -134,13 +196,13 @@ namespace TransitWP7.ViewModel
 
             if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
             {
-                this.UpdateLocation("start", new LocationDescription(this.Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                this.UpdateLocation("start", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
                 return;
             }
 
             if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
             {
-                this.UpdateLocation("end", new LocationDescription(this.Context.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                this.UpdateLocation("end", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
                 return;
             }
 
@@ -148,7 +210,7 @@ namespace TransitWP7.ViewModel
             {
                 ProxyQuery.GetLocationsAndBusiness(
                     this.StartLocationText,
-                    TransitRequestContext.Current.UserGeoCoordinate,
+                    this.UserGeoCoordinate,
                     this.GetLocationsAndBusinessCallback,
                     "start");
                 return;
@@ -158,7 +220,7 @@ namespace TransitWP7.ViewModel
             {
                 ProxyQuery.GetLocationsAndBusiness(
                     this.EndLocationText,
-                    TransitRequestContext.Current.UserGeoCoordinate,
+                    this.UserGeoCoordinate,
                     this.GetLocationsAndBusinessCallback,
                     "end");
                 return;
@@ -169,10 +231,10 @@ namespace TransitWP7.ViewModel
 
             // TODO: fix initial context state not set. Hacked up in view startup.
             ProxyQuery.GetTransitDirections(
-                this.Context.SelectedStartingLocation.GeoCoordinate,
-                this.Context.SelectedEndingLocation.GeoCoordinate,
-                this.Context.DateTime,
-                this.Context.TimeType,
+                this._selectedStartLocation.GeoCoordinate,
+                this._selectedEndLocation.GeoCoordinate,
+                this.DateTime,
+                this.TimeType,
                 this.GetTransitDirectionsCallback,
                 null);
         }
@@ -205,13 +267,13 @@ namespace TransitWP7.ViewModel
                         {
                             this.StartLocationText = location.DisplayName;
                             this._isStartLocationStale = false;
-                            this.Context.SelectedStartingLocation = location;
+                            this._selectedStartLocation = location;
                         }
                         else
                         {
                             this.EndLocationText = location.DisplayName;
                             this._isEndLocationStale = false;
-                            this.Context.SelectedEndingLocation = location;
+                            this._selectedEndLocation = location;
                         }
 
                         TryResolveEndpoints();
@@ -252,6 +314,18 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Send(dialogMessage, MessengerToken.ErrorPopup);
 
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+        }
+
+        internal void StartOver()
+        {
+            this.StartLocationText = Globals.MyCurrentLocationText;
+            this.EndLocationText = string.Empty;
+            this._selectedStartLocation = null;
+            this._selectedEndLocation = null;
+            this.SelectedTransitTrip = null;
+            this.TimeType = TimeCondition.Now;
+            this.TransitDescriptionCollection.Clear();
+
         }
     }
 }

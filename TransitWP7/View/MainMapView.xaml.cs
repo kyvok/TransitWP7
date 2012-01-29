@@ -87,12 +87,12 @@ namespace TransitWP7.View
 
         private void DatePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
         {
-            this._viewModel.EnsureDateTimeSyncInContext(e.NewDateTime.Value, this._viewModel.Context.DateTime);
+            this._viewModel.EnsureDateTimeSyncInContext(e.NewDateTime.Value, this._viewModel.DateTime);
         }
 
         private void TimePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
         {
-            this._viewModel.EnsureDateTimeSyncInContext(this._viewModel.Context.DateTime, e.NewDateTime.Value);
+            this._viewModel.EnsureDateTimeSyncInContext(this._viewModel.DateTime, e.NewDateTime.Value);
         }
 
         private void ListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -148,7 +148,7 @@ namespace TransitWP7.View
         private void ApplicationBarIconButton_Click(object sender, EventArgs e)
         {
             // TODO: if not location enabled, ask permission
-            this.mainMap.SetView(this._viewModel.Context.UserGeoCoordinate, 16);
+            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 16);
         }
 
         private void SetProgressBarState(string message, bool state)
@@ -164,13 +164,18 @@ namespace TransitWP7.View
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Collapsed;
 
-            this._viewModel.Context.SelectedTransitTrip = this.transitTripsList.SelectedIndex >= 0
+            this._viewModel.SelectedTransitTrip = this.transitTripsList.SelectedIndex >= 0
                 ? this._viewModel.TransitDescriptionCollection[this.transitTripsList.SelectedIndex]
                 : null;
 
-            if (this._viewModel.Context.SelectedTransitTrip != null)
+            var notificationMessage = new NotificationMessage<TransitDescription>(this,
+                                                                                  this._viewModel.SelectedTransitTrip,
+                                                                                  string.Empty);
+            Messenger.Default.Send(notificationMessage, MessengerToken.SelectedTransitTrip);
+
+            if (this._viewModel.SelectedTransitTrip != null)
             {
-                this.mainMap.SetView(this._viewModel.Context.SelectedTransitTrip.MapView);
+                this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
             }
         }
 
@@ -188,6 +193,14 @@ namespace TransitWP7.View
         private void ApplicationBarMenuItem_Click_1(object sender, EventArgs e)
         {
             this.ShowTransitTripsList();
+        }
+
+        private void ApplicationBarMenuItem_Click_2(object sender, EventArgs e)
+        {
+            this.bottomGrid.Visibility = Visibility.Collapsed;
+            this.topGrid.Visibility = Visibility.Visible;
+            this._viewModel.StartOver();
+            this.endingInput.Focus();
         }
 
         ////private void Button_Click_1(object sender, RoutedEventArgs e)
