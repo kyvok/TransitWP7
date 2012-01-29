@@ -13,7 +13,7 @@ namespace BingApisLib.BingMapsRestApi
     public class Instruction
     {
         [DataMember(Name = "maneuverType", IsRequired = false)]
-        [XmlAttribute]
+        [XmlAttribute(AttributeName = "maneuverType")]
         public string ManeuverType { get; set; }
 
         [DataMember(Name = "text", IsRequired = false)]

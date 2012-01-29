@@ -108,17 +108,17 @@ namespace TransitWP7.View
                         this.timePicker.IsEnabled = false;
                         break;
                     case 1:
-                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, timePicker.Value, TimeCondition.DepartingAt);
+                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, this.timePicker.Value, TimeCondition.DepartingAt);
                         this.datePicker.IsEnabled = true;
                         this.timePicker.IsEnabled = true;
                         break;
                     case 2:
-                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, timePicker.Value, TimeCondition.ArrivingAt);
+                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, this.timePicker.Value, TimeCondition.ArrivingAt);
                         this.datePicker.IsEnabled = true;
                         this.timePicker.IsEnabled = true;
                         break;
                     case 3:
-                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, timePicker.Value, TimeCondition.LastArrivalTime);
+                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, this.timePicker.Value, TimeCondition.LastArrivalTime);
                         this.datePicker.IsEnabled = true;
                         this.timePicker.IsEnabled = false;
                         break;
@@ -129,8 +129,10 @@ namespace TransitWP7.View
         private void TextBlock_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var inputBox = sender as TextBlock;
-            dateTimeStackPanel.Visibility = dateTimeStackPanel.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
-            inputBox.Text = dateTimeStackPanel.Visibility == Visibility.Collapsed ? "Show options" : "Hide options";
+            this.dateTimeStackPanel.Visibility = this.dateTimeStackPanel.Visibility == Visibility.Collapsed
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+            inputBox.Text = this.dateTimeStackPanel.Visibility == Visibility.Collapsed ? "Show options" : "Hide options";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

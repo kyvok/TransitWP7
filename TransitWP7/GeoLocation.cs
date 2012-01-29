@@ -1,10 +1,11 @@
-﻿using System.Device.Location;
+﻿using System;
+using System.Device.Location;
 
 namespace TransitWP7
 {
     // TODO: improve and move to model
     // singleton class for obtaining the current user location
-    public sealed class GeoLocation
+    public sealed class GeoLocation : IDisposable
     {
         private static readonly GeoLocation instance = new GeoLocation();
         private GeoCoordinateWatcher highGeowatcher = null;
@@ -28,6 +29,14 @@ namespace TransitWP7
         public GeoCoordinateWatcher GeoWatcher
         {
             get { return this.highGeowatcher; }
+        }
+
+        public void Dispose()
+        {
+            if (this.highGeowatcher != null)
+            {
+                this.highGeowatcher.Dispose();
+            }
         }
     }
 }

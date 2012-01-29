@@ -336,7 +336,6 @@ namespace TransitWP7.ViewModel
         private void Watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             this.UserGeoCoordinate = e.Position.Location;
-            ////this.mainMap.SetView(e.Position.Location, 15.0);
         }
     }
 }
