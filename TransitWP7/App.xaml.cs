@@ -9,11 +9,8 @@ namespace TransitWP7
 {
     public partial class App : Application
     {
-        /// <summary>
-        /// Provides easy access to the root frame of the Phone Application.
-        /// </summary>
-        /// <returns>The root frame of the Phone Application.</returns>
-        public PhoneApplicationFrame RootFrame { get; private set; }
+        // Avoid double-initialization
+        private bool phoneApplicationInitialized = false;
 
         /// <summary>
         /// Constructor for the Application object.
@@ -49,6 +46,12 @@ namespace TransitWP7
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
         }
+
+        /// <summary>
+        /// Provides easy access to the root frame of the Phone Application.
+        /// </summary>
+        /// <returns>The root frame of the Phone Application.</returns>
+        public PhoneApplicationFrame RootFrame { get; private set; }
 
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
@@ -110,9 +113,6 @@ namespace TransitWP7
         }
 
         #region Phone application initialization
-
-        // Avoid double-initialization
-        private bool phoneApplicationInitialized = false;
 
         // Do not add any additional code to this method
         private void InitializePhoneApplication()

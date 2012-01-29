@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Windows.Data;
-using System.Globalization;
 
 namespace TransitWP7.Converters
 {
@@ -17,6 +17,7 @@ namespace TransitWP7.Converters
     {
         // TODO: Complete this class properly and move the URI strings to static const.
         // TODO: Take a parameter to prevent repeting walking over and over
+
         /// <summary>
         /// Converts a step description to the corresponding pictogram uri.
         /// </summary>

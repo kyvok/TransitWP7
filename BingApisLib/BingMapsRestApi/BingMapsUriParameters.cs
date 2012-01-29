@@ -6,18 +6,74 @@ using Microsoft.Phone.Controls.Maps;
 
 namespace BingApisLib.BingMapsRestApi
 {
+    public enum OutputFormat
+    {
+        Xml,
+
+        // default
+        Json
+    }
+
+    public enum TravelMode
+    {
+        // default if unspecified in resource path for Routes resource
+        Driving,
+        Walking,
+        Transit
+    }
+
+    public enum OptimizeFor
+    {
+        Distance,
+
+        // default
+        Time,
+        TimeWithTraffic
+    }
+
+    public enum RoutePathOutput
+    {
+        // default
+        None,
+        Points
+    }
+
+    public enum DistanceUnit
+    {
+        // default
+        Kilometer,
+        Mile
+    }
+
+    public enum TimeType
+    {
+        Arrival,
+
+        // default
+        Departure,
+        LastAvailable
+    }
+
+    public enum AvoidType
+    {
+        Highways,
+        Tolls,
+        MinimizeHighways,
+        MinimizeTolls
+    }
+
     // TODO: this needs review
     public class LocationByPoint
     {
-        public Point Point { get; set; }
-
-        // TODO: this only supports a subset of the actual enum
-        public List<EntityType> IncludeEntityTypes { get; set; }
-
         public LocationByPoint(Point point)
         {
             this.Point = point;
         }
+
+        public Point Point { get; set; }
+
+        // TODO: this only supports a subset of the actual enum
+        public List<EntityType> IncludeEntityTypes { get; set; }
 
         public override string ToString()
         {
@@ -28,12 +84,12 @@ namespace BingApisLib.BingMapsRestApi
     // TODO: this needs review
     public class LocationQueryParameters
     {
-        public string Query { get; set; }
-
         public LocationQueryParameters(string query)
         {
             this.Query = query;
         }
+
+        public string Query { get; set; }
     }
 
     /// <summary>
@@ -202,12 +258,6 @@ namespace BingApisLib.BingMapsRestApi
     /// </summary>
     public class UserContextParameters
     {
-        // mv
-        public LocationRect MapView { get; set; }
-
-        // ul
-        public GeoCoordinate UserLocation { get; set; }
-
         public UserContextParameters()
         {
         }
@@ -227,6 +277,12 @@ namespace BingApisLib.BingMapsRestApi
             this.MapView = mapView;
             this.UserLocation = userLocation;
         }
+
+        // mv
+        public LocationRect MapView { get; set; }
+
+        // ul
+        public GeoCoordinate UserLocation { get; set; }
 
         public override string ToString()
         {
@@ -252,10 +308,6 @@ namespace BingApisLib.BingMapsRestApi
     /// </summary>
     public class OutputParameters
     {
-        public OutputFormat? OutputFormat { get; set; } // o
-
-        public bool? SuppressStatus { get; set; } // ss
-
         public OutputParameters()
         {
         }
@@ -275,6 +327,10 @@ namespace BingApisLib.BingMapsRestApi
             this.OutputFormat = format;
             this.SuppressStatus = suppressStatus;
         }
+
+        public OutputFormat? OutputFormat { get; set; } // o
+
+        public bool? SuppressStatus { get; set; } // ss
 
         public override string ToString()
         {
@@ -300,72 +356,16 @@ namespace BingApisLib.BingMapsRestApi
     /// </summary>
     public class KeyParameter
     {
-        public string Key { get; private set; }
-
         public KeyParameter(string key)
         {
             this.Key = key;
         }
 
+        public string Key { get; private set; }
+
         public override string ToString()
         {
             return string.Format("&key={0}", this.Key);
         }
-    }
-
-    public enum OutputFormat
-    {
-        Xml,
-
-        // default
-        Json
-    }
-
-    public enum TravelMode
-    {
-        // default if unspecified in resource path for Routes resource
-        Driving,
-        Walking,
-        Transit
-    }
-
-    public enum OptimizeFor
-    {
-        Distance,
-
-        // default
-        Time,
-        TimeWithTraffic
-    }
-
-    public enum RoutePathOutput
-    {
-        // default
-        None,
-        Points
-    }
-
-    public enum DistanceUnit
-    {
-        // default
-        Kilometer,
-        Mile
-    }
-
-    public enum TimeType
-    {
-        Arrival,
-
-        // default
-        Departure,
-        LastAvailable
-    }
-
-    public enum AvoidType
-    {
-        Highways,
-        Tolls,
-        MinimizeHighways,
-        MinimizeTolls
     }
 }

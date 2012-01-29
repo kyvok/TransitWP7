@@ -31,7 +31,11 @@ namespace BingApisLib.BingMapsRestApi
 
                 return this._boundingBox;
             }
-            set { this._boundingBox = value; }
+
+            set
+            {
+                this._boundingBox = value;
+            }
         }
 
         [DataMember(Name = "distanceUnit", IsRequired = false)]

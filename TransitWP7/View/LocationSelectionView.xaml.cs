@@ -28,7 +28,7 @@ namespace TransitWP7.View
         }
 
         // TODO: backing up from here what happens?
-        private void resultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void ResultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             this._viewModel.SelectionMade(this.resultsList.SelectedIndex);
             this.NavigationService.GoBack();

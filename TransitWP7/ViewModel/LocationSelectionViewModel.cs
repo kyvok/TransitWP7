@@ -24,10 +24,13 @@ namespace TransitWP7.ViewModel
                     }));
         }
 
-
         public string EndpointName
         {
-            get { return this._endpointName; }
+            get 
+            {
+                return this._endpointName;
+            }
+
             set
             {
                 if (value != this._endpointName)
@@ -40,7 +43,11 @@ namespace TransitWP7.ViewModel
 
         public ObservableCollection<LocationDescription> LocationDescriptions
         {
-            get { return this._locationDescriptions; }
+            get
+            {
+                return this._locationDescriptions;
+            }
+
             set
             {
                 if (value != this._locationDescriptions)
@@ -53,7 +60,7 @@ namespace TransitWP7.ViewModel
 
         public void SelectionMade(int selectedIndex)
         {
-            var notificationMessage = new NotificationMessage<LocationDescription>(LocationDescriptions[selectedIndex], this.EndpointName);
+            var notificationMessage = new NotificationMessage<LocationDescription>(this.LocationDescriptions[selectedIndex], this.EndpointName);
             Messenger.Default.Send(notificationMessage, MessengerToken.SelectedEndpoint);
         }
     }

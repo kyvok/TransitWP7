@@ -5,11 +5,12 @@ using System.Xml.Serialization;
 namespace BingApisLib.BingMapsRestApi
 {
     // TODO: Finish converting this to JSON
+
     /// <summary>
     /// Represents a BingMaps Point type as defined in http://msdn.microsoft.com/en-us/library/ff701726.aspx
     /// </summary>
     [DebuggerStepThrough]
-    [DataContract(Name = "Point",Namespace = "http://schemas.microsoft.com/search/local/ws/rest/v1")]
+    [DataContract(Name = "Point", Namespace = "http://schemas.microsoft.com/search/local/ws/rest/v1")]
     [XmlType(AnonymousType = true, Namespace = "http://schemas.microsoft.com/search/local/ws/rest/v1")]
     public class Point
     {

@@ -34,7 +34,11 @@ namespace BingApisLib.BingMapsRestApi
 
                 return this._boundingBox;
             }
-            set { this._boundingBox = value; }
+
+            set 
+            {
+                this._boundingBox = value;
+            }
         }
 
         [DataMember(Name = "entityType", IsRequired = false)]

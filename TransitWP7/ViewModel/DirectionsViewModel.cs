@@ -14,7 +14,7 @@ namespace TransitWP7.ViewModel
                 this,
                 MessengerToken.SelectedTransitTrip,
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
-                    ()=>
+                    () =>
                     {
                         this._transitDescription = notificationMessage.Content;
                     }));
@@ -26,6 +26,7 @@ namespace TransitWP7.ViewModel
             {
                 return this._transitDescription;
             }
+
             set
             {
                 if (value != this._transitDescription)

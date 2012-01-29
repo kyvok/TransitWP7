@@ -7,12 +7,44 @@ using Newtonsoft.Json;
 
 namespace BingApisLib.BingSearchRestApi
 {
+    public enum AdultOption
+    {
+        Off,
+        Moderate,
+        Strict
+    }
+
+    public enum SearchOption
+    {
+        DisableLocationDetection,
+        EnableHighlighting
+    }
+
+    public enum SourceType
+    {
+        Image,
+        News,
+        PhoneBook,
+        RelatedSearch,
+        Spell,
+        Translation,
+        Video,
+        Web
+    }
+
+    public enum PhonebookSortOption
+    {
+        Default,
+        Distance,
+        Relevance
+    }
+
     /// <summary>
     /// Helper class to query BingMaps resources.
     /// </summary>
     public static class BingSearchQuery
     {
-        private static XmlSerializer BingSearchResponseSerializer = new XmlSerializer(typeof(SearchResponse));
+        private static XmlSerializer bingSearchResponseSerializer = new XmlSerializer(typeof(SearchResponse));
 
         /// <summary>
         /// Takes a latitude/longitude location and query for the information related to this location.
@@ -266,37 +298,5 @@ namespace BingApisLib.BingSearchRestApi
 
     public class SpellRequest : SearchRequest
     {
-    }
-
-    public enum AdultOption
-    {
-        Off,
-        Moderate,
-        Strict
-    }
-
-    public enum SearchOption
-    {
-        DisableLocationDetection,
-        EnableHighlighting
-    }
-
-    public enum SourceType
-    {
-        Image,
-        News,
-        PhoneBook,
-        RelatedSearch,
-        Spell,
-        Translation,
-        Video,
-        Web
-    }
-
-    public enum PhonebookSortOption
-    {
-        Default,
-        Distance,
-        Relevance
     }
 }

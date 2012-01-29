@@ -14,9 +14,9 @@ namespace BingApisLib.BingMapsRestApi
     /// </summary>
     public static class BingMapsQuery
     {
-        private static OutputParameters DefaultOutputParameters = new OutputParameters(OutputFormat.Xml, suppressStatus: true);
-        private static KeyParameter DefaultKeyParameter = new KeyParameter(ApiKeys.BingMapsKey);
-        private static XmlSerializer BingMapsResponseSerializer = new XmlSerializer(typeof(Response));
+        private static OutputParameters defaultOutputParameters = new OutputParameters(OutputFormat.Xml, suppressStatus: true);
+        private static KeyParameter defaultKeyParameter = new KeyParameter(ApiKeys.BingMapsKey);
+        private static XmlSerializer bingMapsResponseSerializer = new XmlSerializer(typeof(Response));
 
         /// <summary>
         /// Takes a latitude/longitude location and query for the information related to this location.
@@ -69,13 +69,12 @@ namespace BingApisLib.BingMapsRestApi
         /// <param name="userState">An object to pass to the callback.</param>
         public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, DateTime time, TimeType timeType, Action<BingMapsQueryResult> callback, object userState)
         {
-            var queryUri = ConstructQueryUri(
-                "Routes/Transit",
-                new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint(), time, timeType)
-                {
-                    MaxSolutions = 5,
-                    RoutePathOutput = RoutePathOutput.Points
-                }.ToString());
+            string rqp = new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint(), time, timeType)
+                             {
+                                MaxSolutions = 5,
+                                RoutePathOutput = RoutePathOutput.Points
+                             }.ToString();
+            var queryUri = ConstructQueryUri("Routes/Transit", rqp);
             ExecuteQuery(queryUri, callback, userState);
         }
 
@@ -109,8 +108,8 @@ namespace BingApisLib.BingMapsRestApi
             uri.Append(resourcePath);
             uri.Append("?");
             uri.Append(resourceQueryParameters);
-            uri.Append(DefaultOutputParameters);
-            uri.Append(DefaultKeyParameter);
+            uri.Append(defaultOutputParameters);
+            uri.Append(defaultKeyParameter);
 
             return new Uri(uri.ToString());
         }
@@ -155,7 +154,7 @@ namespace BingApisLib.BingMapsRestApi
             try
             {
                 var httpResponse = context.HttpRequest.EndGetResponse(asyncResult);
-                var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+                var response = (Response)bingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
                 ////var jsonSerializer = new JsonSerializer();
                 ////var streamReader = new StreamReader(httpResponse.GetResponseStream());
                 ////var stringReader = new StringReader(streamReader.ReadToEnd());

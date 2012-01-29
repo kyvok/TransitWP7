@@ -11,6 +11,7 @@ namespace TransitWP7.ViewModel
 {
     public class MainMapViewModel : ViewModelBase
     {
+        private ObservableCollection<TransitDescription> transitDescriptionCollection = new ObservableCollection<TransitDescription>();
         private string _startLocationText;
         private bool _isStartLocationStale = true;
         private string _endLocationText;
@@ -22,11 +23,9 @@ namespace TransitWP7.ViewModel
         private TimeCondition _timeType;
         private GeoCoordinate _userGeoCoordinate;
 
-        public ObservableCollection<TransitDescription> TransitDescriptionCollection = new ObservableCollection<TransitDescription>();
-
         public MainMapViewModel()
         {
-            GeoLocation.Instance.GeoWatcher.PositionChanged += this.watcher_PositionChanged;
+            GeoLocation.Instance.GeoWatcher.PositionChanged += this.Watcher_PositionChanged;
 
             Messenger.Default.Register<NotificationMessage<LocationDescription>>(
                 this,
@@ -45,13 +44,6 @@ namespace TransitWP7.ViewModel
 
             this.DateTime = DateTime.Now;
             this.TimeType = TimeCondition.Now;
-        }
-
-        // Event handler for the GeoCoordinateWatcher.PositionChanged event.
-        private void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
-        {
-            this.UserGeoCoordinate = e.Position.Location;
-            ////this.mainMap.SetView(e.Position.Location, 15.0);
         }
 
         public string StartLocationText
@@ -158,6 +150,19 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public ObservableCollection<TransitDescription> TransitDescriptionCollection
+        {
+            get
+            {
+                return this.transitDescriptionCollection;
+            }
+
+            set
+            {
+                this.transitDescriptionCollection = value;
+            }
+        }
+
         public void EnsureDateTimeSyncInContext(DateTime? datePart, DateTime? timePart)
         {
             this.EnsureDateTimeSyncInContext(datePart, timePart, this.TimeType);
@@ -239,6 +244,29 @@ namespace TransitWP7.ViewModel
                 null);
         }
 
+        internal void StartOver()
+        {
+            this.StartLocationText = Globals.MyCurrentLocationText;
+            this.EndLocationText = string.Empty;
+            this._selectedStartLocation = null;
+            this._selectedEndLocation = null;
+            this.SelectedTransitTrip = null;
+            this.TimeType = TimeCondition.Now;
+            this.TransitDescriptionCollection.Clear();
+        }
+
+        private static void ProcessErrorMessage(string errorMsg)
+        {
+            var dialogMessage = new DialogMessage(errorMsg, null)
+            {
+                Caption = "Oups!",
+                Button = MessageBoxButton.OK
+            };
+            Messenger.Default.Send(dialogMessage, MessengerToken.ErrorPopup);
+
+            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+        }
+
         private void GetLocationsAndBusinessCallback(ProxyQueryResult result)
         {
             if (result.Error != null)
@@ -304,28 +332,11 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
         }
 
-        private static void ProcessErrorMessage(string errorMsg)
+        // Event handler for the GeoCoordinateWatcher.PositionChanged event.
+        private void Watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
-            var dialogMessage = new DialogMessage(errorMsg, null)
-                         {
-                             Caption = "Oups!",
-                             Button = MessageBoxButton.OK
-                         };
-            Messenger.Default.Send(dialogMessage, MessengerToken.ErrorPopup);
-
-            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
-        }
-
-        internal void StartOver()
-        {
-            this.StartLocationText = Globals.MyCurrentLocationText;
-            this.EndLocationText = string.Empty;
-            this._selectedStartLocation = null;
-            this._selectedEndLocation = null;
-            this.SelectedTransitTrip = null;
-            this.TimeType = TimeCondition.Now;
-            this.TransitDescriptionCollection.Clear();
-
+            this.UserGeoCoordinate = e.Position.Location;
+            ////this.mainMap.SetView(e.Position.Location, 15.0);
         }
     }
 }

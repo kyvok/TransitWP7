@@ -20,7 +20,7 @@ namespace TransitWP7.View
 
         public MainMapView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this._viewModel = ViewModelLocator.MainMapViewModelStatic;
             this.DataContext = this._viewModel;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
@@ -59,14 +59,14 @@ namespace TransitWP7.View
             Messenger.Default.Register<NotificationMessage>(
                 this,
                 MessengerToken.TransitTripsReady,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(ShowTransitTripsList));
+                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(this.ShowTransitTripsList));
         }
 
         private void ShowTransitTripsList()
         {
             this.topGrid.Visibility = Visibility.Visible;
             this.bottomGrid.Visibility = Visibility.Visible;
-            this.transitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
+            this.TransitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
             this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
         }
 
@@ -108,17 +108,17 @@ namespace TransitWP7.View
                         this.timePicker.IsEnabled = false;
                         break;
                     case 1:
-                        this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.DepartingAt);
+                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, timePicker.Value, TimeCondition.DepartingAt);
                         this.datePicker.IsEnabled = true;
                         this.timePicker.IsEnabled = true;
                         break;
                     case 2:
-                        this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.ArrivingAt);
+                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, timePicker.Value, TimeCondition.ArrivingAt);
                         this.datePicker.IsEnabled = true;
                         this.timePicker.IsEnabled = true;
                         break;
                     case 3:
-                        this._viewModel.EnsureDateTimeSyncInContext(datePicker.Value, timePicker.Value, TimeCondition.LastArrivalTime);
+                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, timePicker.Value, TimeCondition.LastArrivalTime);
                         this.datePicker.IsEnabled = true;
                         this.timePicker.IsEnabled = false;
                         break;
@@ -159,18 +159,19 @@ namespace TransitWP7.View
         }
 
         // TODO: This is not MVVM friendly. Needs refactoring.
-        private void transitTripsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void TransitTripsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Collapsed;
 
-            this._viewModel.SelectedTransitTrip = this.transitTripsList.SelectedIndex >= 0
-                ? this._viewModel.TransitDescriptionCollection[this.transitTripsList.SelectedIndex]
+            this._viewModel.SelectedTransitTrip = this.TransitTripsList.SelectedIndex >= 0
+                ? this._viewModel.TransitDescriptionCollection[this.TransitTripsList.SelectedIndex]
                 : null;
 
-            var notificationMessage = new NotificationMessage<TransitDescription>(this,
-                                                                                  this._viewModel.SelectedTransitTrip,
-                                                                                  string.Empty);
+            var notificationMessage = new NotificationMessage<TransitDescription>(
+                                                                                this,
+                                                                                this._viewModel.SelectedTransitTrip,
+                                                                                string.Empty);
             Messenger.Default.Send(notificationMessage, MessengerToken.SelectedTransitTrip);
 
             if (this._viewModel.SelectedTransitTrip != null)
@@ -179,7 +180,7 @@ namespace TransitWP7.View
             }
         }
 
-        void pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void Pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var pushpin = sender as Pushpin;
             NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView, pushpin.Tag), UriKind.Relative));

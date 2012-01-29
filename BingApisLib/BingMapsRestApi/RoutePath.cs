@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 namespace BingApisLib.BingMapsRestApi
 {
     // TODO: Finish converting this to JSON
+
     /// <summary>
     /// Represents a BingMaps RoutePath field as defined in http://msdn.microsoft.com/en-us/library/ff701718.aspx
     /// </summary>
