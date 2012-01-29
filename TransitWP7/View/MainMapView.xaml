@@ -149,10 +149,17 @@
                          ItemsSource="{Binding Path=TransitDescriptionCollection}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}" FontSize="36" />
-                                <StackPanel>
-                                    <ItemsControl ItemsSource="{Binding Path=ItinerarySteps}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,24">
+                                <TextBlock Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"
+                                           FontSize="22" TextAlignment="Center" LineHeight="24" LineStackingStrategy="BlockLineHeight" 
+                                           VerticalAlignment="Center"/>
+                                <StackPanel VerticalAlignment="Center" Margin="18,0,0,0">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                        <TextBlock Text="{Binding DepartureTime}" FontSize="18"/>
+                                        <TextBlock Text="  -  " FontSize="18"/>
+                                        <TextBlock Text="{Binding ArrivalTime}" FontSize="18"/>
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding Path=ItinerarySteps}" Margin="0,4,0,0">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
@@ -160,19 +167,15 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <ContentControl Height="32" Width="32">
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,12,0">
+                                                    <ContentControl Height="32" Width="32" VerticalAlignment="Center">
                                                         <Image Source="{Binding IconType, Converter={StaticResource ItineraryStepsToImageConverter}}" />
                                                     </ContentControl>
-                                                    <TextBlock Text="{Binding BusNumber}"/>
+                                                    <TextBlock Text="{Binding BusNumber}" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                                        <TextBlock Text="{Binding DepartureTime}" FontSize="20"/>
-                                        <TextBlock Text="{Binding ArrivalTime}" FontSize="20"/>
-                                    </StackPanel>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
