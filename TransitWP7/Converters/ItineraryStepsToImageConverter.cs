@@ -16,6 +16,7 @@ namespace TransitWP7.Converters
     public class ItineraryStepsToImageConverter : IValueConverter
     {
         // TODO: Complete this class properly and move the URI strings to static const.
+        // TODO: Take a parameter to prevent repeting walking over and over
         /// <summary>
         /// Converts a step description to the corresponding pictogram uri.
         /// </summary>

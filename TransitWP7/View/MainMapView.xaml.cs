@@ -59,13 +59,15 @@ namespace TransitWP7.View
             Messenger.Default.Register<NotificationMessage>(
                 this,
                 MessengerToken.TransitTripsReady,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
-                    () =>
-                    {
-                        this.bottomGrid.Visibility = Visibility.Visible;
-                        this.transitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
-                        this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
-                    }));
+                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(ShowTransitTripsList));
+        }
+
+        private void ShowTransitTripsList()
+        {
+            this.topGrid.Visibility = Visibility.Visible;
+            this.bottomGrid.Visibility = Visibility.Visible;
+            this.transitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
+            this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
@@ -162,72 +164,30 @@ namespace TransitWP7.View
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Collapsed;
 
-            this._viewModel.Context.SelectedTransitTrip = this._viewModel.TransitDescriptionCollection[this.transitTripsList.SelectedIndex];
+            this._viewModel.Context.SelectedTransitTrip = this.transitTripsList.SelectedIndex >= 0
+                ? this._viewModel.TransitDescriptionCollection[this.transitTripsList.SelectedIndex]
+                : null;
 
-            TransitDescription description = TransitRequestContext.Current.SelectedTransitTrip;
-
-            if (description != null)
+            if (this._viewModel.Context.SelectedTransitTrip != null)
             {
-                int stepNumber = 0;
-                foreach (var step in description.ItinerarySteps)
-                {
-                    stepNumber++;
-                    var pushpin = new Pushpin()
-                        {
-                            Location = step.GeoCoordinate,
-                            Content = stepNumber,
-                            Style = (Style)(Application.Current.Resources["TransitStepPushpinStyle"]),
-                            PositionOrigin = PositionOrigin.Center,
-                            Tag = stepNumber - 1,
-                        };
-
-                    pushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(this.pushpin_Tap);
-                    this.pushpinStepsLayer.Children.Add(pushpin);
-                }
-
-
-                var startPushpin = new Pushpin()
-                    {
-                        Location = description.PathPoints[0],
-                        Content = "A",
-                        Style = (Style)(Application.Current.Resources["TransitEndpointPushpinStyle"]),
-                        PositionOrigin = PositionOrigin.Center,
-                        Tag = 0
-                    };
-                startPushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(this.pushpin_Tap);
-
-                var endPushpin = new Pushpin()
-                    {
-                        Location = description.PathPoints[description.PathPoints.Count - 1],
-                        Content = "B",
-                        Style = (Style)(Application.Current.Resources["TransitEndpointPushpinStyle"]),
-                        PositionOrigin = PositionOrigin.Center,
-                        Tag = stepNumber - 1
-                    };
-                endPushpin.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(this.pushpin_Tap);
-
-                this.pushpinStepsLayer.Children.Add(startPushpin);
-                this.pushpinStepsLayer.Children.Add(endPushpin);
-
-                routePath.Locations.Clear();
-                foreach (var pathPoint in description.PathPoints)
-                {
-                    this.routePath.Locations.Add(pathPoint);
-                }
-
-                this.mainMap.SetView(description.MapView);
+                this.mainMap.SetView(this._viewModel.Context.SelectedTransitTrip.MapView);
             }
         }
 
         void pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var pushpin = sender as Pushpin;
-            NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView ,pushpin.Tag), UriKind.Relative));
+            NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView, pushpin.Tag), UriKind.Relative));
         }
 
         private void ApplicationBarMenuItem_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
+        }
+
+        private void ApplicationBarMenuItem_Click_1(object sender, EventArgs e)
+        {
+            this.ShowTransitTripsList();
         }
 
         ////private void Button_Click_1(object sender, RoutedEventArgs e)

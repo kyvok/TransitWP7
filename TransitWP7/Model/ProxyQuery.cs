@@ -191,7 +191,7 @@ namespace TransitWP7
             }
             else
             {
-                GetWalkingDirectionsCallback(new BingMapsQueryResult(new Exception("For walking, distance is over 6 miles.")));
+                GetWalkingDirectionsCallback(new BingMapsQueryResult(new Exception("For walking, distance is over 6 miles."), queryState));
             }
         }
 

@@ -17,7 +17,7 @@ namespace TransitWP7
         private string arrivalTime;
         private string departureTime;
         private ObservableCollection<ItineraryStep> itinerarySteps;
-        private ObservableCollection<GeoCoordinate> pathPoints;
+        private LocationCollection pathPoints;
 
         public TransitDescription()
         {
@@ -38,7 +38,7 @@ namespace TransitWP7
                 this.ItinerarySteps.Add(new ItineraryStep(topLeg));
             }
 
-            this.PathPoints = new ObservableCollection<GeoCoordinate>();
+            this.PathPoints = new LocationCollection();
             foreach (var pathPoint in route.RoutePaths[0].Line)
             {
                 this.PathPoints.Add(pathPoint.AsGeoCoordinate());
@@ -168,7 +168,7 @@ namespace TransitWP7
             }
         }
 
-        public ObservableCollection<GeoCoordinate> PathPoints
+        public LocationCollection PathPoints
         {
             get
             {

@@ -229,11 +229,15 @@ namespace TransitWP7.ViewModel
                 return;
             }
 
-            this.TransitDescriptionCollection.Clear();
-            foreach (var transit in result.TransitDescriptions)
-            {
-                this.TransitDescriptionCollection.Add(transit);
-            }
+            DispatcherHelper.UIDispatcher.BeginInvoke(
+                () =>
+                {
+                    this.TransitDescriptionCollection.Clear();
+                    foreach (var transit in result.TransitDescriptions)
+                    {
+                        this.TransitDescriptionCollection.Add(transit);
+                    }
+                });
 
             Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
         }

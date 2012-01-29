@@ -21,15 +21,15 @@
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsVisible="False" IsIndeterminate="False" Text="" />
     </shell:SystemTray.ProgressIndicator>
-    
+
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        
+
         <Grid.Resources>
             <converters:TravelDurationConverter x:Key="TravelDurationConverter"/>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
         </Grid.Resources>
-        
+
         <maps:Map Name="mainMap" ScaleVisibility="Visible">
             <maps:MapLayer>
                 <maps:MapPolyline Name="routePath"
@@ -38,10 +38,21 @@
                                 StrokeThickness="8"
                                 StrokeStartLineCap="Round"
                                 StrokeEndLineCap="Round"
-                                Locations=""
+                                Locations="{Binding Path=Context.SelectedTransitTrip.PathPoints}"
                                 Opacity="0.5" />
             </maps:MapLayer>
             <maps:MapLayer x:Name="pushpinStepsLayer">
+                <maps:MapItemsControl ItemsSource="{Binding Path=Context.SelectedTransitTrip.ItinerarySteps}">
+                    <maps:MapItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <maps:Pushpin Location="{Binding GeoCoordinate}"
+                                      Content="1"
+                                      Style="{StaticResource TransitStepPushpinStyle}"
+                                      PositionOrigin="Center"
+                                      Tap="pushpin_Tap"/>
+                        </DataTemplate>
+                    </maps:MapItemsControl.ItemTemplate>
+                </maps:MapItemsControl>
             </maps:MapLayer>
             <maps:Pushpin Name="meIndicator" Location="{Binding Path=Context.UserGeoCoordinate}" PositionOrigin="Center" Style="{StaticResource CurrentLocationPushpinStyle}" />
         </maps:Map>
@@ -65,7 +76,7 @@
                              GotFocus="InputBox_GotFocus"
                              KeyUp="TextBoxKeyUp" />
                     <Line X1="0" X2="-400" Y1="60" Y2="60" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="3" />
-                </StackPanel>                
+                </StackPanel>
                 <!-- End section -->
                 <StackPanel Orientation="Horizontal">
                     <!-- Maps application uses #8593 for up arrow. (or similar) -->
@@ -177,7 +188,7 @@
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.questionmark.rest.png" Text="Locate Me" Click="ApplicationBarIconButton_Click"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarMenuItem_Click"/>
-                <shell:ApplicationBarMenuItem Text="show transit options"/>
+                <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarMenuItem_Click_1"/>
                 <shell:ApplicationBarMenuItem Text="clear map"/>
                 <shell:ApplicationBarMenuItem Text="settings"/>
                 <shell:ApplicationBarMenuItem Text="about"/>
