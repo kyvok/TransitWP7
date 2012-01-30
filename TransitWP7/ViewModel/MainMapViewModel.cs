@@ -113,6 +113,11 @@ namespace TransitWP7.ViewModel
                     this._timeType = value;
                     this.RaisePropertyChanged("TimeType");
                 }
+
+                if (this._timeType == TimeCondition.Now)
+                {
+                    this.DateTime = DateTime.Now;
+                }
             }
         }
 
@@ -163,22 +168,13 @@ namespace TransitWP7.ViewModel
             }
         }
 
-        public void EnsureDateTimeSyncInContext(DateTime? datePart, DateTime? timePart)
+        public void EnsureDateTimeSyncInContext(TimeCondition timeType)
         {
-            this.EnsureDateTimeSyncInContext(datePart, timePart, this.TimeType);
-        }
-
-        public void EnsureDateTimeSyncInContext(DateTime? datePart, DateTime? timePart, TimeCondition timeCondition)
-        {
-            this.DateTime = new DateTime(
-                datePart.Value.Year,
-                datePart.Value.Month,
-                datePart.Value.Day,
-                timePart.Value.Hour,
-                timePart.Value.Minute,
-                timePart.Value.Second);
-
-            this.TimeType = timeCondition;
+            this.TimeType = timeType;
+            if (this.TimeType == TimeCondition.Now)
+            {
+                this.DateTime = DateTime.Now;
+            }
         }
 
         // TODO: When pressing back button from location selection page, the progress indicator stays on. Need better decoupling.
@@ -252,6 +248,7 @@ namespace TransitWP7.ViewModel
             this._selectedEndLocation = null;
             this.SelectedTransitTrip = null;
             this.TimeType = TimeCondition.Now;
+            this.DateTime = DateTime.Now;
             this.TransitDescriptionCollection.Clear();
         }
 

@@ -28,6 +28,11 @@
         <Grid.Resources>
             <converters:TravelDurationConverter x:Key="TravelDurationConverter"/>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
+            <converters:TimeConditionToDateTimePickerEnabledConverter x:Key="TimeConditionToDateTimePickerEnabledConverter"/>
+            <converters:TimeConditionToIntConverter x:Key="TimeConditionToIntConverter"/>
+            <!-- Hack: Cannot share CaretBrush otherwise they get in a bad state. So create one for each tile needed. -->
+            <SolidColorBrush x:Key="StartEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
+            <SolidColorBrush x:Key="EndEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
         </Grid.Resources>
 
         <maps:Map Name="mainMap" ScaleVisibility="Visible">
@@ -67,12 +72,14 @@
                                Tap="TextBlock_Tap_1"/>
                     <TextBox Name="startingInput" 
                              InputScope="Maps"
-                             Height="72" Width="410"
-                             Text="{Binding Path=StartLocationText, Mode=TwoWay}"
+                             Width="410"
+                             Text="{Binding Path=StartLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
+                             CaretBrush="{StaticResource StartEndpointCaretBrush}"
                              BorderThickness="0"
                              VerticalAlignment="Center"
+                             TextChanged="EndpointInputTextChanged"
                              GotFocus="InputBox_GotFocus"
                              KeyUp="TextBoxKeyUp" />
                     <Line X1="0" X2="-400" Y1="60" Y2="60" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="3" />
@@ -86,54 +93,45 @@
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
                            Tap="TextBlock_Tap_1"/>
                     <TextBox Name="endingInput"
-                         InputScope="Maps"
-                         Height="72" Width="410"
-                         Text="{Binding Path=EndLocationText, Mode=TwoWay}"
-                         Background="{StaticResource TransparentBrush}"
-                         Foreground="{StaticResource PhoneForegroundBrush}"
+                             InputScope="Maps"
+                             Width="410"
+                             Text="{Binding Path=EndLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                             Background="{StaticResource TransparentBrush}"
+                             Foreground="{StaticResource PhoneForegroundBrush}"
+                             CaretBrush="{StaticResource EndEndpointCaretBrush}"
                              BorderThickness="0"
-                         VerticalAlignment="Center"
-                         GotFocus="InputBox_GotFocus"
-                         KeyUp="TextBoxKeyUp" />
+                             VerticalAlignment="Center"
+                             TextChanged="EndpointInputTextChanged"
+                             GotFocus="InputBox_GotFocus"
+                             KeyUp="TextBoxKeyUp" />
                     <Line X1="0" X2="-400" Y1="60" Y2="60" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="3" />
                 </StackPanel>
 
                 <!-- Time selection picker -->
-                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" Visibility="Collapsed">
+                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal">
                     <toolkit:ListPicker
-                        Margin="12,4,0,0"
                         Width="150"
                         Background="{StaticResource TransparentBrush}"
-                        BorderThickness="0"
                         Foreground="{StaticResource PhoneForegroundBrush}"
-                        SelectedIndex="0"
-                        SelectionChanged="ListPicker_SelectionChanged">
-                        <toolkit:ListPickerItem Content="Depart now" HorizontalContentAlignment="Center" />
-                        <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Center"/>
-                        <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Center"/>
-                        <toolkit:ListPickerItem Content="Last arrival" HorizontalContentAlignment="Center" />
+                        SizeChanged="ListPickerSizeChanged"
+                        BorderThickness="0"
+                        SelectedIndex="{Binding Path=TimeType, Mode=TwoWay, Converter={StaticResource TimeConditionToIntConverter}, FallbackValue=0}">
+                        <toolkit:ListPickerItem Content="Depart now" Padding="0,4,0,4" HorizontalContentAlignment="Center" />
+                        <toolkit:ListPickerItem Content="Depart" Padding="0,4,0,4" HorizontalContentAlignment="Center"/>
+                        <toolkit:ListPickerItem Content="Arrive" Padding="0,4,0,4" HorizontalContentAlignment="Center"/>
+                        <toolkit:ListPickerItem Content="Last arrival" Padding="0,4,0,4" HorizontalContentAlignment="Center" />
                     </toolkit:ListPicker>
                     <toolkit:DatePicker Name="datePicker"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
-                                        IsEnabled="False"
-                                        ValueStringFormat="{}{0:m}"
-                                        ValueChanged="DatePicker_ValueChanged"/>
+                                        IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=datePicker}"
+                                        Value="{Binding Path=DateTime, Mode=TwoWay}"
+                                        ValueStringFormat="{}{0:m}"/>
                     <toolkit:TimePicker Name="timePicker"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
-                                        IsEnabled="False"
-                                        ValueChanged="TimePicker_ValueChanged"/>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <!--<Button Click="Button_Click_1" BorderThickness="0">
-                        <Image Source="/Images/appbar.overflowdots.png" Stretch="None" Height="30"/>
-                    </Button>-->
-                    <TextBlock Text="Show options" FontWeight="Bold"
-                           HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Tap="TextBlock_Tap"/>
-                    <Button Content="Go" Click="Button_Click" />
+                                        IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=timePicker}"
+                                        Value="{Binding Path=DateTime, Mode=TwoWay}"/>
                 </StackPanel>
 
             </StackPanel>

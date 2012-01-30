@@ -74,7 +74,16 @@ namespace TransitWP7.View
         {
             if (e.Key == Key.Enter)
             {
-                this.Focus();
+                var textBox = sender as TextBox;
+                if (textBox.Name == "startingInput")
+                {
+                    this.endingInput.Focus();
+                }
+                else
+                {
+                    this.Focus();
+                    this._viewModel.TryResolveEndpoints();
+                }
             }
         }
 
@@ -83,61 +92,6 @@ namespace TransitWP7.View
             var inputBox = sender as TextBox;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
             inputBox.SelectAll();
-        }
-
-        private void DatePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
-        {
-            this._viewModel.EnsureDateTimeSyncInContext(e.NewDateTime.Value, this._viewModel.DateTime);
-        }
-
-        private void TimePicker_ValueChanged(object sender, DateTimeValueChangedEventArgs e)
-        {
-            this._viewModel.EnsureDateTimeSyncInContext(this._viewModel.DateTime, e.NewDateTime.Value);
-        }
-
-        private void ListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var timeTypePicker = sender as ListPicker;
-            if (timeTypePicker != null)
-            {
-                switch (timeTypePicker.SelectedIndex)
-                {
-                    case 0:
-                        this._viewModel.EnsureDateTimeSyncInContext(DateTime.Now, DateTime.Now, TimeCondition.Now);
-                        this.datePicker.IsEnabled = false;
-                        this.timePicker.IsEnabled = false;
-                        break;
-                    case 1:
-                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, this.timePicker.Value, TimeCondition.DepartingAt);
-                        this.datePicker.IsEnabled = true;
-                        this.timePicker.IsEnabled = true;
-                        break;
-                    case 2:
-                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, this.timePicker.Value, TimeCondition.ArrivingAt);
-                        this.datePicker.IsEnabled = true;
-                        this.timePicker.IsEnabled = true;
-                        break;
-                    case 3:
-                        this._viewModel.EnsureDateTimeSyncInContext(this.datePicker.Value, this.timePicker.Value, TimeCondition.LastArrivalTime);
-                        this.datePicker.IsEnabled = true;
-                        this.timePicker.IsEnabled = false;
-                        break;
-                }
-            }
-        }
-
-        private void TextBlock_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            var inputBox = sender as TextBlock;
-            this.dateTimeStackPanel.Visibility = this.dateTimeStackPanel.Visibility == Visibility.Collapsed
-                ? Visibility.Visible
-                : Visibility.Collapsed;
-            inputBox.Text = this.dateTimeStackPanel.Visibility == Visibility.Collapsed ? "Show options" : "Hide options";
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this._viewModel.TryResolveEndpoints();
         }
 
         private void TextBlock_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
@@ -206,9 +160,15 @@ namespace TransitWP7.View
             this.endingInput.Focus();
         }
 
-        ////private void Button_Click_1(object sender, RoutedEventArgs e)
-        ////{
-        ////    dateTimeStackPanel.Visibility = dateTimeStackPanel.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
-        ////}
+        private void EndpointInputTextChanged(object sender, TextChangedEventArgs e)
+        {
+            ((TextBox)sender).GetBindingExpression(TextBox.TextProperty).UpdateSource();
+        }
+
+        private void ListPickerSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var listPicker = sender as ListPicker;
+            listPicker.Background = new SolidColorBrush(Colors.Transparent);
+        }
     }
 }
