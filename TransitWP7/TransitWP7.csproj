@@ -159,12 +159,9 @@
     </Content>
     <Content Include="Images\appbar.overflowdots.png" />
     <Content Include="Images\appbar.questionmark.rest.png" />
-    <Content Include="Images\bus_hi.png" />
-    <Content Include="Images\bus_lo.png" />
-    <Content Include="Images\rail_hi.png" />
-    <Content Include="Images\rail_lo.png" />
-    <Content Include="Images\walk_hi.png" />
-    <Content Include="Images\walk_lo.png" />
+    <Content Include="Images\bus.png" />
+    <Content Include="Images\rail.png" />
+    <Content Include="Images\walk.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />

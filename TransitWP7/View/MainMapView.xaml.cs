@@ -65,9 +65,9 @@ namespace TransitWP7.View
         private void ShowTransitTripsList()
         {
             this.topGrid.Visibility = Visibility.Visible;
-            this.bottomGrid.Visibility = Visibility.Visible;
             this.TransitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
             this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
+            this.bottomGrid.Visibility = Visibility.Visible;
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
@@ -169,6 +169,11 @@ namespace TransitWP7.View
         {
             var listPicker = sender as ListPicker;
             listPicker.Background = new SolidColorBrush(Colors.Transparent);
+        }
+
+        private void TransitTripsList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            this.TransitTripsList_SelectionChanged(this, null);
         }
     }
 }

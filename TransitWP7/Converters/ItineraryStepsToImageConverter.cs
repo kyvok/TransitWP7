@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 
 namespace TransitWP7.Converters
 {
@@ -34,11 +26,11 @@ namespace TransitWP7.Converters
                 switch (iconType[0])
                 {
                     case 'W':
-                        return new Uri("/images/walk_lo.png", UriKind.Relative);
+                        return new Uri("/images/walk.png", UriKind.Relative);
                     case 'B':
-                        return new Uri("/images/bus_lo.png", UriKind.Relative);
+                        return new Uri("/images/bus.png", UriKind.Relative);
                     case 'T':
-                        break;
+                        return new Uri("/images/rail.png", UriKind.Relative);
                     case 'M':
                         break;
                     default:
