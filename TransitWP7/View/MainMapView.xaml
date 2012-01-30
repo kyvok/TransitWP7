@@ -147,16 +147,26 @@
                          ItemsSource="{Binding Path=TransitDescriptionCollection}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,24">
-                                <TextBlock Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"
-                                           FontSize="22" TextAlignment="Center" LineHeight="24" LineStackingStrategy="BlockLineHeight" 
-                                           VerticalAlignment="Center"/>
-                                <StackPanel VerticalAlignment="Center" Margin="18,0,0,0">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
-                                        <TextBlock Text="{Binding DepartureTime}" FontSize="18"/>
-                                        <TextBlock Text="  -  " FontSize="18"/>
-                                        <TextBlock Text="{Binding ArrivalTime}" FontSize="18"/>
-                                    </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0">
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="75" FontWeight="ExtraBold" Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"/>
+                                    <Line VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="50" Y1="0" Y2="0" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Text="MINUTES" />
+                                    <TextBlock FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock.Inlines>
+                                            <Run Text="{Binding DepartureTime}"/>
+                                            <Run Text="  -  "/>
+                                            <Run Text="{Binding ArrivalTime}"/>
+                                        </TextBlock.Inlines>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Line Margin="5,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="50" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" Grid.Column="1"/>
+                                <StackPanel VerticalAlignment="Center" Margin="18,0,0,0" Grid.Column="2">
                                     <ItemsControl ItemsSource="{Binding Path=ItinerarySteps}" Margin="0,4,0,0">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -175,7 +185,7 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
-                            </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

@@ -16,7 +16,7 @@ namespace TransitWP7.Converters
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return ((int)((double)value / 60)).ToString(CultureInfo.InvariantCulture) + "\r\nmin";
+            return ((int)((double)value / 60)).ToString(CultureInfo.InvariantCulture);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
