@@ -165,8 +165,6 @@
     <Content Include="Images\rail_lo.png" />
     <Content Include="Images\walk_hi.png" />
     <Content Include="Images\walk_lo.png" />
-    <Content Include="Images\swap_hi.png" />
-    <Content Include="Images\swap_lo.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />
