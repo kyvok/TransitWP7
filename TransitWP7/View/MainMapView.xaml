@@ -37,8 +37,7 @@
 
         <maps:Map Name="mainMap" ScaleVisibility="Visible">
             <maps:MapLayer>
-                <maps:MapPolyline Name="routePath"
-                                StrokeLineJoin="Round"
+                <maps:MapPolyline StrokeLineJoin="Round"
                                 Stroke="MediumBlue"
                                 StrokeThickness="8"
                                 StrokeStartLineCap="Round"
@@ -46,7 +45,7 @@
                                 Locations="{Binding Path=SelectedTransitTrip.PathPoints}"
                                 Opacity="0.5" />
             </maps:MapLayer>
-            <maps:MapLayer x:Name="pushpinStepsLayer">
+            <maps:MapLayer>
                 <maps:MapItemsControl ItemsSource="{Binding Path=SelectedTransitTrip.ItinerarySteps}">
                     <maps:MapItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -58,8 +57,23 @@
                         </DataTemplate>
                     </maps:MapItemsControl.ItemTemplate>
                 </maps:MapItemsControl>
+<!-- Adding start and end location, experimental
+                <maps:Pushpin Location="{Binding Path=SelectedTransitTrip.PathPoints[0]}"
+                              Content="A"
+                              Style="{StaticResource TransitEndpointPushpinStyle}"
+                              PositionOrigin="Center"
+                              Tap="Pushpin_Tap"/>
+                <maps:Pushpin Location="{Binding Path=SelectedTransitTrip.PathPoints[0]}"
+                              Content="B"
+                              Style="{StaticResource TransitEndpointPushpinStyle}"
+                              PositionOrigin="Center"
+                              Tap="Pushpin_Tap"/>
+-->
             </maps:MapLayer>
-            <maps:Pushpin Name="meIndicator" Location="{Binding Path=UserGeoCoordinate}" PositionOrigin="Center" Style="{StaticResource CurrentLocationPushpinStyle}" />
+            <maps:Pushpin Name="meIndicator"
+                          Location="{Binding Path=UserGeoCoordinate}"
+                          PositionOrigin="Center"
+                          Style="{StaticResource CurrentLocationPushpinStyle}" />
         </maps:Map>
 
         <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Top">
@@ -110,7 +124,7 @@
                 <!-- Time selection picker -->
                 <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal">
                     <toolkit:ListPicker
-                        Width="150"
+                        Width="140"
                         Background="{StaticResource TransparentBrush}"
                         Foreground="{StaticResource PhoneForegroundBrush}"
                         SizeChanged="ListPickerSizeChanged"
@@ -138,7 +152,7 @@
 
         </Grid>
 
-        <Grid Name="bottomGrid" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Bottom" Visibility="Visible">
+        <Grid Name="bottomGrid" Background="{StaticResource PhoneSemitransparentBrush}" VerticalAlignment="Bottom" Margin="0,0,0,72"  Visibility="Collapsed">
             <ListBox Name="TransitTripsList" Margin="6,6,0,0" Width="444"
                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                          VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
