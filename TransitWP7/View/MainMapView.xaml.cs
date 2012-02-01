@@ -66,7 +66,7 @@ namespace TransitWP7.View
         {
             this.topGrid.Visibility = Visibility.Visible;
             this.TransitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
-            this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
+            this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32 - 72;
             this.bottomGrid.Visibility = Visibility.Visible;
         }
 
