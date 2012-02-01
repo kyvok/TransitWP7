@@ -4,7 +4,6 @@ using System.Device.Location;
 using BingApisLib.BingMapsRestApi;
 using BingApisLib.BingSearchRestApi;
 
-// TODO: show total travel time for trips
 // TODO: walk does not need start and stop time
 namespace TransitWP7
 {
@@ -151,7 +150,6 @@ namespace TransitWP7
             }
             else
             {
-                // TODO: probably try to do spelling correction here.
                 proxyQueryResult.Error = new Exception(string.Format("Could not locate a result for {0} within 80 miles of your location.", queryState.Query));
                 ////if (queryState.SavedException != null)
                 ////{

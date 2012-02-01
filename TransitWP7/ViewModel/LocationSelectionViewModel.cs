@@ -11,7 +11,6 @@ namespace TransitWP7.ViewModel
         private string _endpointName = "end";
         private ObservableCollection<LocationDescription> _locationDescriptions; 
 
-        // TODO: calculate distance of origin or current location to each point
         public LocationSelectionViewModel()
         {
             Messenger.Default.Register<NotificationMessage<List<LocationDescription>>>(

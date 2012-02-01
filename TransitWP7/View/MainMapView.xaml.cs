@@ -29,6 +29,14 @@ namespace TransitWP7.View
             this.RegisterNotifications();
         }
 
+        protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+        
+            // reset the progressbar
+            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+        }
+
         private void RegisterNotifications()
         {
             Messenger.Default.Register<DialogMessage>(
@@ -114,7 +122,6 @@ namespace TransitWP7.View
             SystemTray.ProgressIndicator.IsVisible = state;
         }
 
-        // TODO: This is not MVVM friendly. Needs refactoring.
         private void TransitTripsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.bottomGrid.Visibility = Visibility.Collapsed;

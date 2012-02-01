@@ -4,8 +4,6 @@ using TransitWP7.ViewModel;
 
 namespace TransitWP7.View
 {
-    // TODO: distance of the item from origin
-    // TODO: calculate results from origin for endpoint, not current userlocation!!!
     public partial class LocationSelectionView : PhoneApplicationPage
     {
         private readonly LocationSelectionViewModel _viewModel;
@@ -27,7 +25,6 @@ namespace TransitWP7.View
             this.resultsList.ItemsSource = this._viewModel.LocationDescriptions;
         }
 
-        // TODO: backing up from here what happens?
         private void ResultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             this._viewModel.SelectionMade(this.resultsList.SelectedIndex);

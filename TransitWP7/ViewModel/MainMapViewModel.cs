@@ -177,7 +177,6 @@ namespace TransitWP7.ViewModel
             }
         }
 
-        // TODO: When pressing back button from location selection page, the progress indicator stays on. Need better decoupling.
         public void TryResolveEndpoints()
         {
             // Notify calcul in progress
