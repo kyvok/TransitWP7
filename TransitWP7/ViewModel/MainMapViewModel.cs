@@ -57,7 +57,7 @@ namespace TransitWP7.ViewModel
             {
                 if (value != this._startLocationText)
                 {
-                    this._startLocationText = value.Trim();
+                    this._startLocationText = value;
                     this._isStartLocationStale = true;
                     this.RaisePropertyChanged("StartLocationText");
                 }
@@ -75,7 +75,7 @@ namespace TransitWP7.ViewModel
             {
                 if (value != this._endLocationText)
                 {
-                    this._endLocationText = value.Trim();
+                    this._endLocationText = value;
                     this._isEndLocationStale = true;
                     this.RaisePropertyChanged("EndLocationText");
                 }
@@ -182,6 +182,10 @@ namespace TransitWP7.ViewModel
         {
             // Notify calcul in progress
             Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
+
+            // Trim whitespace from the start/end locations
+            this.StartLocationText = this.StartLocationText.Trim();
+            this.EndLocationText = this.EndLocationText.Trim();
 
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
