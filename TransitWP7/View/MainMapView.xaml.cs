@@ -27,7 +27,7 @@ namespace TransitWP7.View
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
-            this.startingInput.ItemsSource = new ObservableCollection<string>() {"My Location" };
+            this.startingInput.ItemsSource = new ObservableCollection<string>() { "My Location" };
             this.endingInput.ItemsSource = new ObservableCollection<string>() { "My Location" };
 
             this.RegisterNotifications();
@@ -36,7 +36,7 @@ namespace TransitWP7.View
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-        
+
             // reset the progressbar
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
         }
