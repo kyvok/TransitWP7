@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Device.Location;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,9 @@ namespace TransitWP7.View
             this.DataContext = this._viewModel;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
+
+            this.startingInput.ItemsSource = new ObservableCollection<string>() {"My Location" };
+            this.endingInput.ItemsSource = new ObservableCollection<string>() { "My Location" };
 
             this.RegisterNotifications();
         }
@@ -82,7 +86,7 @@ namespace TransitWP7.View
         {
             if (e.Key == Key.Enter)
             {
-                var textBox = sender as TextBox;
+                var textBox = sender as AutoCompleteBox;
                 if (textBox.Name == "startingInput")
                 {
                     this.endingInput.Focus();
@@ -97,9 +101,22 @@ namespace TransitWP7.View
 
         private void InputBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            var inputBox = sender as TextBox;
+            var inputBox = sender as AutoCompleteBox;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
-            inputBox.SelectAll();
+            inputBox.BorderBrush = Application.Current.Resources["UnderliningBorderBrush"] as Brush;
+
+            // Need to traverse the DependencyObject tree to fetch the TextBox.
+            // First layer is Grid, which contains as a first child the TextBox.
+            var parent = VisualTreeHelper.GetChild(inputBox, 0);
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i) as TextBox;
+                if (child != null)
+                {
+                    child.SelectAll();
+                    break;
+                }
+            }
         }
 
         private void TextBlock_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
@@ -167,9 +184,9 @@ namespace TransitWP7.View
             this.endingInput.Focus();
         }
 
-        private void EndpointInputTextChanged(object sender, TextChangedEventArgs e)
+        private void EndpointInputTextChanged(object sender, RoutedEventArgs routedEventArgs)
         {
-            ((TextBox)sender).GetBindingExpression(TextBox.TextProperty).UpdateSource();
+            ((AutoCompleteBox)sender).GetBindingExpression(AutoCompleteBox.TextProperty).UpdateSource();
         }
 
         private void ListPickerSizeChanged(object sender, SizeChangedEventArgs e)

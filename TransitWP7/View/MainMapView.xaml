@@ -30,9 +30,6 @@
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
             <converters:TimeConditionToDateTimePickerEnabledConverter x:Key="TimeConditionToDateTimePickerEnabledConverter"/>
             <converters:TimeConditionToIntConverter x:Key="TimeConditionToIntConverter"/>
-            <!-- Hack: Cannot share CaretBrush otherwise they get in a bad state. So create one for each tile needed. -->
-            <SolidColorBrush x:Key="StartEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
-            <SolidColorBrush x:Key="EndEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
         </Grid.Resources>
 
         <maps:Map Name="mainMap" ScaleVisibility="Visible">
@@ -82,21 +79,19 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Width="60" Padding="0,20,0,0"
                                Text="Start" TextAlignment="Right"
+                               FontWeight="Bold"
                                HorizontalAlignment="Left" VerticalAlignment="Stretch"
                                Tap="TextBlock_Tap_1"/>
-                    <TextBox Name="startingInput" 
-                             InputScope="Maps"
-                             Width="410"
+                    <toolkit:AutoCompleteBox Name="startingInput"
+                             Width="420"
                              Text="{Binding Path=StartLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                             VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
-                             CaretBrush="{StaticResource StartEndpointCaretBrush}"
-                             BorderThickness="0"
-                             VerticalAlignment="Center"
                              TextChanged="EndpointInputTextChanged"
                              GotFocus="InputBox_GotFocus"
-                             KeyUp="TextBoxKeyUp" />
-                    <Line X1="0" X2="-400" Y1="60" Y2="60" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="3" />
+                             KeyUp="TextBoxKeyUp"
+                             Style="{StaticResource StartEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>
                 <!-- End section -->
                 <StackPanel Orientation="Horizontal">
@@ -104,21 +99,19 @@
                     <!-- We consider using #8645 for up arrow. -->
                     <TextBlock Width="60" Padding="0,20,0,0"
                            Text="&#8645;End" TextAlignment="Right"
+                           FontWeight="Bold"
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
                            Tap="TextBlock_Tap_1"/>
-                    <TextBox Name="endingInput"
-                             InputScope="Maps"
-                             Width="410"
+                    <toolkit:AutoCompleteBox Name="endingInput"
+                             Width="420"
                              Text="{Binding Path=EndLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                             VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
-                             CaretBrush="{StaticResource EndEndpointCaretBrush}"
-                             BorderThickness="0"
-                             VerticalAlignment="Center"
                              TextChanged="EndpointInputTextChanged"
                              GotFocus="InputBox_GotFocus"
-                             KeyUp="TextBoxKeyUp" />
-                    <Line X1="0" X2="-400" Y1="60" Y2="60" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="3" />
+                             KeyUp="TextBoxKeyUp"
+                             Style="{StaticResource EndEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>
 
                 <!-- Time selection picker -->
