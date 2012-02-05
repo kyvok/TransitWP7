@@ -209,7 +209,7 @@
                 <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarMenuItem_Click"/>
                 <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarMenuItem_Click_1"/>
                 <shell:ApplicationBarMenuItem Text="clear map" Click="ApplicationBarMenuItem_Click_2"/>
-                <shell:ApplicationBarMenuItem Text="settings"/>
+                <shell:ApplicationBarMenuItem Text="settings" Click="ApplicationBarMenuItem_Click_3" />
                 <shell:ApplicationBarMenuItem Text="about"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>

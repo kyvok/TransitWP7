@@ -199,5 +199,10 @@ namespace TransitWP7.View
         {
             this.TransitTripsList_SelectionChanged(this, null);
         }
+
+        private void ApplicationBarMenuItem_Click_3(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri(PhonePageUri.SettingsView, UriKind.Relative));
+        }
     }
 }

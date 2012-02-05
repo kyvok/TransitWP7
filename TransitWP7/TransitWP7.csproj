@@ -92,6 +92,7 @@
     <Compile Include="Converters\TravelDurationConverter.cs" />
     <Compile Include="ViewModel\LocationSelectionViewModel.cs" />
     <Compile Include="ViewModel\DirectionsViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\DirectionsView.xaml.cs">
       <DependentUpon>DirectionsView.xaml</DependentUpon>

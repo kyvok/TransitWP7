@@ -25,6 +25,7 @@ namespace TransitWP7.ViewModel
         private static DirectionsViewModel _directionsViewModel;
         private static MainMapViewModel _mainMapViewModel;
         private static LocationSelectionViewModel _locationSelectionViewModel;
+        private static SettingsViewModel _settingsViewModel;
 
         public ViewModelLocator()
         {
@@ -40,6 +41,7 @@ namespace TransitWP7.ViewModel
             CreateMainMapViewModel();
             CreateLocationSelectionViewModel();
             CreateDirectionsViewModel();
+            CreateSettingsViewModel();
         }
 
         public static MainMapViewModel MainMapViewModelStatic
@@ -81,6 +83,19 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public static SettingsViewModel SettingsViewModelStatic
+        {
+            get
+            {
+                if (_settingsViewModel == null)
+                {
+                    CreateSettingsViewModel();
+                }
+
+                return _settingsViewModel;
+            }
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
             "CA1822:MarkMembersAsStatic",
             Justification = "This non-static member is needed for data binding purposes.")]
@@ -114,6 +129,17 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public SettingsViewModel SettingsViewModel
+        {
+            get
+            {
+                return SettingsViewModelStatic;
+            }
+        }
+
         public static void CreateMainMapViewModel()
         {
             if (_mainMapViewModel == null)
@@ -138,6 +164,14 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public static void CreateSettingsViewModel()
+        {
+            if (_settingsViewModel == null)
+            {
+                _settingsViewModel = new SettingsViewModel();
+            }
+        }
+
         public static void ClearMainMapViewModel()
         {
             _mainMapViewModel.Cleanup();
@@ -156,11 +190,18 @@ namespace TransitWP7.ViewModel
             _directionsViewModel = null;
         }
 
+        public static void ClearSettingsViewModel()
+        {
+            _settingsViewModel.Cleanup();
+            _settingsViewModel = null;
+        }
+
         public static void Cleanup()
         {
             ClearDirectionsViewModel();
             ClearMainMapViewModel();
             ClearLocationSelectionViewModel();
+            ClearSettingsViewModel();
         }
     }
 }
