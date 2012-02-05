@@ -77,13 +77,13 @@
             <StackPanel>
                 <!-- Start section -->
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="60" Padding="0,20,0,0"
+                    <TextBlock Width="80" Padding="0,20,0,0"
                                Text="Start" TextAlignment="Right"
                                FontWeight="Bold"
                                HorizontalAlignment="Left" VerticalAlignment="Stretch"
                                Tap="TextBlock_Tap_1"/>
                     <toolkit:AutoCompleteBox Name="startingInput"
-                             Width="420"
+                             Width="400"
                              Text="{Binding Path=StartLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
@@ -97,13 +97,13 @@
                 <StackPanel Orientation="Horizontal">
                     <!-- Maps application uses #8593 for up arrow. (or similar) -->
                     <!-- We consider using #8645 for up arrow. -->
-                    <TextBlock Width="60" Padding="0,20,0,0"
-                           Text="&#8645;End" TextAlignment="Right"
+                    <TextBlock Width="80" Padding="0,20,0,0"
+                           Text="&#8645; End" TextAlignment="Right"
                            FontWeight="Bold"
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
                            Tap="TextBlock_Tap_1"/>
                     <toolkit:AutoCompleteBox Name="endingInput"
-                             Width="420"
+                             Width="400"
                              Text="{Binding Path=EndLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
@@ -122,11 +122,12 @@
                         Foreground="{StaticResource PhoneForegroundBrush}"
                         SizeChanged="ListPickerSizeChanged"
                         BorderThickness="0"
+                        Margin="20,0,0,0"
                         SelectedIndex="{Binding Path=TimeType, Mode=TwoWay, Converter={StaticResource TimeConditionToIntConverter}, FallbackValue=0}">
-                        <toolkit:ListPickerItem Content="Depart now" Padding="0,4,0,4" HorizontalContentAlignment="Center" />
-                        <toolkit:ListPickerItem Content="Depart" Padding="0,4,0,4" HorizontalContentAlignment="Center"/>
-                        <toolkit:ListPickerItem Content="Arrive" Padding="0,4,0,4" HorizontalContentAlignment="Center"/>
-                        <toolkit:ListPickerItem Content="Last arrival" Padding="0,4,0,4" HorizontalContentAlignment="Center" />
+                        <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Center" />
+                        <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Center"/>
+                        <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Center"/>
+                        <toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Center" />
                     </toolkit:ListPicker>
                     <toolkit:DatePicker Name="datePicker"
                                         Background="{StaticResource TransparentBrush}"
