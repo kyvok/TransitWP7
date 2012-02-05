@@ -79,6 +79,7 @@
 
         <Style TargetType="toolkit:AutoCompleteBox" x:Key="StartEndpointInputAutoCompleteBoxStyle">
             <Setter Property="InputScope" Value="Maps"/>
+            <Setter Property="MinimumPrefixLength" Value="2" />
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="{StaticResource UnderliningBorderBrush}"/>
             <Setter Property="TextBoxStyle">
@@ -93,7 +94,6 @@
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style TargetType="ListBoxItem">
-                        <Setter Property="FontSize" Value="{StaticResource PhoneFontSizeSmall}"/>
                         <Setter Property="Foreground" Value="{StaticResource PhoneContrastForegroundBrush}"/>
                     </Style>
                 </Setter.Value>
