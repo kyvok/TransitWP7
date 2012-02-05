@@ -1,9 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Application x:Class="TransitWP7.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone" xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone" xmlns:m="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:vm="clr-namespace:TransitWP7.ViewModel"
+<Application x:Class="TransitWP7.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+             xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+             xmlns:m="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:TransitWP7.ViewModel"
              xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d">
     <!--Application Resources-->
     <Application.Resources>
+
+        <System:Double x:Key="GridOpacityValue">0.7</System:Double>
+        <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}" Opacity="{StaticResource GridOpacityValue}" x:Key="GridTransparencyBrush"/>
+
         <Style TargetType="m:Pushpin" x:Key="CurrentLocationPushpinStyle">
             <Setter Property="Template">
                 <Setter.Value>
