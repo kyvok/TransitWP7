@@ -86,6 +86,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ItineraryStepsCollapseWalkConverter.cs" />
     <Compile Include="Converters\ItineraryStepsToImageConverter.cs" />
     <Compile Include="Converters\TimeConditionToDateTimePickerEnabledConverter.cs" />
     <Compile Include="Converters\TimeConditionToIntConverter.cs" />

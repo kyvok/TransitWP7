@@ -27,6 +27,7 @@
 
         <Grid.Resources>
             <converters:TravelDurationConverter x:Key="TravelDurationConverter"/>
+            <converters:ItineraryStepsCollapseWalkConverter x:Key="ItineraryStepsCollapseWalkConverter"/>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
             <converters:TimeConditionToDateTimePickerEnabledConverter x:Key="TimeConditionToDateTimePickerEnabledConverter"/>
             <converters:TimeConditionToIntConverter x:Key="TimeConditionToIntConverter"/>
@@ -174,7 +175,7 @@
                                 </TextBlock>
                             </StackPanel>
                             <Line Margin="5,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="50" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" Grid.Column="1"/>
-                            <ItemsControl ItemsSource="{Binding Path=ItinerarySteps}" Margin="0,4,0,0" Grid.Column="2" VerticalAlignment="Center">
+                            <ItemsControl ItemsSource="{Binding Path=ItinerarySteps, Converter={StaticResource ItineraryStepsCollapseWalkConverter}}" Margin="0,4,0,0" Grid.Column="2" VerticalAlignment="Center">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
