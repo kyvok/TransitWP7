@@ -11,39 +11,50 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    xmlns:converters="clr-namespace:TransitWP7.Converters">
 
     <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.Resources>
+            <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <StackPanel Grid.Row="0" Margin="12,17,0,28">
-                <TextBlock x:Name="PageTitle" Text="Directions list" Style="{StaticResource PhoneTextTitle3Style}" />
-            </StackPanel>
-        </StackPanel>
-
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="0" Margin="12,0,12,0">
             <ListBox HorizontalAlignment="Stretch" Name="directionsList"
                      VerticalAlignment="Stretch" Width="444"
                      VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                      ItemsSource="{Binding Path=ItinerarySteps}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding IconType}" FontSize="40" FontStyle="Normal"/>
-                                <TextBlock Text="{Binding BusNumber}" FontSize="40" FontStyle="Normal"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="96"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Ellipse Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="2" Fill="{StaticResource PhoneBackgroundBrush}" Width="48" Height="48" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <TextBlock Width="48" Height="48" FontSize="25" Text="{Binding StepNumber}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Margin="0" />
+                                </Grid>
+                                <ContentControl Height="32" Width="32" VerticalAlignment="Center" Margin="0 0 15 15" HorizontalAlignment="Center">
+                                    <Rectangle Height="32" Width="32" StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">
+                                        <Rectangle.OpacityMask>
+                                            <ImageBrush ImageSource="{Binding IconType, Converter={StaticResource ItineraryStepsToImageConverter}}"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </ContentControl>
+                                <TextBlock Text="{Binding BusNumber}" FontSize="30" FontStyle="Normal" Width="32" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </StackPanel>
-                            <!-- TODO: review the content to show. Will necessitate changes in the model. -->
-                            <TextBlock Text="{Binding Instruction}" FontSize="20" FontStyle="Italic"/>
-                        </StackPanel>
+                            <TextBlock Text="{Binding Instruction}" FontSize="15" FontStyle="Italic" Grid.Column="1" TextWrapping="Wrap" Width="414"/>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
     </Grid>
- 
+
 </phone:PhoneApplicationPage>
