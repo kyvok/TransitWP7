@@ -182,10 +182,6 @@ namespace TransitWP7.ViewModel
             // Notify calcul in progress
             Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
 
-            // Trim whitespace from the start/end locations
-            this.StartLocationText = this.StartLocationText.Trim();
-            this.EndLocationText = this.EndLocationText.Trim();
-
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
                 ProcessErrorMessage("Where are you starting from?");
@@ -197,6 +193,10 @@ namespace TransitWP7.ViewModel
                 ProcessErrorMessage("Where do you want to go?");
                 return;
             }
+
+            // Trim whitespace from the start/end locations
+            this.StartLocationText = this.StartLocationText.Trim();
+            this.EndLocationText = this.EndLocationText.Trim();
 
             if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
             {
