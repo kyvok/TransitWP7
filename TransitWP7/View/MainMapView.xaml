@@ -48,7 +48,7 @@
                     <maps:MapItemsControl.ItemTemplate>
                         <DataTemplate>
                             <maps:Pushpin Location="{Binding GeoCoordinate}"
-                                      Content="1"
+                                      Content="{Binding StepNumber}"
                                       Style="{StaticResource TransitStepPushpinStyle}"
                                       PositionOrigin="Center"
                                       Tap="Pushpin_Tap"/>

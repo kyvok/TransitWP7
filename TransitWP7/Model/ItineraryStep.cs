@@ -18,12 +18,13 @@ namespace TransitWP7
         private string travelMode;
         private string busNumber;
         private string iconType;
+        private int stepNumber;
 
         public ItineraryStep()
         {
         }
 
-        public ItineraryStep(ItineraryItem item)
+        public ItineraryStep(ItineraryItem item, int stepNumber)
         {
             this.GeoCoordinate = item.ManeuverPoint.AsGeoCoordinate();
             this.Instruction = item.Instruction.Value;
@@ -41,12 +42,14 @@ namespace TransitWP7
                 }
             }
 
+            this.stepNumber = stepNumber;
+
             this.ChildItinerarySteps = new ObservableCollection<ItineraryStep>();
             if (item.ChildItineraryItems != null)
             {
                 foreach (var itemStep in item.ChildItineraryItems)
                 {
-                    this.ChildItinerarySteps.Add(new ItineraryStep(itemStep));
+                    this.ChildItinerarySteps.Add(new ItineraryStep(itemStep, 0));
                 }
             }
         }
@@ -168,6 +171,23 @@ namespace TransitWP7
                 {
                     this.iconType = value;
                     this.RaisePropertyChanged("IconType");
+                }
+            }
+        }
+
+        public int StepNumber
+        {
+            get
+            {
+                return this.stepNumber;
+            }
+
+            set
+            {
+                if (value != this.stepNumber)
+                {
+                    this.stepNumber = value;
+                    this.RaisePropertyChanged("StepNumber");
                 }
             }
         }

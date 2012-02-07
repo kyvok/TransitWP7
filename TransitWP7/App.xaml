@@ -13,7 +13,7 @@
     <!--Application Resources-->
     <Application.Resources>
 
-        <System:Double x:Key="GridOpacityValue">0.7</System:Double>
+        <System:Double x:Key="GridOpacityValue">0.75</System:Double>
         <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}" Opacity="{StaticResource GridOpacityValue}" x:Key="GridTransparencyBrush"/>
 
         <Style TargetType="m:Pushpin" x:Key="CurrentLocationPushpinStyle">

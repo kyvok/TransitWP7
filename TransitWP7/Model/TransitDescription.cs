@@ -33,9 +33,10 @@ namespace TransitWP7
 
             // TODO: need to add endpoint to the step list?
             this.ItinerarySteps = new ObservableCollection<ItineraryStep>();
+            var stepNumber = 0;
             foreach (var topLeg in route.RouteLegs[0].ItineraryItems)
             {
-                this.ItinerarySteps.Add(new ItineraryStep(topLeg));
+                this.ItinerarySteps.Add(new ItineraryStep(topLeg, ++stepNumber));
             }
 
             this.PathPoints = new LocationCollection();
