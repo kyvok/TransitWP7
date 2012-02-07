@@ -126,7 +126,7 @@ namespace TransitWP7.View
             this.endingInput.Text = temp;
         }
 
-        private void ApplicationBarIconButton_Click(object sender, EventArgs e)
+        private void ApplicationBarLocateMe_Click(object sender, EventArgs e)
         {
             // TODO: if not location enabled, ask permission
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 16);
@@ -166,17 +166,17 @@ namespace TransitWP7.View
             NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView, pushpin.Tag), UriKind.Relative));
         }
 
-        private void ApplicationBarMenuItem_Click(object sender, EventArgs e)
+        private void ApplicationBarDirectionsList_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
         }
 
-        private void ApplicationBarMenuItem_Click_1(object sender, EventArgs e)
+        private void ApplicationBarShowTransitOptions_Click(object sender, EventArgs e)
         {
             this.ShowTransitTripsList();
         }
 
-        private void ApplicationBarMenuItem_Click_2(object sender, EventArgs e)
+        private void ApplicationBarClearMap_Click(object sender, EventArgs e)
         {
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Visible;
@@ -200,7 +200,7 @@ namespace TransitWP7.View
             this.TransitTripsList_SelectionChanged(this, null);
         }
 
-        private void ApplicationBarMenuItem_Click_3(object sender, EventArgs e)
+        private void ApplicationBarSettings_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri(PhonePageUri.SettingsView, UriKind.Relative));
         }
