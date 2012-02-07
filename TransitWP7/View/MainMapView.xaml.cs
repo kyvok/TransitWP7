@@ -163,7 +163,7 @@ namespace TransitWP7.View
         private void Pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var pushpin = sender as Pushpin;
-            NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView, pushpin.Tag), UriKind.Relative));
+            NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView, (int)pushpin.Content + 1), UriKind.Relative));
         }
 
         private void ApplicationBarDirectionsList_Click(object sender, EventArgs e)
@@ -203,6 +203,12 @@ namespace TransitWP7.View
         private void ApplicationBarSettings_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri(PhonePageUri.SettingsView, UriKind.Relative));
+        }
+
+        private void GoButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Focus();
+            this._viewModel.TryResolveEndpoints();
         }
     }
 }

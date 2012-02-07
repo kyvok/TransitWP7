@@ -104,7 +104,7 @@
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
                            Tap="TextBlock_Tap_1"/>
                     <toolkit:AutoCompleteBox Name="endingInput"
-                             Width="400"
+                             Width="350"
                              Text="{Binding Path=EndLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
@@ -113,6 +113,7 @@
                              GotFocus="InputBox_GotFocus"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource EndEndpointInputAutoCompleteBoxStyle}"/>
+                    <Button Width="50" Content="&#8658;" BorderThickness="0" Padding="0" Margin="0" Click="GoButton_Click" />
                 </StackPanel>
 
                 <!-- Time selection picker -->
