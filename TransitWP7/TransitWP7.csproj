@@ -77,6 +77,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="mscorlib.extensions" />
     <Reference Include="System.Xml.Serialization" />
+    <Reference Include="YourLastAboutDialog">
+      <HintPath>..\packages\YLAD.1.3\lib\sl40-wp71\YourLastAboutDialog.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiKeys.Designer.cs">
@@ -161,6 +164,7 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\About\Data.xml" />
     <Content Include="Images\appbar.overflowdots.png" />
     <Content Include="Images\appbar.questionmark.rest.png" />
     <Content Include="Images\bus.png" />

@@ -213,7 +213,7 @@
                 <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarShowTransitOptions_Click"/>
                 <shell:ApplicationBarMenuItem Text="clear map" Click="ApplicationBarClearMap_Click"/>
                 <shell:ApplicationBarMenuItem Text="settings" Click="ApplicationBarSettings_Click" />
-                <shell:ApplicationBarMenuItem Text="about"/>
+                <shell:ApplicationBarMenuItem Text="about" Click="ApplicationBarAbout_Click" />
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

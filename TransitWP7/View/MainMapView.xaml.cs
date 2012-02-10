@@ -209,5 +209,10 @@ namespace TransitWP7.View
             this.Focus();
             this._viewModel.TryResolveEndpoints();
         }
+
+        private void ApplicationBarAbout_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/YourLastAboutDialog;component/AboutPage.xaml", UriKind.Relative));
+        }
     }
 }
