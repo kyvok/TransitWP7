@@ -76,6 +76,7 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="mscorlib.extensions" />
+    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiKeys.Designer.cs">
@@ -165,6 +166,9 @@
     <Content Include="Images\bus.png" />
     <Content Include="Images\rail.png" />
     <Content Include="Images\walk.png" />
+    <Content Include="TestData\bingmapslocations.xml" />
+    <Content Include="TestData\bingservicephonebook.xml" />
+    <Content Include="TestData\bingmapstransit.xml" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />

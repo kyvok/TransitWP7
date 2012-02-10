@@ -9,7 +9,7 @@ namespace TransitWP7.ViewModel
     public class LocationSelectionViewModel : ViewModelBase
     {
         private string _endpointName = "end";
-        private ObservableCollection<LocationDescription> _locationDescriptions; 
+        private ObservableCollection<LocationDescription> _locationDescriptions;
 
         public LocationSelectionViewModel()
         {
@@ -21,11 +21,21 @@ namespace TransitWP7.ViewModel
                     {
                         this._locationDescriptions = new ObservableCollection<LocationDescription>(notificationMessage.Content);
                     }));
+
+            if (IsInDesignModeStatic)
+            {
+                this.EndpointName = "End";
+                this.LocationDescriptions = ViewModelLocator.LocDescs;
+                ////foreach (var loc in ViewModelLocator.LocDescs)
+                ////{
+                ////    this.LocationDescriptions.Add(loc);
+                ////}
+            }
         }
 
         public string EndpointName
         {
-            get 
+            get
             {
                 return this._endpointName;
             }

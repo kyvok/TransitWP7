@@ -24,12 +24,13 @@
             <TextBlock x:Name="PageTitle" Text="Which end location did you mean?" Style="{StaticResource PhoneTextTitle3Style}" />
         </StackPanel>
 
-        <Grid Grid.Row="1" Margin="12,0,12,0">
+        <Grid Grid.Row="1" Margin="12,0,12,0" DataContext="{Binding Source={StaticResource Locator}, Path=LocationSelectionViewModel}">
             <ListBox Name="resultsList"
                      Width="444"
                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                      VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                     SelectionChanged="ResultsList_SelectionChanged">
+                     SelectionChanged="ResultsList_SelectionChanged"
+                     ItemsSource="{Binding Path=LocationDescriptions}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
