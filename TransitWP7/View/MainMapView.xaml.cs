@@ -23,7 +23,6 @@ namespace TransitWP7.View
         {
             this.InitializeComponent();
             this._viewModel = ViewModelLocator.MainMapViewModelStatic;
-            this.DataContext = this._viewModel;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 

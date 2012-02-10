@@ -6,9 +6,9 @@
              xmlns:m="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:TransitWP7.ViewModel"
              xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:ViewModel="clr-namespace:TransitWP7.ViewModel"
              mc:Ignorable="d">
     <!--Application Resources-->
     <Application.Resources>
@@ -110,7 +110,7 @@
             </Setter>
         </Style>
 
-        <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
+        <ViewModel:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
     </Application.Resources>
     <Application.ApplicationLifetimeObjects>
         <!--Required object that handles lifetime events for the application-->

@@ -14,7 +14,7 @@
     shell:SystemTray.IsVisible="True"
     xmlns:converters="clr-namespace:TransitWP7.Converters">
 
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource Locator}, Path=DirectionsViewModel.TransitDescription}">
         <Grid.Resources>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
         </Grid.Resources>

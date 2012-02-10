@@ -23,7 +23,7 @@
     </shell:SystemTray.ProgressIndicator>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource Locator}, Path=MainMapViewModel}">
 
         <Grid.Resources>
             <converters:TravelDurationConverter x:Key="TravelDurationConverter"/>
