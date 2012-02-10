@@ -18,11 +18,8 @@ namespace TransitWP7.View
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs arg)
         {
             base.OnNavigatedTo(arg);
-
             this._viewModel.EndpointName = this.NavigationContext.QueryString["endpoint"];
-
             this.PageTitle.Text = string.Format(PageTitleStringFormat, this._viewModel.EndpointName);
-            ////this.resultsList.ItemsSource = this._viewModel.LocationDescriptions;
         }
 
         private void ResultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

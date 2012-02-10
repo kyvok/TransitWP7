@@ -22,15 +22,13 @@ namespace TransitWP7.ViewModel
                         this._locationDescriptions = new ObservableCollection<LocationDescription>(notificationMessage.Content);
                     }));
 
+#if DEBUG
             if (IsInDesignModeStatic)
             {
-                this.EndpointName = "End";
-                this.LocationDescriptions = ViewModelLocator.LocDescs;
-                ////foreach (var loc in ViewModelLocator.LocDescs)
-                ////{
-                ////    this.LocationDescriptions.Add(loc);
-                ////}
+                this.EndpointName = "start";
+                this.LocationDescriptions = ViewModelLocator.LocationDescriptionsTestValues;
             }
+#endif
         }
 
         public string EndpointName

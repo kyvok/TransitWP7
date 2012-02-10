@@ -12,7 +12,13 @@ namespace TransitWP7.ViewModel
 
         public SettingsViewModel()
         {
-            ////this._settings = IsolatedStorageSettings.ApplicationSettings;
+#if DEBUG
+            // Need to skip in design mode as this will throw IsolatedStorageException.
+            if (!IsInDesignModeStatic)
+#endif
+            {
+                this._settings = IsolatedStorageSettings.ApplicationSettings;
+            }
         }
 
         public bool UseLocationSetting

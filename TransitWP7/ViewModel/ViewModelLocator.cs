@@ -12,6 +12,7 @@
   See http://www.galasoft.ch/mvvm
 */
 
+#if DEBUG
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -19,6 +20,7 @@ using System.Xml.Serialization;
 using BingApisLib.BingMapsRestApi;
 using BingApisLib.BingSearchRestApi;
 using GalaSoft.MvvmLight;
+#endif
 
 namespace TransitWP7.ViewModel
 {
@@ -35,49 +37,46 @@ namespace TransitWP7.ViewModel
 
         public ViewModelLocator()
         {
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time services and viewmodels
-            ////}
-            ////else
-            ////{
-            ////    // Create run time services and view models
-            ////}
-
-            LocDescs = new ObservableCollection<LocationDescription>();
-            BusDescs = new ObservableCollection<TransitDescription>();
-
-            var bingMapsResponseSerializer = new XmlSerializer(typeof(Response));
-            var bingSearchResponseSerializer = new XmlSerializer(typeof(SearchResponse));
-            var bmlocresx = new Uri("TestData/bingmapslocations.xml", UriKind.Relative);
-            var bmbusresx = new Uri("TestData/bingmapstransit.xml", UriKind.Relative);
-            var bsphoresx = new Uri("TestData/bingservicephonebook.xml", UriKind.Relative);
-            var sr1 = new StreamReader(System.Windows.Application.GetResourceStream(bmlocresx).Stream);
-            var locRsp = (Response)bingMapsResponseSerializer.Deserialize(sr1);
-            foreach (Location location in locRsp.ResourceSets[0].Resources)
+#if DEBUG
+            if (ViewModelBase.IsInDesignModeStatic)
             {
-                LocDescs.Add(new LocationDescription(location));
+                LocationDescriptionsTestValues = new ObservableCollection<LocationDescription>();
+                TransitDescriptionsTestValues = new ObservableCollection<TransitDescription>();
+
+                var bingMapsResponseSerializer = new XmlSerializer(typeof(Response));
+                var bingSearchResponseSerializer = new XmlSerializer(typeof(SearchResponse));
+
+                var bmlocresx = new Uri("TestData/bingmapslocations.xml", UriKind.Relative);
+                var bmbusresx = new Uri("TestData/bingmapstransit.xml", UriKind.Relative);
+                var bsphoresx = new Uri("TestData/bingservicephonebook.xml", UriKind.Relative);
+
+                var sr1 = new StreamReader(System.Windows.Application.GetResourceStream(bmlocresx).Stream);
+                var sr2 = new StreamReader(System.Windows.Application.GetResourceStream(bsphoresx).Stream);
+                var sr3 = new StreamReader(System.Windows.Application.GetResourceStream(bmbusresx).Stream);
+
+                var locRsp = (Response)bingMapsResponseSerializer.Deserialize(sr1);
+                foreach (Location location in locRsp.ResourceSets[0].Resources)
+                {
+                    LocationDescriptionsTestValues.Add(new LocationDescription(location));
+                }
+                
+                var phoRsp = (SearchResponse)bingSearchResponseSerializer.Deserialize(sr2);
+                foreach (PhonebookResult phone in phoRsp.Phonebook.Results)
+                {
+                    LocationDescriptionsTestValues.Add(new LocationDescription(phone));
+                }
+                
+                var busRsp = (Response)bingMapsResponseSerializer.Deserialize(sr3);
+                foreach (Route route in busRsp.ResourceSets[0].Resources)
+                {
+                    TransitDescriptionsTestValues.Add(new TransitDescription(route));
+                }
+
+                sr1.Dispose();
+                sr2.Dispose();
+                sr3.Dispose();
             }
-
-            sr1.Dispose();
-
-            var sr2 = new StreamReader(System.Windows.Application.GetResourceStream(bsphoresx).Stream);
-            var phoRsp = (SearchResponse)bingSearchResponseSerializer.Deserialize(sr2);
-            foreach (PhonebookResult phone in phoRsp.Phonebook.Results)
-            {
-                LocDescs.Add(new LocationDescription(phone));
-            }
-
-            sr2.Dispose();
-
-            var sr3 = new StreamReader(System.Windows.Application.GetResourceStream(bmbusresx).Stream);
-            var busRsp = (Response)bingMapsResponseSerializer.Deserialize(sr3);
-            foreach (Route route in busRsp.ResourceSets[0].Resources)
-            {
-                BusDescs.Add(new TransitDescription(route));
-            }
-
-            sr3.Dispose();
+#endif
 
             CreateMainMapViewModel();
             CreateLocationSelectionViewModel();
@@ -85,9 +84,11 @@ namespace TransitWP7.ViewModel
             CreateSettingsViewModel();
         }
 
-        public static ObservableCollection<LocationDescription> LocDescs { get; set; }
+#if DEBUG
+        public static ObservableCollection<LocationDescription> LocationDescriptionsTestValues { get; set; }
 
-        public static ObservableCollection<TransitDescription> BusDescs { get; set; }
+        public static ObservableCollection<TransitDescription> TransitDescriptionsTestValues { get; set; }
+#endif
 
         public static MainMapViewModel MainMapViewModelStatic
         {

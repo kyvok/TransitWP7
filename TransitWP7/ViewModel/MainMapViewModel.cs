@@ -11,7 +11,7 @@ namespace TransitWP7.ViewModel
 {
     public class MainMapViewModel : ViewModelBase
     {
-        private ObservableCollection<TransitDescription> transitDescriptionCollection = new ObservableCollection<TransitDescription>();
+        private ObservableCollection<TransitDescription> _transitDescriptionCollection = new ObservableCollection<TransitDescription>();
         private string _startLocationText;
         private bool _isStartLocationStale = true;
         private string _endLocationText;
@@ -44,6 +44,17 @@ namespace TransitWP7.ViewModel
 
             this.DateTime = DateTime.Now;
             this.TimeType = TimeCondition.Now;
+
+#if DEBUG
+            if (IsInDesignModeStatic)
+            {
+                this.StartLocationText = "Example Start Location";
+                this.EndLocationText = "Example End Location";
+                this.TransitDescriptionCollection = ViewModelLocator.TransitDescriptionsTestValues;
+                this.SelectedTransitTrip = ViewModelLocator.TransitDescriptionsTestValues[0];
+                this.UserGeoCoordinate = new GeoCoordinate(47.603, -122.329);
+            }
+#endif
         }
 
         public string StartLocationText
@@ -159,12 +170,12 @@ namespace TransitWP7.ViewModel
         {
             get
             {
-                return this.transitDescriptionCollection;
+                return this._transitDescriptionCollection;
             }
 
             set
             {
-                this.transitDescriptionCollection = value;
+                this._transitDescriptionCollection = value;
             }
         }
 
