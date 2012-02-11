@@ -16,7 +16,7 @@
 
     <Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource Locator}, Path=DirectionsViewModel.TransitDescription}">
         <Grid.Resources>
-            <converters:SequentialValueConverter x:Key="VisibilityScrollConverter">
+        	<converters:SequentialValueConverter x:Key="VisibilityScrollConverter">
                 <converters:VisibilityToBooleanConverter/>
                 <converters:NegateBoolConverter/>
                 <converters:BooleanToVisibilityConverter/>
@@ -32,7 +32,7 @@
             <ItemsControl Height="73" VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
+                        <VirtualizingStackPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
