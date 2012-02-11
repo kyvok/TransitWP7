@@ -19,6 +19,7 @@ namespace TransitWP7
         private string busNumber;
         private string iconType;
         private int stepNumber;
+        private ItineraryStepType stepType;
 
         public ItineraryStep()
         {
@@ -55,6 +56,13 @@ namespace TransitWP7
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public enum ItineraryStepType
+        {
+            MiddleStep,
+            FirstStep,
+            LastStep
+        }
 
         public GeoCoordinate GeoCoordinate
         {
@@ -188,6 +196,23 @@ namespace TransitWP7
                 {
                     this.stepNumber = value;
                     this.RaisePropertyChanged("StepNumber");
+                }
+            }
+        }
+
+        public ItineraryStepType StepType
+        {
+            get
+            {
+                return this.stepType;
+            }
+
+            set
+            {
+                if (value != this.stepType)
+                {
+                    this.stepType = value;
+                    this.RaisePropertyChanged("StepType");
                 }
             }
         }

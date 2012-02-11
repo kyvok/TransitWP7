@@ -90,11 +90,16 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\NegateBoolConverter.cs" />
+    <Compile Include="Converters\SequentialValueConverter .cs" />
+    <Compile Include="Converters\StepTypeToBooleanConverter.cs" />
     <Compile Include="Converters\ItineraryStepsCollapseWalkConverter.cs" />
     <Compile Include="Converters\ItineraryStepsToImageConverter.cs" />
     <Compile Include="Converters\TimeConditionToDateTimePickerEnabledConverter.cs" />
     <Compile Include="Converters\TimeConditionToIntConverter.cs" />
     <Compile Include="Converters\TravelDurationConverter.cs" />
+    <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
     <Compile Include="ViewModel\LocationSelectionViewModel.cs" />
     <Compile Include="ViewModel\DirectionsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />

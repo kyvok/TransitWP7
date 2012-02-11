@@ -18,12 +18,14 @@ namespace TransitWP7.View
         {
             base.OnNavigatedTo(arg);
 
+            /*
             int selectedIndex;
             if (this.NavigationContext.QueryString.ContainsKey("selectedIndex")
                 && int.TryParse(this.NavigationContext.QueryString["selectedIndex"], out selectedIndex))
             {
                 this.directionsList.SelectedIndex = selectedIndex;
             }
+            */ 
         }
     }
 }

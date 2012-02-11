@@ -39,6 +39,9 @@ namespace TransitWP7
                 this.ItinerarySteps.Add(new ItineraryStep(topLeg, ++stepNumber));
             }
 
+            this.ItinerarySteps[0].StepType = ItineraryStep.ItineraryStepType.FirstStep;
+            this.ItinerarySteps[this.ItinerarySteps.Count - 1].StepType = ItineraryStep.ItineraryStepType.LastStep;
+
             this.PathPoints = new LocationCollection();
             foreach (var pathPoint in route.RoutePaths[0].Line)
             {
