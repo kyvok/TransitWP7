@@ -12,12 +12,12 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True"
-    xmlns:converters="clr-namespace:TransitWP7.Converters">
+    xmlns:converters="clr-namespace:TransitWP7.Converters"
+    x:Name="DirectionsViewPage">
 
     <Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource Locator}, Path=DirectionsViewModel.TransitDescription}">
         <Grid.Resources>
-        	<converters:SequentialValueConverter x:Key="VisibilityScrollConverter">
-                <converters:VisibilityToBooleanConverter/>
+            <converters:SequentialValueConverter x:Key="VisibilityScrollConverter">
                 <converters:NegateBoolConverter/>
                 <converters:BooleanToVisibilityConverter/>
             </converters:SequentialValueConverter>
@@ -28,7 +28,7 @@
             </converters:SequentialValueConverter>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
         </Grid.Resources>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="DirectionsListScrollViewer">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
             <ItemsControl Height="73" VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -43,7 +43,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Webdings" FontWeight="Bold" Visibility="{Binding ComputedHorizontalScrollBarVisibility, ElementName=DirectionsListScrollViewer, Converter={StaticResource VisibilityScrollConverter}}"/>
+                            <TextBlock Text="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Webdings" FontWeight="Bold" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionsViewPage, Converter={StaticResource VisibilityScrollConverter}}"/>
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="34"/>
@@ -59,7 +59,7 @@
                                         <RowDefinition Height="23"/>
                                     </Grid.RowDefinitions>
                                     <ContentControl HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Width="50" Height="50">
-                                        <Rectangle StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}" RenderTransformOrigin="0.562,0.594" Margin="0" Width="50" Height="50">
+                                        <Rectangle StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}" Margin="0" Width="50" Height="50">
                                             <Rectangle.OpacityMask>
                                                 <ImageBrush ImageSource="{Binding IconType, Converter={StaticResource ItineraryStepsToImageConverter}}"/>
                                             </Rectangle.OpacityMask>
@@ -69,7 +69,7 @@
                                 </Grid>
                                 <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Center" Height="46" Grid.Column="2"/>
                             </Grid>
-                            <TextBlock Text="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Webdings" Visibility="{Binding ComputedHorizontalScrollBarVisibility, ElementName=DirectionsListScrollViewer, Converter={StaticResource VisibilityScrollConverter}}"/>
+                            <TextBlock Text="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Webdings" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionsViewPage, Converter={StaticResource VisibilityScrollConverter}}"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
