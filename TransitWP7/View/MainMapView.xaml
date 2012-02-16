@@ -91,6 +91,7 @@
                              Foreground="{StaticResource PhoneForegroundBrush}"
                              TextChanged="EndpointInputTextChanged"
                              GotFocus="InputBox_GotFocus"
+                             LostFocus="InputBox_LostFocus"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource StartEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>
@@ -104,27 +105,27 @@
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
                            Tap="TextBlock_Tap_1"/>
                     <toolkit:AutoCompleteBox Name="endingInput"
-                             Width="350"
+                             Width="400"
                              Text="{Binding Path=EndLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
                              TextChanged="EndpointInputTextChanged"
                              GotFocus="InputBox_GotFocus"
+                             LostFocus="InputBox_LostFocus"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource EndEndpointInputAutoCompleteBoxStyle}"/>
-                    <Button Width="50" Content="&#8658;" BorderThickness="0" Padding="0" Margin="0" Click="GoButton_Click" />
                 </StackPanel>
 
                 <!-- Time selection picker -->
                 <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal">
                     <toolkit:ListPicker
-                        Width="140"
+                        Width="100"
                         Background="{StaticResource TransparentBrush}"
                         Foreground="{StaticResource PhoneForegroundBrush}"
                         SizeChanged="ListPickerSizeChanged"
                         BorderThickness="0"
-                        Margin="20,0,0,0"
+                        Margin="0,0,0,0"
                         SelectedIndex="{Binding Path=TimeType, Mode=TwoWay, Converter={StaticResource TimeConditionToIntConverter}, FallbackValue=0}">
                         <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Center" />
                         <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Center"/>
@@ -142,6 +143,12 @@
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=timePicker}"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"/>
+                    <Button Width="50"
+                            VerticalAlignment="Top"
+                            Content="&#8658;"
+                            BorderThickness="0"
+                            Padding="0" Margin="0"
+                            Click="GoButton_Click" />
                 </StackPanel>
 
             </StackPanel>
@@ -207,7 +214,7 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="{StaticResource PhoneBackgroundColor}" Opacity="{StaticResource GridOpacityValue}"  IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar.questionmark.rest.png" Text="Locate Me" Click="ApplicationBarLocateMe_Click"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar.crosshair.png" Text="Locate Me" Click="ApplicationBarLocateMe_Click"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarDirectionsList_Click"/>
                 <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarShowTransitOptions_Click"/>

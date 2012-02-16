@@ -170,11 +170,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\About\Data.xml" />
-    <Content Include="Images\appbar.overflowdots.png" />
-    <Content Include="Images\appbar.questionmark.rest.png" />
-    <Content Include="Images\bus.png" />
-    <Content Include="Images\rail.png" />
-    <Content Include="Images\walk.png" />
+    <Content Include="Images\appbar.crosshair.png" />
+    <Content Include="Images\light\bus.100x100.png" />
+    <Content Include="Images\light\ferry.100x100.png" />
+    <Content Include="Images\light\rail.100x100.png" />
+    <Content Include="Images\light\taxi.100x100.png" />
+    <Content Include="Images\light\train.100x100.png" />
+    <Content Include="Images\light\walk.100x100.png" />
     <Content Include="TestData\bingmapslocations.xml" />
     <Content Include="TestData\bingservicephonebook.xml" />
     <Content Include="TestData\bingmapstransit.xml" />

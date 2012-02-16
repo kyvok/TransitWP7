@@ -11,7 +11,7 @@ namespace TransitWP7
 
         private GeoLocation()
         {
-            this.highGeowatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 20 };
+            this.highGeowatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) { MovementThreshold = 20 };
             this.highGeowatcher.Start();
         }
 

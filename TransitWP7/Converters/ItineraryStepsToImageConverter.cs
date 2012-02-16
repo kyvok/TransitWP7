@@ -25,11 +25,11 @@ namespace TransitWP7.Converters
                 switch (iconType[0])
                 {
                     case 'W':
-                        return new Uri("/images/walk.png", UriKind.Relative);
+                        return new Uri("/images/light/walk.100x100.png", UriKind.Relative);
                     case 'B':
-                        return new Uri("/images/bus.png", UriKind.Relative);
+                        return new Uri("/images/light/bus.100x100.png", UriKind.Relative);
                     case 'T':
-                        return new Uri("/images/rail.png", UriKind.Relative);
+                        return new Uri("/images/light/rail.100x100.png", UriKind.Relative);
                     case 'M':
                         break;
                     default:

@@ -79,7 +79,7 @@
 
         <Style TargetType="toolkit:AutoCompleteBox" x:Key="StartEndpointInputAutoCompleteBoxStyle">
             <Setter Property="InputScope" Value="Maps"/>
-            <Setter Property="MinimumPrefixLength" Value="2" />
+            <Setter Property="MinimumPrefixLength" Value="1" />
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="{StaticResource UnderliningBorderBrush}"/>
             <Setter Property="TextBoxStyle">

@@ -101,6 +101,7 @@ namespace TransitWP7.View
         private void InputBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var inputBox = sender as AutoCompleteBox;
+            inputBox.MinimumPrefixLength = 1;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
             inputBox.BorderBrush = Application.Current.Resources["UnderliningBorderBrush"] as Brush;
 
@@ -116,6 +117,12 @@ namespace TransitWP7.View
                     break;
                 }
             }
+        }
+
+        private void InputBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var inputBox = sender as AutoCompleteBox;
+            inputBox.MinimumPrefixLength = -1;
         }
 
         private void TextBlock_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
