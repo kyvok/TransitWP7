@@ -90,6 +90,8 @@ namespace TransitWP7
                 // A navigation has failed; break into the debugger
                 System.Diagnostics.Debugger.Break();
             }
+
+            LittleWatson.ReportException(e.Exception, "Unhandled Navigation Exception in TransitWP7. Navigation URI: " + e.Uri.ToString());
         }
 
         // Code to execute on Unhandled Exceptions
@@ -100,16 +102,8 @@ namespace TransitWP7
                 // An unhandled exception has occurred; break into the debugger
                 System.Diagnostics.Debugger.Break();
             }
-            else
-            {
-                // handle the exception
-                e.Handled = true;
 
-                // Navigate to the error page
-                PhoneApplicationService.Current.State["exception"] = e.ExceptionObject.ToString();
-                DispatcherHelper.UIDispatcher.BeginInvoke(
-                    () => this.RootFrame.Navigate(new Uri(PhonePageUri.ExceptionView, UriKind.Relative)));
-            }
+            LittleWatson.ReportException(e.ExceptionObject, "Unhandled Exception Error in TransitWP7");
         }
 
         #region Phone application initialization

@@ -18,7 +18,6 @@
     public static class PhonePageUri
     {
         public const string DirectionsView = "/View/DirectionsView.xaml";
-        public const string ExceptionView = "/View/ExceptionView.xaml";
         public const string LocationSelectionView = "/View/LocationSelectionView.xaml";
         public const string MainMapView = "/View/MainMapView.xaml";
         public const string SettingsView = "/View/SettingsView.xaml";

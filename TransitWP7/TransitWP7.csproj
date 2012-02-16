@@ -100,15 +100,13 @@
     <Compile Include="Converters\TimeConditionToIntConverter.cs" />
     <Compile Include="Converters\TravelDurationConverter.cs" />
     <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
+    <Compile Include="LittleWatson.cs" />
     <Compile Include="ViewModel\LocationSelectionViewModel.cs" />
     <Compile Include="ViewModel\DirectionsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\DirectionsView.xaml.cs">
       <DependentUpon>DirectionsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ExceptionView.xaml.cs">
-      <DependentUpon>ExceptionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="View\MainMapView.xaml.cs">
@@ -136,10 +134,6 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Page Include="View\DirectionsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\ExceptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

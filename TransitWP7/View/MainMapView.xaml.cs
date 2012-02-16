@@ -30,6 +30,8 @@ namespace TransitWP7.View
             this.endingInput.ItemsSource = new ObservableCollection<string>() { "My Location" };
 
             this.RegisterNotifications();
+
+            LittleWatson.CheckForPreviousException();
         }
 
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
@@ -213,7 +215,6 @@ namespace TransitWP7.View
 
         private void GoButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Focus();
             this._viewModel.TryResolveEndpoints();
         }
 
