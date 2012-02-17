@@ -16,7 +16,7 @@ namespace TransitWP7.ViewModel
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () =>
                     {
-                        this._transitDescription = notificationMessage.Content;
+                        this.TransitDescription = notificationMessage.Content;
                     }));
 
 #if DEBUG

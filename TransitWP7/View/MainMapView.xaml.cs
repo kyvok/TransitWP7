@@ -44,7 +44,8 @@ namespace TransitWP7.View
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
-            if (this.topGrid.Visibility == Visibility.Collapsed && this.bottomGrid.Visibility == Visibility.Collapsed)
+            // the initial state of the application
+            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Collapsed)
             {
                 base.OnBackKeyPress(e);
                 return;
@@ -52,22 +53,23 @@ namespace TransitWP7.View
 
             e.Cancel = true;
 
+            // directions list has been displayed
             if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Visible)
             {
+                this._viewModel.TransitDescriptionCollection.Clear();
                 this.topGrid.Visibility = Visibility.Visible;
                 this.bottomGrid.Visibility = Visibility.Collapsed;
+
+                return;
             }
 
-            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Collapsed)
+            // route has been selected
+            if (this.topGrid.Visibility == Visibility.Collapsed && this.bottomGrid.Visibility == Visibility.Collapsed)
             {
-                this.topGrid.Visibility = Visibility.Collapsed;
-                this.bottomGrid.Visibility = Visibility.Collapsed;
-            }
-
-            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Visible)
-            {
-                this.topGrid.Visibility = Visibility.Collapsed;
-                this.bottomGrid.Visibility = Visibility.Collapsed;
+                this.topGrid.Visibility = Visibility.Visible;
+                this.bottomGrid.Visibility = Visibility.Visible;
+                this.directionsGrid.Height = 0;
+                return;
             }
         }
 
@@ -106,6 +108,7 @@ namespace TransitWP7.View
 
         private void ShowTransitTripsList()
         {
+            this.directionsGrid.Height = 0;
             this.topGrid.Visibility = Visibility.Visible;
             this.TransitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
             this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32 - 72;
@@ -182,6 +185,7 @@ namespace TransitWP7.View
         {
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Collapsed;
+            this.directionsGrid.Height = double.NaN;
 
             this._viewModel.SelectedTransitTrip = this.TransitTripsList.SelectedIndex >= 0
                 ? this._viewModel.TransitDescriptionCollection[this.TransitTripsList.SelectedIndex]
@@ -203,11 +207,6 @@ namespace TransitWP7.View
         {
             var pushpin = sender as Pushpin;
             NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView, (int)pushpin.Content + 1), UriKind.Relative));
-        }
-
-        private void ApplicationBarDirectionsList_Click(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
         }
 
         private void ApplicationBarShowTransitOptions_Click(object sender, EventArgs e)
@@ -232,11 +231,6 @@ namespace TransitWP7.View
         {
             var listPicker = sender as ListPicker;
             listPicker.Background = new SolidColorBrush(Colors.Transparent);
-        }
-
-        private void TransitTripsList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            this.TransitTripsList_SelectionChanged(this, null);
         }
 
         private void ApplicationBarSettings_Click(object sender, EventArgs e)
