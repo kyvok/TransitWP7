@@ -26,8 +26,8 @@ namespace TransitWP7.View
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
-            this.startingInput.ItemsSource = new ObservableCollection<string>() { "My Location" };
-            this.endingInput.ItemsSource = new ObservableCollection<string>() { "My Location" };
+            this.startingInput.ItemsSource = new ObservableCollection<string>() { "My location" };
+            this.endingInput.ItemsSource = new ObservableCollection<string>() { "My location" };
 
             this.RegisterNotifications();
 
@@ -40,6 +40,35 @@ namespace TransitWP7.View
 
             // reset the progressbar
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+        }
+
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            if (this.topGrid.Visibility == Visibility.Collapsed && this.bottomGrid.Visibility == Visibility.Collapsed)
+            {
+                base.OnBackKeyPress(e);
+                return;
+            }
+
+            e.Cancel = true;
+
+            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Visible)
+            {
+                this.topGrid.Visibility = Visibility.Visible;
+                this.bottomGrid.Visibility = Visibility.Collapsed;
+            }
+
+            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Collapsed)
+            {
+                this.topGrid.Visibility = Visibility.Collapsed;
+                this.bottomGrid.Visibility = Visibility.Collapsed;
+            }
+
+            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Visible)
+            {
+                this.topGrid.Visibility = Visibility.Collapsed;
+                this.bottomGrid.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void RegisterNotifications()
@@ -183,9 +212,9 @@ namespace TransitWP7.View
 
         private void ApplicationBarClearMap_Click(object sender, EventArgs e)
         {
+            this._viewModel.StartOver();
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Visible;
-            this._viewModel.StartOver();
             this.endingInput.Focus();
         }
 
