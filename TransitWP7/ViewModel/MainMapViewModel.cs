@@ -22,6 +22,7 @@ namespace TransitWP7.ViewModel
         private DateTime _dateTime;
         private TimeCondition _timeType;
         private GeoCoordinate _userGeoCoordinate;
+        private GeoCoordinate _centerMapGeoCoordinate;
 
         public MainMapViewModel()
         {
@@ -162,6 +163,23 @@ namespace TransitWP7.ViewModel
                 {
                     this._userGeoCoordinate = value;
                     this.RaisePropertyChanged("UserGeoCoordinate");
+                }
+            }
+        }
+
+        public GeoCoordinate CenterMapGeoCoordinate
+        {
+            get
+            {
+                return this._centerMapGeoCoordinate;
+            }
+
+            set
+            {
+                if (value != this._centerMapGeoCoordinate)
+                {
+                    this._centerMapGeoCoordinate = value;
+                    this.RaisePropertyChanged("CenterMapGeoCoordinate");
                 }
             }
         }

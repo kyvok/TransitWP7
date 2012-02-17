@@ -131,6 +131,7 @@ namespace TransitWP7.View
 
         private void InputBox_GotFocus(object sender, RoutedEventArgs e)
         {
+            this.ApplicationBar.IsVisible = false;
             var inputBox = sender as AutoCompleteBox;
             inputBox.MinimumPrefixLength = 1;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
@@ -152,6 +153,7 @@ namespace TransitWP7.View
 
         private void InputBox_LostFocus(object sender, RoutedEventArgs e)
         {
+            this.ApplicationBar.IsVisible = true;
             var inputBox = sender as AutoCompleteBox;
             inputBox.MinimumPrefixLength = -1;
         }
@@ -250,6 +252,11 @@ namespace TransitWP7.View
         private void ApplicationBarAbout_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/YourLastAboutDialog;component/AboutPage.xaml", UriKind.Relative));
+        }
+
+        private void MainMap_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
+        {
+            this._viewModel.CenterMapGeoCoordinate = this.mainMap.Center;
         }
     }
 }

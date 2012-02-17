@@ -33,7 +33,8 @@
             <converters:TimeConditionToIntConverter x:Key="TimeConditionToIntConverter"/>
         </Grid.Resources>
 
-        <maps:Map Name="mainMap" ScaleVisibility="Visible">
+        <maps:Map Name="mainMap" ScaleVisibility="Visible"
+                  ManipulationCompleted="MainMap_ManipulationCompleted">
             <maps:MapLayer>
                 <maps:MapPolyline StrokeLineJoin="Round"
                                 Stroke="MediumBlue"
