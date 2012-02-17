@@ -27,7 +27,7 @@
             </converters:SequentialValueConverter>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
         </Grid.Resources>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
+        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
             <ItemsControl Height="73" VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
