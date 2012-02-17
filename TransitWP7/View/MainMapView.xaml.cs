@@ -44,7 +44,8 @@ namespace TransitWP7.View
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
-            if (this.topGrid.Visibility == Visibility.Collapsed && this.bottomGrid.Visibility == Visibility.Collapsed)
+            // the initial state of the application
+            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Collapsed)
             {
                 base.OnBackKeyPress(e);
                 return;
@@ -52,22 +53,23 @@ namespace TransitWP7.View
 
             e.Cancel = true;
 
+            // directions list has been displayed
             if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Visible)
             {
+                this._viewModel.TransitDescriptionCollection.Clear();
                 this.topGrid.Visibility = Visibility.Visible;
                 this.bottomGrid.Visibility = Visibility.Collapsed;
+
+                return;
             }
 
-            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Collapsed)
+            // route has been selected
+            if (this.topGrid.Visibility == Visibility.Collapsed && this.bottomGrid.Visibility == Visibility.Collapsed)
             {
-                this.topGrid.Visibility = Visibility.Collapsed;
-                this.bottomGrid.Visibility = Visibility.Collapsed;
-            }
-
-            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Visible)
-            {
-                this.topGrid.Visibility = Visibility.Collapsed;
-                this.bottomGrid.Visibility = Visibility.Collapsed;
+                this.topGrid.Visibility = Visibility.Visible;
+                this.bottomGrid.Visibility = Visibility.Visible;
+                this.directionsGrid.Height = 0;
+                return;
             }
         }
 
