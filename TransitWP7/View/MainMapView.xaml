@@ -16,7 +16,8 @@
     shell:SystemTray.BackgroundColor="{StaticResource PhoneBackgroundColor}"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
-    xmlns:converters="clr-namespace:TransitWP7.Converters">
+    xmlns:converters="clr-namespace:TransitWP7.Converters"
+    xmlns:view="clr-namespace:TransitWP7.View">
 
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsVisible="False" IsIndeterminate="False" Text="" />
@@ -74,6 +75,10 @@
                           Style="{StaticResource CurrentLocationPushpinStyle}" />
         </maps:Map>
 
+        <Grid Name="directionsGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top" Height="0">
+            <view:DirectionsView/>
+        </Grid>
+        
         <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top">
             <StackPanel>
                 <!-- Start section -->
@@ -160,7 +165,6 @@
                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                          VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                          SelectionChanged="TransitTripsList_SelectionChanged"
-                         Tap="TransitTripsList_Tap"
                          ItemsSource="{Binding Path=TransitDescriptionCollection}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -216,7 +220,6 @@
         <shell:ApplicationBar BackgroundColor="{StaticResource PhoneBackgroundColor}" Opacity="{StaticResource GridOpacityValue}"  IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.crosshair.png" Text="Locate Me" Click="ApplicationBarLocateMe_Click"/>
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarDirectionsList_Click"/>
                 <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarShowTransitOptions_Click"/>
                 <shell:ApplicationBarMenuItem Text="clear map" Click="ApplicationBarClearMap_Click"/>
                 <shell:ApplicationBarMenuItem Text="settings" Click="ApplicationBarSettings_Click" />
