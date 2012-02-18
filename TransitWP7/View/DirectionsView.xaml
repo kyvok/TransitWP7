@@ -29,10 +29,10 @@
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
         </Grid.Resources>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
-            <ItemsControl Height="73" VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">
+            <ItemsControl VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <VirtualizingStackPanel Orientation="Horizontal"/>
+                        <VirtualizingStackPanel Orientation="Vertical"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

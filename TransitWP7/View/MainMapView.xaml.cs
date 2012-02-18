@@ -56,7 +56,6 @@ namespace TransitWP7.View
             // directions list has been displayed
             if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Visible)
             {
-                this._viewModel.TransitDescriptionCollection.Clear();
                 this.topGrid.Visibility = Visibility.Visible;
                 this.bottomGrid.Visibility = Visibility.Collapsed;
 
