@@ -105,10 +105,13 @@
     <Compile Include="ViewModel\DirectionsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\DirectionStepView.xaml.cs">
+      <DependentUpon>DirectionStepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Globals.cs" />
     <Compile Include="View\DirectionsView.xaml.cs">
       <DependentUpon>DirectionsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Globals.cs" />
     <Compile Include="View\MainMapView.xaml.cs">
       <DependentUpon>MainMapView.xaml</DependentUpon>
     </Compile>
@@ -133,9 +136,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="View\DirectionsView.xaml">
+    <Page Include="View\DirectionStepView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\DirectionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\MainMapView.xaml">
       <SubType>Designer</SubType>

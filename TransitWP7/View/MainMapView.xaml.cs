@@ -173,6 +173,11 @@ namespace TransitWP7.View
             // TODO: if not location enabled, ask permission
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 16);
         }
+ 
+        private void ApplicationBarDirectionsList_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
+        }
 
         private void SetProgressBarState(string message, bool state)
         {

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 using Microsoft.Phone.Controls;
@@ -9,13 +10,13 @@ using TransitWP7.ViewModel;
 
 namespace TransitWP7.View
 {
-    public partial class DirectionsView : PhoneApplicationPage, INotifyPropertyChanged
+    public partial class DirectionStepView : UserControl, INotifyPropertyChanged
     {
         private readonly DirectionsViewModel _viewModel;
         private bool alreadyHookedScrollEvents = false;
         private bool _isScrollBarScrolling;
 
-        public DirectionsView()
+        public DirectionStepView()
         {
             this.InitializeComponent();
             this._viewModel = ViewModelLocator.DirectionsViewModelStatic;
@@ -68,20 +69,6 @@ namespace TransitWP7.View
                     scrollStateGroup.CurrentStateChanging += (s, args) => { this.IsScrollBarScrolling = args.NewState.Name == "Scrolling"; };
                 }
             }
-        }
-
-        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs arg)
-        {
-            base.OnNavigatedTo(arg);
-
-            /*
-            int selectedIndex;
-            if (this.NavigationContext.QueryString.ContainsKey("selectedIndex")
-                && int.TryParse(this.NavigationContext.QueryString["selectedIndex"], out selectedIndex))
-            {
-                this.directionsList.SelectedIndex = selectedIndex;
-            }
-            */
         }
 
         private void RaisePropertyChanged(string propertyName)

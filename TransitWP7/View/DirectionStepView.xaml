@@ -1,5 +1,5 @@
-﻿<phone:PhoneApplicationPage 
-    x:Class="TransitWP7.View.DirectionsView"
+﻿<UserControl 
+    x:Class="TransitWP7.View.DirectionStepView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -9,11 +9,10 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True"
     xmlns:converters="clr-namespace:TransitWP7.Converters"
-    x:Name="DirectionsViewPage">
+    x:Name="DirectionStepViewControl">
 
     <Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource Locator}, Path=DirectionsViewModel.TransitDescription}">
         <Grid.Resources>
@@ -28,7 +27,7 @@
             </converters:SequentialValueConverter>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
         </Grid.Resources>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
+        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
             <ItemsControl Height="73" VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -43,7 +42,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Webdings" FontWeight="Bold" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionsViewPage, Converter={StaticResource VisibilityScrollConverter}}"/>
+                            <TextBlock Text="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Webdings" FontWeight="Bold" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionsViewControl, Converter={StaticResource VisibilityScrollConverter}}"/>
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="34"/>
@@ -69,7 +68,7 @@
                                 </Grid>
                                 <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Center" Height="46" Grid.Column="2"/>
                             </Grid>
-                            <TextBlock Text="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Webdings" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionsViewPage, Converter={StaticResource VisibilityScrollConverter}}"/>
+                            <TextBlock Text="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Webdings" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionsViewControl, Converter={StaticResource VisibilityScrollConverter}}"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -77,4 +76,4 @@
         </ScrollViewer>
     </Grid>
 
-</phone:PhoneApplicationPage>
+</UserControl>
