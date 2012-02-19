@@ -79,17 +79,28 @@
         <Grid Name="directionsGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top" Height="0">
             <view:DirectionStepView/>
         </Grid>
-        
-        <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top">
-            <StackPanel>
-                <!-- Start section -->
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="80" Padding="0,20,0,0"
+
+        <Canvas>
+            <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top">
+                <Grid.Resources>
+                    <Storyboard x:Name="outofview" Storyboard.TargetName="topGrid" Storyboard.TargetProperty="(Canvas.Top)" >
+                        <DoubleAnimation Duration="00:00:01.5" To="-400">
+                            <DoubleAnimation.EasingFunction>
+                                <BackEase EasingMode="EaseInOut" Amplitude="0.3" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </Grid.Resources>
+
+                <StackPanel>
+                    <!-- Start section -->
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="80" Padding="0,20,0,0"
                                Text="Start" TextAlignment="Right"
                                FontWeight="Bold"
                                HorizontalAlignment="Left" VerticalAlignment="Stretch"
                                Tap="TextBlock_Tap_1"/>
-                    <toolkit:AutoCompleteBox Name="startingInput"
+                        <toolkit:AutoCompleteBox Name="startingInput"
                              Width="400"
                              Text="{Binding Path=StartLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
                              VerticalAlignment="Center"
@@ -100,17 +111,17 @@
                              LostFocus="InputBox_LostFocus"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource StartEndpointInputAutoCompleteBoxStyle}"/>
-                </StackPanel>
-                <!-- End section -->
-                <StackPanel Orientation="Horizontal">
-                    <!-- Maps application uses #8593 for up arrow. (or similar) -->
-                    <!-- We consider using #8645 for up arrow. -->
-                    <TextBlock Width="80" Padding="0,20,0,0"
+                    </StackPanel>
+                    <!-- End section -->
+                    <StackPanel Orientation="Horizontal">
+                        <!-- Maps application uses #8593 for up arrow. (or similar) -->
+                        <!-- We consider using #8645 for up arrow. -->
+                        <TextBlock Width="80" Padding="0,20,0,0"
                            Text="&#8645; End" TextAlignment="Right"
                            FontWeight="Bold"
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
                            Tap="TextBlock_Tap_1"/>
-                    <toolkit:AutoCompleteBox Name="endingInput"
+                        <toolkit:AutoCompleteBox Name="endingInput"
                              Width="400"
                              Text="{Binding Path=EndLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
                              VerticalAlignment="Center"
@@ -121,11 +132,11 @@
                              LostFocus="InputBox_LostFocus"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource EndEndpointInputAutoCompleteBoxStyle}"/>
-                </StackPanel>
+                    </StackPanel>
 
-                <!-- Time selection picker -->
-                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal">
-                    <toolkit:ListPicker
+                    <!-- Time selection picker -->
+                    <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal">
+                        <toolkit:ListPicker
                         Width="100"
                         Background="{StaticResource TransparentBrush}"
                         Foreground="{StaticResource PhoneForegroundBrush}"
@@ -133,87 +144,88 @@
                         BorderThickness="0"
                         Margin="0,0,0,0"
                         SelectedIndex="{Binding Path=TimeType, Mode=TwoWay, Converter={StaticResource TimeConditionToIntConverter}, FallbackValue=0}">
-                        <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Center" />
-                        <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Center"/>
-                        <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Center"/>
-                        <toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Center" />
-                    </toolkit:ListPicker>
-                    <toolkit:DatePicker Name="datePicker"
+                            <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Center" />
+                            <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Center"/>
+                            <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Center"/>
+                            <toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Center" />
+                        </toolkit:ListPicker>
+                        <toolkit:DatePicker Name="datePicker"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=datePicker}"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"
                                         ValueStringFormat="{}{0:m}"/>
-                    <toolkit:TimePicker Name="timePicker"
+                        <toolkit:TimePicker Name="timePicker"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=timePicker}"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"/>
-                    <Button Width="50"
+                        <Button Width="50"
                             VerticalAlignment="Top"
                             Content="&#8658;"
                             BorderThickness="0"
                             Padding="0" Margin="0"
                             Click="GoButton_Click" />
+                    </StackPanel>
+
                 </StackPanel>
 
-            </StackPanel>
+            </Grid>
 
-        </Grid>
-
-        <Grid Name="bottomGrid" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Bottom" Margin="0,0,0,72" Visibility="Collapsed">
-            <ListBox Name="TransitTripsList" Margin="6,6,0,0" Width="444"
+            <Grid Name="bottomGrid" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Bottom" Margin="0,0,0,72" Visibility="Collapsed">
+                <ListBox Name="TransitTripsList" Margin="6,6,0,0" Width="444"
                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                          VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                          SelectionChanged="TransitTripsList_SelectionChanged"
                          ItemsSource="{Binding Path=TransitDescriptionCollection}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0">
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="75" FontWeight="ExtraBold" Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"/>
-                                <Line VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="50" Y1="0" Y2="0" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" />
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Text="MINUTES" />
-                                <TextBlock FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0">
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="75" FontWeight="ExtraBold" Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"/>
+                                    <Line VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="50" Y1="0" Y2="0" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Text="MINUTES" />
+                                    <TextBlock FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <TextBlock.Inlines>
                                             <Run Text="{Binding DepartureTime}"/>
                                             <Run Text="  -  "/>
                                             <Run Text="{Binding ArrivalTime}"/>
                                         </TextBlock.Inlines>
-                                </TextBlock>
-                            </StackPanel>
-                            <Line Margin="5,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="50" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" Grid.Column="1"/>
-                            <ItemsControl ItemsSource="{Binding Path=ItinerarySteps, Converter={StaticResource ItineraryStepsCollapseWalkConverter}}" Margin="0,4,0,0" Grid.Column="2" VerticalAlignment="Center">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <ContentControl Height="32" Width="32" VerticalAlignment="Center" Margin="15 0 0 0">
-                                                <Rectangle Height="32" Width="32" StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">
-                                                    <Rectangle.OpacityMask>
-                                                        <ImageBrush ImageSource="{Binding IconType, Converter={StaticResource ItineraryStepsToImageConverter}}"/>
-                                                    </Rectangle.OpacityMask>
-                                                </Rectangle>
-                                            </ContentControl>
-                                            <TextBlock Text="{Binding BusNumber}" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Grid>
+                                    </TextBlock>
+                                </StackPanel>
+                                <Line Margin="5,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="50" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" Grid.Column="1"/>
+                                <ItemsControl ItemsSource="{Binding Path=ItinerarySteps, Converter={StaticResource ItineraryStepsCollapseWalkConverter}}" Margin="0,4,0,0" Grid.Column="2" VerticalAlignment="Center">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <ContentControl Height="32" Width="32" VerticalAlignment="Center" Margin="15 0 0 0">
+                                                    <Rectangle Height="32" Width="32" StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">
+                                                        <Rectangle.OpacityMask>
+                                                            <ImageBrush ImageSource="{Binding IconType, Converter={StaticResource ItineraryStepsToImageConverter}}"/>
+                                                        </Rectangle.OpacityMask>
+                                                    </Rectangle>
+                                                </ContentControl>
+                                                <TextBlock Text="{Binding BusNumber}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Canvas>
 
     </Grid>
 
