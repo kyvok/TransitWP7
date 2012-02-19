@@ -26,8 +26,8 @@ namespace TransitWP7.View
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
-            this.startingInput.ItemsSource = new ObservableCollection<string>() { "My location" };
-            this.endingInput.ItemsSource = new ObservableCollection<string>() { "My location" };
+            this.startingInput.ItemsSource = new ObservableCollection<string> { Globals.MyCurrentLocationText };
+            this.endingInput.ItemsSource = new ObservableCollection<string> { Globals.MyCurrentLocationText };
 
             this.RegisterNotifications();
 
@@ -223,6 +223,7 @@ namespace TransitWP7.View
             this._viewModel.StartOver();
             this.bottomGrid.Visibility = Visibility.Collapsed;
             this.topGrid.Visibility = Visibility.Visible;
+            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 10);
             this.endingInput.Focus();
         }
 
