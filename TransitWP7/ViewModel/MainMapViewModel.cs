@@ -150,6 +150,40 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public LocationDescription SelectedStartLocation
+        {
+            get
+            {
+                return this._selectedStartLocation;
+            }
+
+            set
+            {
+                if (value != this._selectedStartLocation)
+                {
+                    this._selectedStartLocation = value;
+                    this.RaisePropertyChanged("SelectedStartLocation");
+                }
+            }
+        }
+
+        public LocationDescription SelectedEndLocation
+        {
+            get
+            {
+                return this._selectedEndLocation;
+            }
+
+            set
+            {
+                if (value != this._selectedEndLocation)
+                {
+                    this._selectedEndLocation = value;
+                    this.RaisePropertyChanged("SelectedEndLocation");
+                }
+            }
+        }
+
         public GeoCoordinate UserGeoCoordinate
         {
             get
@@ -276,8 +310,8 @@ namespace TransitWP7.ViewModel
         {
             this.StartLocationText = Globals.MyCurrentLocationText;
             this.EndLocationText = string.Empty;
-            this._selectedStartLocation = null;
-            this._selectedEndLocation = null;
+            this.SelectedStartLocation = null;
+            this.SelectedEndLocation = null;
             this.SelectedTransitTrip = null;
             this.TimeType = TimeCondition.Now;
             this.DateTime = DateTime.Now;
@@ -324,13 +358,13 @@ namespace TransitWP7.ViewModel
                         {
                             this.StartLocationText = location.DisplayName;
                             this._isStartLocationStale = false;
-                            this._selectedStartLocation = location;
+                            this.SelectedStartLocation = location;
                         }
                         else
                         {
                             this.EndLocationText = location.DisplayName;
                             this._isEndLocationStale = false;
-                            this._selectedEndLocation = location;
+                            this.SelectedEndLocation = location;
                         }
 
                         TryResolveEndpoints();

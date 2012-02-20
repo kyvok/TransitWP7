@@ -32,6 +32,7 @@
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
             <converters:TimeConditionToDateTimePickerEnabledConverter x:Key="TimeConditionToDateTimePickerEnabledConverter"/>
             <converters:TimeConditionToIntConverter x:Key="TimeConditionToIntConverter"/>
+            <converters:NullValueToVisibilityConverter x:Key="NullValueToVisibilityConverter" />
         </Grid.Resources>
 
         <maps:Map Name="mainMap" ScaleVisibility="Visible"
@@ -57,18 +58,19 @@
                         </DataTemplate>
                     </maps:MapItemsControl.ItemTemplate>
                 </maps:MapItemsControl>
-                <!-- Adding start and end location, experimental
-                <maps:Pushpin Location="{Binding Path=SelectedTransitTrip.PathPoints[0]}"
+                <!-- TODO add the tap back -->
+                <maps:Pushpin Location="{Binding Path=SelectedStartLocation.GeoCoordinate}"
+                              Visibility="{Binding Path=SelectedStartLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="A"
                               Style="{StaticResource TransitEndpointPushpinStyle}"
                               PositionOrigin="Center"
-                              Tap="Pushpin_Tap"/>
-                <maps:Pushpin Location="{Binding Path=SelectedTransitTrip.PathPoints[0]}"
+                              />
+                <maps:Pushpin Location="{Binding Path=SelectedEndLocation.GeoCoordinate}"
+                              Visibility="{Binding Path=SelectedEndLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="B"
                               Style="{StaticResource TransitEndpointPushpinStyle}"
                               PositionOrigin="Center"
-                              Tap="Pushpin_Tap"/>
--->
+                              />
             </maps:MapLayer>
             <maps:Pushpin Name="meIndicator"
                           Location="{Binding Path=UserGeoCoordinate}"
@@ -80,13 +82,34 @@
             <view:DirectionStepView/>
         </Grid>
 
-        <Canvas>
+        <!--<Canvas>-->
             <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top">
                 <Grid.Resources>
-                    <Storyboard x:Name="hidePanel" Storyboard.TargetName="topGrid" Storyboard.TargetProperty="(Canvas.Top)" >
+                    <Storyboard x:Name="hideTopGrid" Storyboard.TargetName="topGrid" Storyboard.TargetProperty="(Canvas.Top)" >
                         <DoubleAnimation Duration="00:00:01.5" To="-400">
                             <DoubleAnimation.EasingFunction>
                                 <QuadraticEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                    <Storyboard x:Name="showTopGrid" Storyboard.TargetName="topGrid" Storyboard.TargetProperty="(Canvas.Top)" >
+                        <DoubleAnimation Duration="00:00:01.5" To="32">
+                            <DoubleAnimation.EasingFunction>
+                                <BounceEase Bounces="3" Bounciness="0.2" EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                    <Storyboard x:Name="hideBottomGrid" Storyboard.TargetName="topGrid" Storyboard.TargetProperty="(Canvas.Top)" >
+                        <DoubleAnimation Duration="00:00:01.5" To="1000">
+                            <DoubleAnimation.EasingFunction>
+                                <QuadraticEase EasingMode="EaseIn" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                    <Storyboard x:Name="showBottomGrid" Storyboard.TargetName="topGrid" Storyboard.TargetProperty="(Canvas.Top)" >
+                        <DoubleAnimation Duration="00:00:01.5" To="{Binding ElementName=topGrid, Path=ActualHeight}">
+                            <DoubleAnimation.EasingFunction>
+                                <BounceEase Bounces="3" Bounciness="0.2" EasingMode="EaseIn" />
                             </DoubleAnimation.EasingFunction>
                         </DoubleAnimation>
                     </Storyboard>
@@ -225,7 +248,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
-        </Canvas>
+        <!--</Canvas>-->
 
     </Grid>
 
