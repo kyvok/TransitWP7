@@ -92,10 +92,10 @@ namespace TransitWP7
 
                     // TODO: probably remove this out.
                     // ignore values farther than 80 miles. (same as phonebook API)
-                    if (locationDescription.GeoCoordinate.GetDistanceTo(queryState.UserLocation) / 1600 > 80)
-                    {
-                        continue;
-                    }
+                    ////if (locationDescription.GeoCoordinate.GetDistanceTo(queryState.UserLocation) / 1600 > 80)
+                    ////{
+                    ////    continue;
+                    ////}
 
                     if (queryState.LocationDescriptions == null)
                     {
