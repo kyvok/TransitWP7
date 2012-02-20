@@ -94,7 +94,8 @@
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style TargetType="ListBoxItem">
-                        <Setter Property="Foreground" Value="{StaticResource PhoneContrastForegroundBrush}"/>
+                        <Setter Property="Background" Value="White"/> 
+                        <Setter Property="Foreground" Value="Black"/>
                     </Style>
                 </Setter.Value>
             </Setter>
