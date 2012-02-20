@@ -238,6 +238,12 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public void DoServiceChecks()
+        {
+            CheckNetwork();
+            CheckLocationService(this._geoCoordinateWatcher.Status);
+        }
+
         public override void Cleanup()
         {
             if (this._geoCoordinateWatcher != null)
@@ -347,11 +353,30 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
         }
 
-        private void DeviceNetworkInformation_NetworkAvailabilityChanged(object sender, NetworkNotificationEventArgs e)
+        private static void CheckNetwork()
         {
             if (!DeviceNetworkInformation.IsNetworkAvailable)
             {
                 ProcessErrorMessage("No network is available. Internet connection is required for calculating new transits.");
+            }
+        }
+
+        private static void CheckLocationService(GeoPositionStatus status)
+        {
+            switch (status)
+            {
+                case GeoPositionStatus.Disabled:
+                    ProcessErrorMessage("Location service is disabled. Some features won't work well.");
+                    break;
+                case GeoPositionStatus.NoData:
+                case GeoPositionStatus.Initializing:
+                    Messenger.Default.Send(new NotificationMessage<bool>(true, "Acquiring your current location..."), MessengerToken.MainMapProgressIndicator);
+                    break;
+                case GeoPositionStatus.Ready:
+                    Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -420,7 +445,11 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
         }
 
-        // Event handler for the GeoCoordinateWatcher.PositionChanged event.
+        private void DeviceNetworkInformation_NetworkAvailabilityChanged(object sender, NetworkNotificationEventArgs e)
+        {
+            CheckNetwork();
+        }
+
         private void GeoCoordinateWatcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             this.UserGeoCoordinate = e.Position.Location;
@@ -428,21 +457,7 @@ namespace TransitWP7.ViewModel
 
         private void GeoCoordinateWatcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
         {
-            switch (e.Status)
-            {
-                case GeoPositionStatus.NoData:
-                case GeoPositionStatus.Disabled:
-                    ProcessErrorMessage("Location service is not enabled for this application. Some features won't work well.");
-                    break;
-                case GeoPositionStatus.Initializing:
-                    Messenger.Default.Send(new NotificationMessage<bool>(true, "Acquiring your current location..."), MessengerToken.MainMapProgressIndicator);
-                    break;
-                case GeoPositionStatus.Ready:
-                    Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
-                    break;
-                default:
-                    break;
-            }
+            CheckLocationService(e.Status);
         }
     }
 }

@@ -31,6 +31,8 @@ namespace TransitWP7.View
 
             this.RegisterNotifications();
 
+            this._viewModel.DoServiceChecks();
+
             LittleWatson.CheckForPreviousException();
         }
 
