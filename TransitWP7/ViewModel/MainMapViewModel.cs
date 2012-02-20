@@ -6,11 +6,13 @@ using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
+using Microsoft.Phone.Net.NetworkInformation;
 
 namespace TransitWP7.ViewModel
 {
     public class MainMapViewModel : ViewModelBase
     {
+        private readonly GeoCoordinateWatcher _geoCoordinateWatcher;
         private ObservableCollection<TransitDescription> _transitDescriptionCollection = new ObservableCollection<TransitDescription>();
         private string _startLocationText;
         private bool _isStartLocationStale = true;
@@ -26,7 +28,10 @@ namespace TransitWP7.ViewModel
 
         public MainMapViewModel()
         {
-            GeoLocation.Instance.GeoWatcher.PositionChanged += this.Watcher_PositionChanged;
+            this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) { MovementThreshold = 20 };
+            this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
+            this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
+            this._geoCoordinateWatcher.Start();
 
             Messenger.Default.Register<NotificationMessage<LocationDescription>>(
                 this,
@@ -45,6 +50,8 @@ namespace TransitWP7.ViewModel
 
             this.DateTime = DateTime.Now;
             this.TimeType = TimeCondition.Now;
+
+            DeviceNetworkInformation.NetworkAvailabilityChanged += this.DeviceNetworkInformation_NetworkAvailabilityChanged;
 
 #if DEBUG
             if (IsInDesignModeStatic)
@@ -231,6 +238,16 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public override void Cleanup()
+        {
+            if (this._geoCoordinateWatcher != null)
+            {
+                this._geoCoordinateWatcher.Dispose();
+            }
+
+            base.Cleanup();
+        }
+
         public void EnsureDateTimeSyncInContext(TimeCondition timeType)
         {
             this.TimeType = timeType;
@@ -330,6 +347,14 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
         }
 
+        private void DeviceNetworkInformation_NetworkAvailabilityChanged(object sender, NetworkNotificationEventArgs e)
+        {
+            if (!DeviceNetworkInformation.IsNetworkAvailable)
+            {
+                ProcessErrorMessage("No network is available. Internet connection is required for calculating new transits.");
+            }
+        }
+
         private void GetLocationsAndBusinessCallback(ProxyQueryResult result)
         {
             if (result.Error != null)
@@ -396,9 +421,28 @@ namespace TransitWP7.ViewModel
         }
 
         // Event handler for the GeoCoordinateWatcher.PositionChanged event.
-        private void Watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        private void GeoCoordinateWatcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             this.UserGeoCoordinate = e.Position.Location;
+        }
+
+        private void GeoCoordinateWatcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
+        {
+            switch (e.Status)
+            {
+                case GeoPositionStatus.NoData:
+                case GeoPositionStatus.Disabled:
+                    ProcessErrorMessage("Location service is not enabled for this application. Some features won't work well.");
+                    break;
+                case GeoPositionStatus.Initializing:
+                    Messenger.Default.Send(new NotificationMessage<bool>(true, "Acquiring your current location..."), MessengerToken.MainMapProgressIndicator);
+                    break;
+                case GeoPositionStatus.Ready:
+                    Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

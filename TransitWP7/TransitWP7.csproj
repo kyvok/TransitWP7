@@ -125,7 +125,6 @@
     </Compile>
     <Compile Include="Model\TransitDescription.cs" />
     <Compile Include="Model\BingMapsExtensionMethods.cs" />
-    <Compile Include="GeoLocation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\LocationSelectionView.xaml.cs">
       <DependentUpon>LocationSelectionView.xaml</DependentUpon>
