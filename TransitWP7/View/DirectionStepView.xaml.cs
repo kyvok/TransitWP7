@@ -38,6 +38,14 @@ namespace TransitWP7.View
                 {
                     this._isScrollBarScrolling = value;
                     this.RaisePropertyChanged("IsScrollBarScrolling");
+
+                    // snap the scrollviewer into place. the screen is 480px.
+                    if (this._isScrollBarScrolling == false)
+                    {
+                        double offset = this.directionsListScrollViewer.HorizontalOffset;
+                        int itemNumber = (int)((offset + 240) / 480);
+                        this.directionsListScrollViewer.ScrollToHorizontalOffset(480 * itemNumber);
+                    }
                 }
             }
         }
