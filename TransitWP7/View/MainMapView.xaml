@@ -79,7 +79,7 @@
         </maps:Map>
 
         <Grid Name="directionsGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top" Height="0">
-            <view:DirectionStepView/>
+            <view:DirectionStepView x:Name="directionsStepView"/>
         </Grid>
 
         <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top">

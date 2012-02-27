@@ -15,15 +15,35 @@ namespace TransitWP7.View
         private readonly DirectionsViewModel _viewModel;
         private bool alreadyHookedScrollEvents = false;
         private bool _isScrollBarScrolling;
+        private int _selectedItem;
 
         public DirectionStepView()
         {
             this.InitializeComponent();
+            this._selectedItem = 0;
             this._viewModel = ViewModelLocator.DirectionsViewModelStatic;
             this.Loaded += new System.Windows.RoutedEventHandler(this.DirectionsView_Loaded);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public int SelectedItem
+        {
+            get
+            {
+                return this._selectedItem;
+            }
+
+            set
+            {
+                if (this._selectedItem != value)
+                {
+                    this._selectedItem = value;
+                    this.RaisePropertyChanged("SelectedItem");
+                    this.directionsListScrollViewer.ScrollToHorizontalOffset(480 * this.SelectedItem);
+                }
+            }
+        }
 
         public bool IsScrollBarScrolling
         {
@@ -43,8 +63,8 @@ namespace TransitWP7.View
                     if (this._isScrollBarScrolling == false)
                     {
                         double offset = this.directionsListScrollViewer.HorizontalOffset;
-                        int itemNumber = (int)((offset + 240) / 480);
-                        this.directionsListScrollViewer.ScrollToHorizontalOffset(480 * itemNumber);
+                        this.SelectedItem = (int)((offset + 240) / 480);
+                        this.directionsListScrollViewer.ScrollToHorizontalOffset(480 * this.SelectedItem);
                     }
                 }
             }

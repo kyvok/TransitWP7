@@ -212,7 +212,7 @@ namespace TransitWP7.View
         private void Pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var pushpin = sender as Pushpin;
-            NavigationService.Navigate(new Uri(string.Format("{0}?selectedIndex={1}", PhonePageUri.DirectionsView, (int)pushpin.Content + 1), UriKind.Relative));
+            this.directionsStepView.SelectedItem = ((int)pushpin.Content) - 1;
         }
 
         private void ApplicationBarShowTransitOptions_Click(object sender, EventArgs e)
