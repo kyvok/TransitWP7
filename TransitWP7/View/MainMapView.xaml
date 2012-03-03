@@ -62,13 +62,13 @@
                 <maps:Pushpin Location="{Binding Path=SelectedStartLocation.GeoCoordinate}"
                               Visibility="{Binding Path=SelectedStartLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="A"
-                              Style="{StaticResource TransitEndpointPushpinStyle}"
+                              Style="{StaticResource TransitStartPointPushpinStyle}"
                               PositionOrigin="Center"
                               />
                 <maps:Pushpin Location="{Binding Path=SelectedEndLocation.GeoCoordinate}"
                               Visibility="{Binding Path=SelectedEndLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="B"
-                              Style="{StaticResource TransitEndpointPushpinStyle}"
+                              Style="{StaticResource TransitEndPointPushpinStyle}"
                               PositionOrigin="Center"
                               />
             </maps:MapLayer>

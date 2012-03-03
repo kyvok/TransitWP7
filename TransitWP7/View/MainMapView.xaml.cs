@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Device.Location;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Messaging;
@@ -30,6 +31,16 @@ namespace TransitWP7.View
             this.endingInput.ItemsSource = new ObservableCollection<string> { Globals.MyCurrentLocationText };
 
             this.RegisterNotifications();
+            this.RegisterForNotification(
+                "SelectedItem", 
+                this.directionsStepView, 
+                (d, e) =>
+                    {
+                        if (this._viewModel.SelectedTransitTrip != null)
+                        {
+                            this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem].GeoCoordinate, 16);
+                        }
+                    });
 
             this._viewModel.DoServiceChecks();
 
@@ -72,6 +83,19 @@ namespace TransitWP7.View
                 this.directionsGrid.Height = 0;
                 return;
             }
+        }
+
+        private void RegisterForNotification(string propertyName, FrameworkElement element, PropertyChangedCallback callback)
+        {
+            // Bind to a depedency property
+            Binding b = new Binding(propertyName) { Source = element };
+            var prop = System.Windows.DependencyProperty.RegisterAttached(
+                "ListenAttached" + propertyName,
+                typeof(object),
+                typeof(UserControl),
+                new System.Windows.PropertyMetadata(callback));
+
+            element.SetBinding(prop, b);
         }
 
         private void RegisterNotifications()
