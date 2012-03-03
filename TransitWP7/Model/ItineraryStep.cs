@@ -35,11 +35,6 @@ namespace TransitWP7
             this.IconType = item.IconType.ToString().StartsWith("N") ? string.Empty : item.IconType.ToString();
             this.StartTime = item.Time;
             this.EndTime = item.Time;
-            if (item.ChildItineraryItems != null)
-            {
-                this.StartTime = item.ChildItineraryItems[0].Time;
-                this.EndTime = item.ChildItineraryItems[item.ChildItineraryItems.Length - 1].Time;
-            }
 
             this.hints = new ObservableCollection<string>();
             if (item.Hint != null)
@@ -55,6 +50,8 @@ namespace TransitWP7
             this.ChildItinerarySteps = new ObservableCollection<ItineraryStep>();
             if (item.ChildItineraryItems != null)
             {
+                this.StartTime = item.ChildItineraryItems[0].Time;
+                this.EndTime = item.ChildItineraryItems[item.ChildItineraryItems.Length - 1].Time;
                 foreach (var itemStep in item.ChildItineraryItems)
                 {
                     this.ChildItinerarySteps.Add(new ItineraryStep(itemStep, 0));
