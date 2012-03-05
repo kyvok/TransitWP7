@@ -265,6 +265,10 @@ namespace TransitWP7.ViewModel
 
         public void TryResolveEndpoints()
         {
+            // This is a new search, clear old transit info.
+            this.TransitDescriptionCollection.Clear();
+            this.SelectedTransitTrip = null;
+
             // Notify calcul in progress
             Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
             Messenger.Default.Send(new NotificationMessage<bool>(false, "Locking UI"), MessengerToken.LockUiIndicator);
@@ -328,6 +332,16 @@ namespace TransitWP7.ViewModel
                 this.TimeType,
                 this.GetTransitDirectionsCallback,
                 null);
+        }
+
+        public void SetSelectedTransitTrip(int index)
+        {
+            this.SelectedTransitTrip = index >= 0 ? this.TransitDescriptionCollection[index] : null;
+            var notificationMessage = new NotificationMessage<TransitDescription>(
+                this,
+                this.SelectedTransitTrip,
+                string.Empty);
+            Messenger.Default.Send(notificationMessage, MessengerToken.SelectedTransitTrip);
         }
 
         internal void StartOver()

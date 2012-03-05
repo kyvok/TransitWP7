@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
@@ -157,7 +158,6 @@ namespace TransitWP7.View
         private void ShowTransitTripsList()
         {
             this.SetUIVisibility(UIViewState.TransitOptionsView);
-            this.TransitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
             this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
         }
 
@@ -280,11 +280,6 @@ namespace TransitWP7.View
             NavigationService.Navigate(new Uri("/YourLastAboutDialog;component/AboutPage.xaml", UriKind.Relative));
         }
 
-        private void MainMap_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
-        {
-            this._viewModel.CenterMapGeoCoordinate = this.mainMap.Center;
-        }
-
         private void SetUIVisibility(UIViewState uiState)
         {
             switch (uiState)
@@ -319,15 +314,7 @@ namespace TransitWP7.View
 
         private void TransitTripsList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            this._viewModel.SelectedTransitTrip = this.TransitTripsList.SelectedIndex >= 0
-                ? this._viewModel.TransitDescriptionCollection[this.TransitTripsList.SelectedIndex]
-                : null;
-
-            var notificationMessage = new NotificationMessage<TransitDescription>(
-                                                                                this,
-                                                                                this._viewModel.SelectedTransitTrip,
-                                                                                string.Empty);
-            Messenger.Default.Send(notificationMessage, MessengerToken.SelectedTransitTrip);
+            this._viewModel.SetSelectedTransitTrip(this.TransitTripsList.SelectedIndex);
 
             if (this._viewModel.SelectedTransitTrip != null)
             {

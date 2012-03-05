@@ -104,7 +104,7 @@
         </Grid.Resources>
 
         <maps:Map Name="mainMap" ScaleVisibility="Visible"
-                  ManipulationCompleted="MainMap_ManipulationCompleted">
+                  Center="{Binding CenterMapGeoCoordinate, Mode=TwoWay}">
             <maps:MapLayer>
                 <maps:MapPolyline StrokeLineJoin="Round"
                                 Stroke="MediumBlue"
