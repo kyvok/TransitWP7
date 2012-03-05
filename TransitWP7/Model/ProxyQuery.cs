@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Linq;
 using BingApisLib.BingMapsRestApi;
 using BingApisLib.BingSearchRestApi;
 
@@ -90,13 +91,6 @@ namespace TransitWP7
                 {
                     var locationDescription = new LocationDescription(location);
 
-                    // TODO: probably remove this out.
-                    // ignore values farther than 80 miles. (same as phonebook API)
-                    ////if (locationDescription.GeoCoordinate.GetDistanceTo(queryState.UserLocation) / 1600 > 80)
-                    ////{
-                    ////    continue;
-                    ////}
-
                     if (queryState.LocationDescriptions == null)
                     {
                         queryState.LocationDescriptions = new List<LocationDescription>();
@@ -142,6 +136,8 @@ namespace TransitWP7
                 queryState.SavedException = result.Error;
             }
 
+            queryState.LocationDescriptions = SortLocationDescriptionsByDistance(queryState.LocationDescriptions, queryState.UserLocation);
+
             // call user callback
             var proxyQueryResult = new ProxyQueryResult() { UserState = queryState.UserState };
             if (queryState.LocationDescriptions != null && queryState.LocationDescriptions.Count > 0)
@@ -150,18 +146,22 @@ namespace TransitWP7
             }
             else
             {
-                proxyQueryResult.Error = new Exception(string.Format("Could not locate a result for {0} within 80 miles of your location.", queryState.Query));
-                ////if (queryState.SavedException != null)
-                ////{
-                ////    proxyQueryResult.Error = queryState.SavedException;
-                ////}
-                ////else
-                ////{
-                ////    proxyQueryResult.Error = new Exception("no results");
-                ////}
+                proxyQueryResult.Error = new Exception(string.Format("Could not locate a result for {0}.", queryState.Query));
             }
 
             queryState.UserCallback(proxyQueryResult);
+        }
+
+        private static List<LocationDescription> SortLocationDescriptionsByDistance(IEnumerable<LocationDescription> locations, GeoCoordinate center)
+        {
+            if (locations == null)
+            {
+                return null;
+            }
+
+            var presort = locations.ToDictionary(k => k, v => v.GeoCoordinate.GetDistanceTo(center));
+            var sorted = presort.OrderBy(kvp => kvp.Value);
+            return sorted.Select(items => items.Key).ToList();
         }
 
         private static void GetTransitDirectionsCallback(BingMapsQueryResult result)
