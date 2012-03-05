@@ -231,6 +231,11 @@ namespace TransitWP7.View
             this._viewModel.StartOver();
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 10);
+            
+            // the following is a workaround for the appbar preventing the update of binding for textbox
+            this.startingInput.Text += " ";
+            this.endingInput.Text += " ";
+
             this.endingInput.Focus();
         }
 
@@ -287,8 +292,6 @@ namespace TransitWP7.View
 
         private void TransitTripsList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            this.SetUIVisibility(UIViewState.ItineraryView);
-
             this._viewModel.SelectedTransitTrip = this.TransitTripsList.SelectedIndex >= 0
                 ? this._viewModel.TransitDescriptionCollection[this.TransitTripsList.SelectedIndex]
                 : null;
@@ -301,6 +304,7 @@ namespace TransitWP7.View
 
             if (this._viewModel.SelectedTransitTrip != null)
             {
+                this.SetUIVisibility(UIViewState.ItineraryView);
                 this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
             }
         }
