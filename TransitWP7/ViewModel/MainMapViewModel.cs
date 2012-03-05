@@ -332,7 +332,9 @@ namespace TransitWP7.ViewModel
         internal void StartOver()
         {
             this.StartLocationText = Globals.MyCurrentLocationText;
+            this._isStartLocationStale = true;
             this.EndLocationText = string.Empty;
+            this._isEndLocationStale = true;
             this.SelectedStartLocation = null;
             this.SelectedEndLocation = null;
             this.SelectedTransitTrip = null;

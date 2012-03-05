@@ -12,6 +12,7 @@
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True"
     xmlns:converters="clr-namespace:TransitWP7.Converters"
+    xmlns:View="clr-namespace:TransitWP7.View"
     x:Name="DirectionStepViewControl">
 
     <Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource Locator}, Path=DirectionsViewModel.TransitDescription}">
@@ -26,6 +27,14 @@
                 <converters:BooleanToVisibilityConverter/>
             </converters:SequentialValueConverter>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
+            <Storyboard x:Name="snapScrollViewer" >
+                <DoubleAnimation x:Name="innerAnim" Storyboard.TargetName="directionsListScrollViewer" Storyboard.TargetProperty="View:ScrollViewerUtilities.HorizontalOffset"
+                                 Duration="0:0:01.5">
+                    <DoubleAnimation.EasingFunction>
+                        <BounceEase Bounces="4" Bounciness="0.3" EasingMode="EaseInOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
         </Grid.Resources>
         <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
             <ItemsControl Height="73" VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">

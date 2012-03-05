@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-
+using System.Windows.Media.Animation;
 using Microsoft.Phone.Controls;
 using TransitWP7.ViewModel;
 
@@ -40,8 +40,9 @@ namespace TransitWP7.View
                 {
                     this._selectedItem = value;
                     this.RaisePropertyChanged("SelectedItem");
-                    this.directionsListScrollViewer.ScrollToHorizontalOffset(480 * this.SelectedItem);
                 }
+
+                this.AnimateSnapScrollViewer();
             }
         }
 
@@ -62,9 +63,8 @@ namespace TransitWP7.View
                     // snap the scrollviewer into place. the screen is 480px.
                     if (this._isScrollBarScrolling == false)
                     {
-                        double offset = this.directionsListScrollViewer.HorizontalOffset;
+                        var offset = this.directionsListScrollViewer.HorizontalOffset;
                         this.SelectedItem = (int)((offset + 240) / 480);
-                        this.directionsListScrollViewer.ScrollToHorizontalOffset(480 * this.SelectedItem);
                     }
                 }
             }
@@ -78,7 +78,7 @@ namespace TransitWP7.View
             }
 
             this.alreadyHookedScrollEvents = true;
-            FrameworkElement element = VisualTreeHelper.GetChild(this.directionsListScrollViewer, 0) as FrameworkElement;
+            var element = VisualTreeHelper.GetChild(this.directionsListScrollViewer, 0) as FrameworkElement;
             VisualStateGroup scrollStateGroup = null;
             if (element != null)
             {
@@ -105,6 +105,38 @@ namespace TransitWP7.View
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private void AnimateSnapScrollViewer()
+        {
+            ((DoubleAnimation)this.snapScrollViewer.Children[0]).To = 480 * this.SelectedItem;
+            this.snapScrollViewer.Begin();
+        }
+    }
+
+    public class ScrollViewerUtilities
+    {
+        public static readonly DependencyProperty HorizontalOffsetProperty =
+            DependencyProperty.RegisterAttached(
+            "HorizontalOffset",
+            typeof(double),
+            typeof(ScrollViewerUtilities),
+            new PropertyMetadata(OnHorizontalOffsetChanged));
+
+        public static double GetHorizontalOffset(DependencyObject d)
+        {
+            return (double)d.GetValue(HorizontalOffsetProperty);
+        }
+
+        public static void SetHorizontalOffset(DependencyObject d, double value)
+        {
+            d.SetValue(HorizontalOffsetProperty, value);
+        }
+
+        private static void OnHorizontalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var viewer = (ScrollViewer)d;
+            viewer.ScrollToHorizontalOffset((double)e.NewValue);
         }
     }
 }
