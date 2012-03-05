@@ -101,6 +101,11 @@ namespace TransitWP7.ViewModel
 
                 return _mainMapViewModel;
             }
+
+            set
+            {
+                _mainMapViewModel = value;
+            }
         }
 
         public static LocationSelectionViewModel LocationSelectionViewModelStatic

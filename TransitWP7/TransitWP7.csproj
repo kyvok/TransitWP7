@@ -103,6 +103,7 @@
     <Compile Include="Converters\TravelDurationConverter.cs" />
     <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
     <Compile Include="LittleWatson.cs" />
+    <Compile Include="PersistedInfo.cs" />
     <Compile Include="ViewModel\LocationSelectionViewModel.cs" />
     <Compile Include="ViewModel\DirectionsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />

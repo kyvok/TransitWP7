@@ -1,29 +1,21 @@
 ﻿using System;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+using System.IO;
 using System.IO.IsolatedStorage;
 using System.Xml.Serialization;
-using System.IO;
+using TransitWP7.ViewModel;
 
 namespace TransitWP7
 {
     public static class PersistedInfo
     {
-        const string filename = "persisted.xml";
+        private const string SavedFileName = "persisted.xml";
 
         public static void Save()
         {
-            IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
-            IsolatedStorageFileStream stream = storage.CreateFile(filename);
-            XmlSerializer xml = new XmlSerializer(typeof(TransitRequestContext));
-            xml.Serialize(stream, TransitRequestContext.Current);
+            var storage = IsolatedStorageFile.GetUserStoreForApplication();
+            var stream = storage.CreateFile(SavedFileName);
+            var xml = new XmlSerializer(typeof(MainMapViewModel));
+            xml.Serialize(stream, ViewModelLocator.MainMapViewModelStatic);
             stream.Close();
             stream.Dispose();
         }
@@ -32,22 +24,23 @@ namespace TransitWP7
         {
             IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
 
-            if (storage.FileExists(filename))
+            if (storage.FileExists(SavedFileName))
             {
-                IsolatedStorageFileStream stream = storage.OpenFile(filename, FileMode.Open);
-                XmlSerializer xml = new XmlSerializer(typeof(TransitRequestContext));
-                TransitRequestContext.Current = xml.Deserialize(stream) as TransitRequestContext;
-                stream.Close();
-                stream.Dispose();
-            }
-            else
-            {
-                // default values
-                TransitRequestContext.Current.StartName = Globals.MyCurrentLocationText;
-                TransitRequestContext.Current.StartAddress = "";
-
-                TransitRequestContext.Current.EndName = "";
-                TransitRequestContext.Current.EndAddress = "";
+                try
+                {
+                    var stream = storage.OpenFile(SavedFileName, FileMode.Open);
+                    var xml = new XmlSerializer(typeof(MainMapViewModel));
+                    ViewModelLocator.MainMapViewModelStatic = xml.Deserialize(stream) as MainMapViewModel;
+                    stream.Close();
+                    stream.Dispose();
+                }
+                catch (Exception)
+                {
+                }
+                finally
+                {
+                    storage.DeleteFile(SavedFileName);
+                }
             }
         }
     }

@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
@@ -45,17 +44,9 @@ namespace TransitWP7.View
 
             this._viewModel.DoServiceChecks();
 
-            this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+            this.SetUIVisibility(this._viewModel.CurrentViewState);
 
             LittleWatson.CheckForPreviousException();
-        }
-
-        private enum UIViewState
-        {
-            ItineraryView,
-            TransitOptionsView,
-            OnlyStartEndInputsView,
-            MapViewOnly
         }
 
         private enum AppBarMenuItemOrder
@@ -66,8 +57,6 @@ namespace TransitWP7.View
             Settings,
             About
         }
-
-        private UIViewState CurrentViewState { get; set; }
 
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
@@ -80,19 +69,19 @@ namespace TransitWP7.View
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
-            switch (this.CurrentViewState)
+            switch (this._viewModel.CurrentViewState)
             {
-                case UIViewState.MapViewOnly:
+                case MainMapViewModel.UIViewState.MapViewOnly:
                     base.OnBackKeyPress(e);
                     return;
-                case UIViewState.OnlyStartEndInputsView:
-                    this.SetUIVisibility(UIViewState.MapViewOnly);
+                case MainMapViewModel.UIViewState.OnlyStartEndInputsView:
+                    this.SetUIVisibility(MainMapViewModel.UIViewState.MapViewOnly);
                     break;
-                case UIViewState.TransitOptionsView:
-                    this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+                case MainMapViewModel.UIViewState.TransitOptionsView:
+                    this.SetUIVisibility(MainMapViewModel.UIViewState.OnlyStartEndInputsView);
                     break;
-                case UIViewState.ItineraryView:
-                    this.SetUIVisibility(UIViewState.TransitOptionsView);
+                case MainMapViewModel.UIViewState.ItineraryView:
+                    this.SetUIVisibility(MainMapViewModel.UIViewState.TransitOptionsView);
                     break;
             }
 
@@ -157,7 +146,7 @@ namespace TransitWP7.View
 
         private void ShowTransitTripsList()
         {
-            this.SetUIVisibility(UIViewState.TransitOptionsView);
+            this.SetUIVisibility(MainMapViewModel.UIViewState.TransitOptionsView);
             this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
         }
 
@@ -249,7 +238,7 @@ namespace TransitWP7.View
         private void ApplicationBarClearMap_Click(object sender, EventArgs e)
         {
             this._viewModel.StartOver();
-            this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+            this.SetUIVisibility(MainMapViewModel.UIViewState.OnlyStartEndInputsView);
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 15);
 
             // the following is a workaround for the appbar preventing the update of binding for textbox
@@ -280,23 +269,23 @@ namespace TransitWP7.View
             NavigationService.Navigate(new Uri("/YourLastAboutDialog;component/AboutPage.xaml", UriKind.Relative));
         }
 
-        private void SetUIVisibility(UIViewState uiState)
+        private void SetUIVisibility(MainMapViewModel.UIViewState uiState)
         {
             switch (uiState)
             {
-                case UIViewState.ItineraryView:
+                case MainMapViewModel.UIViewState.ItineraryView:
                     this.ItineraryViewAnimation.Begin();
                     this.ApplicationBar.IsVisible = true;
                     break;
-                case UIViewState.TransitOptionsView:
+                case MainMapViewModel.UIViewState.TransitOptionsView:
                     this.TransitOptionsViewAnimation.Begin();
                     this.ApplicationBar.IsVisible = false;
                     break;
-                case UIViewState.OnlyStartEndInputsView:
+                case MainMapViewModel.UIViewState.OnlyStartEndInputsView:
                     this.OnlyStartEndInputViewAnimation.Begin();
                     this.ApplicationBar.IsVisible = true;
                     break;
-                case UIViewState.MapViewOnly:
+                case MainMapViewModel.UIViewState.MapViewOnly:
                     this.MapViewOnlyAnimation.Begin();
                     this.ApplicationBar.IsVisible = true;
                     break;
@@ -309,7 +298,7 @@ namespace TransitWP7.View
             appbarmenuTrips.IsEnabled = this._viewModel.TransitDescriptionCollection != null
                                      && this._viewModel.TransitDescriptionCollection.Count != 0;
 
-            this.CurrentViewState = uiState;
+            this._viewModel.CurrentViewState = uiState;
         }
 
         private void TransitTripsList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -318,7 +307,7 @@ namespace TransitWP7.View
 
             if (this._viewModel.SelectedTransitTrip != null)
             {
-                this.SetUIVisibility(UIViewState.ItineraryView);
+                this.SetUIVisibility(MainMapViewModel.UIViewState.ItineraryView);
                 this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
 
                 // set zoom a little lower so endpoints don't underlap overlays
@@ -328,7 +317,7 @@ namespace TransitWP7.View
 
         private void ApplicationBarTransitSearch_Click(object sender, EventArgs e)
         {
-            this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+            this.SetUIVisibility(MainMapViewModel.UIViewState.OnlyStartEndInputsView);
             this.endingInput.Focus();
         }
     }

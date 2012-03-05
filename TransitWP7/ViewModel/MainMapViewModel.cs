@@ -65,6 +65,16 @@ namespace TransitWP7.ViewModel
 #endif
         }
 
+        public enum UIViewState
+        {
+            OnlyStartEndInputsView,
+            MapViewOnly,
+            TransitOptionsView,
+            ItineraryView,
+        }
+
+        public UIViewState CurrentViewState { get; set; }
+
         public string StartLocationText
         {
             get
