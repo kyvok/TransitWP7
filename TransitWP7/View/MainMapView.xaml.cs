@@ -57,6 +57,15 @@ namespace TransitWP7.View
             MapViewOnly
         }
 
+        private enum AppBarMenuItemOrder
+        {
+            Directions = 0,
+            TransitOptions,
+            ClearMap,
+            Settings,
+            About
+        }
+
         private UIViewState CurrentViewState { get; set; }
 
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
@@ -242,7 +251,7 @@ namespace TransitWP7.View
             this._viewModel.StartOver();
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 15);
-            
+
             // the following is a workaround for the appbar preventing the update of binding for textbox
             this.startingInput.Text += " ";
             this.endingInput.Text += " ";
@@ -297,6 +306,13 @@ namespace TransitWP7.View
                     this.ApplicationBar.IsVisible = true;
                     break;
             }
+
+            var appbarmenuDirections = (ApplicationBarMenuItem)this.ApplicationBar.MenuItems[(int)AppBarMenuItemOrder.Directions];
+            appbarmenuDirections.IsEnabled = this._viewModel.SelectedTransitTrip != null;
+
+            var appbarmenuTrips = (ApplicationBarMenuItem)this.ApplicationBar.MenuItems[(int)AppBarMenuItemOrder.TransitOptions];
+            appbarmenuTrips.IsEnabled = this._viewModel.TransitDescriptionCollection != null
+                                     && this._viewModel.TransitDescriptionCollection.Count != 0;
 
             this.CurrentViewState = uiState;
         }
