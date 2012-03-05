@@ -23,6 +23,7 @@ namespace TransitWP7.View
             this._selectedItem = 0;
             this._viewModel = ViewModelLocator.DirectionsViewModelStatic;
             this.Loaded += new System.Windows.RoutedEventHandler(this.DirectionsView_Loaded);
+            var ran = new ScrollViewerUtilities();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -109,11 +110,14 @@ namespace TransitWP7.View
 
         private void AnimateSnapScrollViewer()
         {
+            ((DoubleAnimation)this.snapScrollViewer.Children[0]).From = this.directionsListScrollViewer.HorizontalOffset;
             ((DoubleAnimation)this.snapScrollViewer.Children[0]).To = 480 * this.SelectedItem;
             this.snapScrollViewer.Begin();
         }
     }
 
+    // technique from http://marlongrech.wordpress.com/2009/09/14/how-to-set-wpf-scrollviewer-verticaloffset-and-horizontal-offset/
+    // does not work though.
     public class ScrollViewerUtilities
     {
         public static readonly DependencyProperty HorizontalOffsetProperty =
@@ -137,6 +141,55 @@ namespace TransitWP7.View
         {
             var viewer = (ScrollViewer)d;
             viewer.ScrollToHorizontalOffset((double)e.NewValue);
+        }
+    }
+
+    // technique from: http://blogs.msdn.com/b/delay/archive/2009/08/04/scrolling-so-smooth-like-the-butter-on-a-muffin-how-to-animate-the-horizontal-verticaloffset-properties-of-a-scrollviewer.aspx
+    public class ScrollViewerOffsetMediator : FrameworkElement
+    {
+        public static readonly DependencyProperty ScrollViewerProperty =
+            DependencyProperty.Register(
+                "ScrollViewer",
+                typeof(ScrollViewer),
+                typeof(ScrollViewerOffsetMediator),
+                new PropertyMetadata(OnScrollViewerChanged));
+
+        public static readonly DependencyProperty HorizontalOffsetProperty =
+            DependencyProperty.Register(
+                "HorizontalOffset",
+                typeof(double),
+                typeof(ScrollViewerOffsetMediator),
+                new PropertyMetadata(OnHorizontalOffsetChanged));
+
+        public ScrollViewer ScrollViewer
+        {
+            get { return (ScrollViewer)GetValue(ScrollViewerProperty); }
+            set { SetValue(ScrollViewerProperty, value); }
+        }
+
+        public double HorizontalOffset
+        {
+            get { return (double)GetValue(HorizontalOffsetProperty); }
+            set { SetValue(HorizontalOffsetProperty, value); }
+        }
+
+        public static void OnHorizontalOffsetChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
+            var mediator = (ScrollViewerOffsetMediator)o;
+            if (null != mediator.ScrollViewer)
+            {
+                mediator.ScrollViewer.ScrollToHorizontalOffset((double)e.NewValue);
+            }
+        }
+
+        private static void OnScrollViewerChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
+            var mediator = (ScrollViewerOffsetMediator)o;
+            var scrollViewer = (ScrollViewer)e.NewValue;
+            if (null != scrollViewer)
+            {
+                scrollViewer.ScrollToHorizontalOffset(mediator.HorizontalOffset);
+            }
         }
     }
 }

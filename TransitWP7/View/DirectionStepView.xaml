@@ -29,14 +29,18 @@
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
             <converters:DateTimeToTimeConverter x:Key="DateTimeToTimeConverter"/>
             <Storyboard x:Name="snapScrollViewer" >
-                <DoubleAnimation x:Name="innerAnim" Storyboard.TargetName="directionsListScrollViewer" Storyboard.TargetProperty="View:ScrollViewerUtilities.HorizontalOffset"
-                                 Duration="0:0:01.5">
+                <DoubleAnimation x:Name="innerAnim" Duration="0:0:00.5"
+                                 Storyboard.TargetName="Mediator"
+                                 Storyboard.TargetProperty="View:ScrollViewerOffsetMediator.HorizontalOffset">
                     <DoubleAnimation.EasingFunction>
-                        <BounceEase Bounces="4" Bounciness="0.3" EasingMode="EaseInOut" />
+                       <CircleEase EasingMode="EaseOut" />
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
             </Storyboard>
         </Grid.Resources>
+
+        <View:ScrollViewerOffsetMediator x:Name="Mediator" ScrollViewer="{Binding ElementName=directionsListScrollViewer}"/>
+
         <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
             <ItemsControl Height="73" VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">
                 <ItemsControl.ItemsPanel>
