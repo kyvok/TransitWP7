@@ -210,26 +210,6 @@ namespace TransitWP7.View
             SystemTray.ProgressIndicator.IsVisible = state;
         }
 
-        private void TransitTripsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            this.SetUIVisibility(UIViewState.ItineraryView);
-
-            this._viewModel.SelectedTransitTrip = this.TransitTripsList.SelectedIndex >= 0
-                ? this._viewModel.TransitDescriptionCollection[this.TransitTripsList.SelectedIndex]
-                : null;
-
-            var notificationMessage = new NotificationMessage<TransitDescription>(
-                                                                                this,
-                                                                                this._viewModel.SelectedTransitTrip,
-                                                                                string.Empty);
-            Messenger.Default.Send(notificationMessage, MessengerToken.SelectedTransitTrip);
-
-            if (this._viewModel.SelectedTransitTrip != null)
-            {
-                this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
-            }
-        }
-
         private void Pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var pushpin = sender as Pushpin;
@@ -303,6 +283,26 @@ namespace TransitWP7.View
             }
 
             this.CurrentViewState = uiState;
+        }
+
+        private void TransitTripsList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            this.SetUIVisibility(UIViewState.ItineraryView);
+
+            this._viewModel.SelectedTransitTrip = this.TransitTripsList.SelectedIndex >= 0
+                ? this._viewModel.TransitDescriptionCollection[this.TransitTripsList.SelectedIndex]
+                : null;
+
+            var notificationMessage = new NotificationMessage<TransitDescription>(
+                                                                                this,
+                                                                                this._viewModel.SelectedTransitTrip,
+                                                                                string.Empty);
+            Messenger.Default.Send(notificationMessage, MessengerToken.SelectedTransitTrip);
+
+            if (this._viewModel.SelectedTransitTrip != null)
+            {
+                this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
+            }
         }
     }
 }
