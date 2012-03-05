@@ -91,6 +91,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\DateTimeToTimeConverter.cs" />
     <Compile Include="Converters\NegateBoolConverter.cs" />
     <Compile Include="Converters\NullValueToVisibilityConverter.cs" />
     <Compile Include="Converters\SequentialValueConverter .cs" />

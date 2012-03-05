@@ -14,7 +14,8 @@ namespace TransitWP7
         private ObservableCollection<ItineraryStep> childItinerarySteps;
         private string instruction;
         private ObservableCollection<string> hints;
-        private DateTime time;
+        private DateTime starttime;
+        private DateTime endtime;
         private string travelMode;
         private string busNumber;
         private string iconType;
@@ -29,10 +30,11 @@ namespace TransitWP7
         {
             this.GeoCoordinate = item.ManeuverPoint.AsGeoCoordinate();
             this.Instruction = item.Instruction.Value;
-            this.Time = item.Time;
             this.TravelMode = item.Detail.Mode != null ? item.Detail.Mode : string.Empty;
             this.BusNumber = item.TransitLine != null ? item.TransitLine.AbbreviatedName : string.Empty;
             this.IconType = item.IconType.ToString().StartsWith("N") ? string.Empty : item.IconType.ToString();
+            this.StartTime = item.Time;
+            this.EndTime = item.Time;
 
             this.hints = new ObservableCollection<string>();
             if (item.Hint != null)
@@ -48,6 +50,8 @@ namespace TransitWP7
             this.ChildItinerarySteps = new ObservableCollection<ItineraryStep>();
             if (item.ChildItineraryItems != null)
             {
+                this.StartTime = item.ChildItineraryItems[0].Time;
+                this.EndTime = item.ChildItineraryItems[item.ChildItineraryItems.Length - 1].Time;
                 foreach (var itemStep in item.ChildItineraryItems)
                 {
                     this.ChildItinerarySteps.Add(new ItineraryStep(itemStep, 0));
@@ -115,19 +119,36 @@ namespace TransitWP7
             }
         }
 
-        public DateTime Time
+        public DateTime StartTime
         {
             get
             {
-                return this.time;
+                return this.starttime;
             }
 
             set
             {
-                if (value != this.time)
+                if (value != this.starttime)
                 {
-                    this.time = value;
-                    this.RaisePropertyChanged("Time");
+                    this.starttime = value;
+                    this.RaisePropertyChanged("StartTime");
+                }
+            }
+        }
+
+        public DateTime EndTime
+        {
+            get
+            {
+                return this.endtime;
+            }
+
+            set
+            {
+                if (value != this.endtime)
+                {
+                    this.endtime = value;
+                    this.RaisePropertyChanged("EndTime");
                 }
             }
         }

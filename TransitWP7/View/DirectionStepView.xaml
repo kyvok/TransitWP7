@@ -27,6 +27,7 @@
                 <converters:BooleanToVisibilityConverter/>
             </converters:SequentialValueConverter>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
+            <converters:DateTimeToTimeConverter x:Key="DateTimeToTimeConverter"/>
             <Storyboard x:Name="snapScrollViewer" >
                 <DoubleAnimation x:Name="innerAnim" Storyboard.TargetName="directionsListScrollViewer" Storyboard.TargetProperty="View:ScrollViewerUtilities.HorizontalOffset"
                                  Duration="0:0:01.5">
@@ -78,7 +79,14 @@
                                     </ContentControl>
                                     <TextBlock Text="{Binding BusNumber}" FontSize="18.667" FontStyle="Normal" VerticalAlignment="Center" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Center"/>
                                 </Grid>
-                                <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Center" Height="46" Grid.Column="2"/>
+                                <Grid Grid.Column="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="46"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding StartTime, Converter={StaticResource DateTimeToTimeConverter}}" Grid.Row="0" FontStyle="Italic" FontSize="16"/>
+                                    <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Center" Height="46" Grid.Row="1"/>
+                                </Grid>
                             </Grid>
                             <TextBlock Text="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Webdings" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionStepViewControl, Converter={StaticResource VisibilityScrollConverter}}"/>
                         </Grid>
