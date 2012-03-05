@@ -63,8 +63,9 @@ namespace TransitWP7.View
         {
             base.OnNavigatingFrom(e);
 
-            // reset the progressbar
+            // reset the progressbar and UI
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Unlocking UI"), MessengerToken.LockUiIndicator);
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
@@ -118,6 +119,16 @@ namespace TransitWP7.View
                 MessengerToken.MainMapProgressIndicator,
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () => this.SetProgressBarState(notificationMessage.Notification, notificationMessage.Content)));
+
+            Messenger.Default.Register<NotificationMessage<bool>>(
+                this,
+                MessengerToken.LockUiIndicator,
+                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                    () =>
+                    {
+                        this.IsEnabled = notificationMessage.Content;
+                        this.ApplicationBar.IsVisible = notificationMessage.Content;
+                    }));
 
             Messenger.Default.Register<NotificationMessage>(
                 this,

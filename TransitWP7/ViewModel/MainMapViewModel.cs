@@ -267,6 +267,7 @@ namespace TransitWP7.ViewModel
         {
             // Notify calcul in progress
             Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(false, "Locking UI"), MessengerToken.LockUiIndicator);
 
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
@@ -317,7 +318,7 @@ namespace TransitWP7.ViewModel
             }
 
             // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Calculating transit trips..."), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Searching transit trips..."), MessengerToken.MainMapProgressIndicator);
 
             // TODO: fix initial context state not set. Hacked up in view startup.
             ProxyQuery.GetTransitDirections(
@@ -353,6 +354,7 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Send(dialogMessage, MessengerToken.ErrorPopup);
 
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Unlocking UI"), MessengerToken.LockUiIndicator);
         }
 
         private static void CheckNetwork()
@@ -427,6 +429,7 @@ namespace TransitWP7.ViewModel
         {
             // Notify progress bar calcul is done
             Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Unlocking UI"), MessengerToken.LockUiIndicator);
 
             if (result.Error != null)
             {

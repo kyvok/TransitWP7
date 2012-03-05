@@ -7,7 +7,8 @@
         TransitTripsReady,
         EndpointResolutionPopup,
         SelectedEndpoint,
-        SelectedTransitTrip
+        SelectedTransitTrip,
+        LockUiIndicator
     }
 
     public static class Globals
