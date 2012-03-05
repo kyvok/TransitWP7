@@ -32,20 +32,32 @@ namespace TransitWP7.View
 
             this.RegisterNotifications();
             this.RegisterForNotification(
-                "SelectedItem", 
-                this.directionsStepView, 
+                "SelectedItem",
+                this.directionsStepView,
                 (d, e) =>
+                {
+                    if (this._viewModel.SelectedTransitTrip != null)
                     {
-                        if (this._viewModel.SelectedTransitTrip != null)
-                        {
-                            this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem].GeoCoordinate, 16);
-                        }
-                    });
+                        this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem].GeoCoordinate, 16);
+                    }
+                });
 
             this._viewModel.DoServiceChecks();
 
+            this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+
             LittleWatson.CheckForPreviousException();
         }
+
+        private enum UIViewState
+        {
+            ItineraryView,
+            TransitOptionsView,
+            OnlyStartEndInputsView,
+            MapViewOnly
+        }
+
+        private UIViewState CurrentViewState { get; set; }
 
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
         {
@@ -57,43 +69,34 @@ namespace TransitWP7.View
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
-            // the initial state of the application
-            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Collapsed)
+            switch (this.CurrentViewState)
             {
-                base.OnBackKeyPress(e);
-                return;
+                case UIViewState.MapViewOnly:
+                    base.OnBackKeyPress(e);
+                    return;
+                case UIViewState.OnlyStartEndInputsView:
+                    this.SetUIVisibility(UIViewState.MapViewOnly);
+                    break;
+                case UIViewState.TransitOptionsView:
+                    this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+                    break;
+                case UIViewState.ItineraryView:
+                    this.SetUIVisibility(UIViewState.TransitOptionsView);
+                    break;
             }
 
             e.Cancel = true;
-
-            // directions list has been displayed
-            if (this.topGrid.Visibility == Visibility.Visible && this.bottomGrid.Visibility == Visibility.Visible)
-            {
-                this.topGrid.Visibility = Visibility.Visible;
-                this.bottomGrid.Visibility = Visibility.Collapsed;
-
-                return;
-            }
-
-            // route has been selected
-            if (this.topGrid.Visibility == Visibility.Collapsed && this.bottomGrid.Visibility == Visibility.Collapsed)
-            {
-                this.topGrid.Visibility = Visibility.Visible;
-                this.bottomGrid.Visibility = Visibility.Visible;
-                this.directionsGrid.Height = 0;
-                return;
-            }
         }
 
         private void RegisterForNotification(string propertyName, FrameworkElement element, PropertyChangedCallback callback)
         {
             // Bind to a depedency property
-            Binding b = new Binding(propertyName) { Source = element };
-            var prop = System.Windows.DependencyProperty.RegisterAttached(
+            var b = new Binding(propertyName) { Source = element };
+            var prop = DependencyProperty.RegisterAttached(
                 "ListenAttached" + propertyName,
                 typeof(object),
                 typeof(UserControl),
-                new System.Windows.PropertyMetadata(callback));
+                new PropertyMetadata(callback));
 
             element.SetBinding(prop, b);
         }
@@ -133,11 +136,9 @@ namespace TransitWP7.View
 
         private void ShowTransitTripsList()
         {
-            this.directionsGrid.Height = 0;
-            this.topGrid.Visibility = Visibility.Visible;
+            this.SetUIVisibility(UIViewState.TransitOptionsView);
             this.TransitTripsList.ItemsSource = this._viewModel.TransitDescriptionCollection;
-            this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32 - 72;
-            this.bottomGrid.Visibility = Visibility.Visible;
+            this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
@@ -159,7 +160,6 @@ namespace TransitWP7.View
 
         private void InputBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            this.ApplicationBar.IsVisible = false;
             var inputBox = sender as AutoCompleteBox;
             inputBox.MinimumPrefixLength = 1;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
@@ -181,7 +181,6 @@ namespace TransitWP7.View
 
         private void InputBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            this.ApplicationBar.IsVisible = true;
             var inputBox = sender as AutoCompleteBox;
             inputBox.MinimumPrefixLength = -1;
         }
@@ -198,7 +197,7 @@ namespace TransitWP7.View
             // TODO: if not location enabled, ask permission
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 16);
         }
- 
+
         private void ApplicationBarDirectionsList_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
@@ -213,9 +212,7 @@ namespace TransitWP7.View
 
         private void TransitTripsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.bottomGrid.Visibility = Visibility.Collapsed;
-            this.topGrid.Visibility = Visibility.Collapsed;
-            this.directionsGrid.Height = double.NaN;
+            this.SetUIVisibility(UIViewState.ItineraryView);
 
             this._viewModel.SelectedTransitTrip = this.TransitTripsList.SelectedIndex >= 0
                 ? this._viewModel.TransitDescriptionCollection[this.TransitTripsList.SelectedIndex]
@@ -247,8 +244,7 @@ namespace TransitWP7.View
         private void ApplicationBarClearMap_Click(object sender, EventArgs e)
         {
             this._viewModel.StartOver();
-            this.bottomGrid.Visibility = Visibility.Collapsed;
-            this.topGrid.Visibility = Visibility.Visible;
+            this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 10);
             this.endingInput.Focus();
         }
@@ -282,6 +278,31 @@ namespace TransitWP7.View
         private void MainMap_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
             this._viewModel.CenterMapGeoCoordinate = this.mainMap.Center;
+        }
+
+        private void SetUIVisibility(UIViewState uiState)
+        {
+            switch (uiState)
+            {
+                case UIViewState.ItineraryView:
+                    this.ItineraryViewAnimation.Begin();
+                    this.ApplicationBar.IsVisible = true;
+                    break;
+                case UIViewState.TransitOptionsView:
+                    this.TransitOptionsViewAnimation.Begin();
+                    this.ApplicationBar.IsVisible = false;
+                    break;
+                case UIViewState.OnlyStartEndInputsView:
+                    this.OnlyStartEndInputViewAnimation.Begin();
+                    this.ApplicationBar.IsVisible = false;
+                    break;
+                case UIViewState.MapViewOnly:
+                    this.MapViewOnlyAnimation.Begin();
+                    this.ApplicationBar.IsVisible = true;
+                    break;
+            }
+
+            this.CurrentViewState = uiState;
         }
     }
 }

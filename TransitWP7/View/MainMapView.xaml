@@ -33,6 +33,74 @@
             <converters:TimeConditionToDateTimePickerEnabledConverter x:Key="TimeConditionToDateTimePickerEnabledConverter"/>
             <converters:TimeConditionToIntConverter x:Key="TimeConditionToIntConverter"/>
             <converters:NullValueToVisibilityConverter x:Key="NullValueToVisibilityConverter" />
+            <Storyboard x:Name="MapViewOnlyAnimation">
+                <DoubleAnimation Duration="00:00:00.5" To="-400" Storyboard.TargetName="topGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Duration="00:00:00.5" To="1400" Storyboard.TargetName="bottomGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Duration="00:00:00.5" To="-400" Storyboard.TargetName="directionsGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+            <Storyboard x:Name="OnlyStartEndInputViewAnimation">
+                <DoubleAnimation Duration="00:00:00.5" To="0" Storyboard.TargetName="topGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Duration="00:00:00.5" To="1400" Storyboard.TargetName="bottomGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Duration="00:00:00.5" To="-400" Storyboard.TargetName="directionsGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+            <Storyboard x:Name="TransitOptionsViewAnimation">
+                <DoubleAnimation Duration="00:00:00.5" To="0" Storyboard.TargetName="topGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Duration="00:00:00.5" To="0" Storyboard.TargetName="bottomGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Duration="00:00:00.5" To="-400" Storyboard.TargetName="directionsGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+            <Storyboard x:Name="ItineraryViewAnimation">
+                <DoubleAnimation Duration="00:00:00.5" To="-400" Storyboard.TargetName="topGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Duration="00:00:00.5" To="1400" Storyboard.TargetName="bottomGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+                <DoubleAnimation Duration="00:00:00.5" To="0" Storyboard.TargetName="directionsGridTranslate" Storyboard.TargetProperty="Y">
+                    <DoubleAnimation.EasingFunction>
+                        <QuadraticEase EasingMode="EaseIn" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
         </Grid.Resources>
 
         <maps:Map Name="mainMap" ScaleVisibility="Visible"
@@ -58,7 +126,7 @@
                         </DataTemplate>
                     </maps:MapItemsControl.ItemTemplate>
                 </maps:MapItemsControl>
-                <!-- TODO add the tap back -->
+                <!-- TODO add the tap back that select steps. -->
                 <maps:Pushpin Location="{Binding Path=SelectedStartLocation.GeoCoordinate}"
                               Visibility="{Binding Path=SelectedStartLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="A"
@@ -78,30 +146,19 @@
                           Style="{StaticResource CurrentLocationPushpinStyle}" />
         </maps:Map>
 
-        <Grid Name="directionsGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top" Height="0">
+        <Grid Name="directionsGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top">
+            
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="directionsGridTranslate" X="0" Y="-400" />
+            </Grid.RenderTransform>
+            
             <view:DirectionStepView x:Name="directionsStepView"/>
         </Grid>
 
         <Grid Name="topGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top">
-            <Grid.Resources>
-                <Storyboard x:Name="hideTopGrid" Storyboard.TargetName="topGridTranslate" Storyboard.TargetProperty="Y" >
-                    <DoubleAnimation Duration="00:00:00.5" To="-400">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn" />
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-                <Storyboard x:Name="showTopGrid" Storyboard.TargetName="topGridTranslate" Storyboard.TargetProperty="Y" >
-                    <DoubleAnimation Duration="00:00:00.5" To="0">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn" />
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </Grid.Resources>
 
             <Grid.RenderTransform>
-                <TranslateTransform x:Name="topGridTranslate" X="0" Y="0" />
+                <TranslateTransform x:Name="topGridTranslate" X="0" Y="-400" />
             </Grid.RenderTransform>
 
             <StackPanel>
@@ -114,11 +171,10 @@
                                Tap="TextBlock_Tap_1"/>
                     <toolkit:AutoCompleteBox Name="startingInput"
                              Width="400"
-                             Text="{Binding Path=StartLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                             Text="{Binding Path=StartLocationText, Mode=TwoWay}"
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
-                             TextChanged="EndpointInputTextChanged"
                              GotFocus="InputBox_GotFocus"
                              LostFocus="InputBox_LostFocus"
                              KeyUp="TextBoxKeyUp"
@@ -135,11 +191,10 @@
                            Tap="TextBlock_Tap_1"/>
                     <toolkit:AutoCompleteBox Name="endingInput"
                              Width="400"
-                             Text="{Binding Path=EndLocationText, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+                             Text="{Binding Path=EndLocationText, Mode=TwoWay}"
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
-                             TextChanged="EndpointInputTextChanged"
                              GotFocus="InputBox_GotFocus"
                              LostFocus="InputBox_LostFocus"
                              KeyUp="TextBoxKeyUp"
@@ -182,23 +237,7 @@
             </StackPanel>
         </Grid>
 
-        <Grid Name="bottomGrid" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Bottom" Margin="0,0,0,72" Visibility="Collapsed">
-            <Grid.Resources>
-                <Storyboard x:Name="hideBottomGrid" Storyboard.TargetName="bottomGridTranslate" Storyboard.TargetProperty="Y" >
-                    <DoubleAnimation Duration="00:00:00.5" To="1400">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn" />
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-                <Storyboard x:Name="showBottomGrid" Storyboard.TargetName="bottomGridTranslate" Storyboard.TargetProperty="Y" >
-                    <DoubleAnimation Duration="00:00:00.5" To="0">
-                        <DoubleAnimation.EasingFunction>
-                            <QuadraticEase EasingMode="EaseIn" />
-                        </DoubleAnimation.EasingFunction>
-                    </DoubleAnimation>
-                </Storyboard>
-            </Grid.Resources>
+        <Grid Name="bottomGrid" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Bottom" Margin="0,0,0,0">
 
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="bottomGridTranslate" X="0" Y="0" />

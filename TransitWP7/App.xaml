@@ -20,8 +20,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
-                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.5">
-                            <Rectangle Fill="Black" Stroke="White" StrokeThickness="2" Width="28" Height="28" RenderTransformOrigin="0.5,0.5">
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Rectangle Fill="Black" Stroke="White" StrokeThickness="2" Width="26" Height="26" RenderTransformOrigin="0.5,0.5">
                                 <Rectangle.RenderTransform>
                                     <RotateTransform Angle="45" />
                                 </Rectangle.RenderTransform>
