@@ -190,7 +190,7 @@ namespace TransitWP7.View
             }
         }
 
-        private void TextBlock_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
+        private void SwapEndpoints(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var temp = this.startingInput.Text;
             this.startingInput.Text = this.endingInput.Text;
@@ -200,7 +200,7 @@ namespace TransitWP7.View
         private void ApplicationBarLocateMe_Click(object sender, EventArgs e)
         {
             // TODO: if not location enabled, ask permission
-            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 16);
+            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 15);
         }
 
         private void ApplicationBarDirectionsList_Click(object sender, EventArgs e)
@@ -230,7 +230,7 @@ namespace TransitWP7.View
         {
             this._viewModel.StartOver();
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
-            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 10);
+            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 15);
             
             // the following is a workaround for the appbar preventing the update of binding for textbox
             this.startingInput.Text += " ";
@@ -306,6 +306,9 @@ namespace TransitWP7.View
             {
                 this.SetUIVisibility(UIViewState.ItineraryView);
                 this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
+
+                // set zoom a little lower so endpoints don't underlap overlays
+                this.mainMap.ZoomLevel = this.mainMap.TargetZoomLevel - 0.4;
             }
         }
 

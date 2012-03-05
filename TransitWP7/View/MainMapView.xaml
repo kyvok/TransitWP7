@@ -168,7 +168,7 @@
                                Text="Start" TextAlignment="Right"
                                FontWeight="Bold"
                                HorizontalAlignment="Left" VerticalAlignment="Stretch"
-                               Tap="TextBlock_Tap_1"/>
+                               Tap="SwapEndpoints"/>
                     <toolkit:AutoCompleteBox Name="startingInput"
                              Width="400"
                              Text="{Binding Path=StartLocationText, Mode=TwoWay}"
@@ -188,7 +188,7 @@
                            Text="&#8645; End" TextAlignment="Right"
                            FontWeight="Bold"
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
-                           Tap="TextBlock_Tap_1"/>
+                           Tap="SwapEndpoints"/>
                     <toolkit:AutoCompleteBox Name="endingInput"
                              Width="400"
                              Text="{Binding Path=EndLocationText, Mode=TwoWay}"
