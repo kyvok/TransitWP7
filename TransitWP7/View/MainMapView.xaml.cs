@@ -160,6 +160,7 @@ namespace TransitWP7.View
 
         private void InputBox_GotFocus(object sender, RoutedEventArgs e)
         {
+            this.ApplicationBar.IsVisible = false;
             var inputBox = sender as AutoCompleteBox;
             inputBox.MinimumPrefixLength = 1;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
@@ -183,6 +184,10 @@ namespace TransitWP7.View
         {
             var inputBox = sender as AutoCompleteBox;
             inputBox.MinimumPrefixLength = -1;
+            if (this.bottomGridTranslate.Y != 0)
+            {
+                this.ApplicationBar.IsVisible = true;
+            }
         }
 
         private void TextBlock_Tap_1(object sender, System.Windows.Input.GestureEventArgs e)
@@ -229,11 +234,6 @@ namespace TransitWP7.View
             this.endingInput.Focus();
         }
 
-        private void EndpointInputTextChanged(object sender, RoutedEventArgs routedEventArgs)
-        {
-            ((AutoCompleteBox)sender).GetBindingExpression(AutoCompleteBox.TextProperty).UpdateSource();
-        }
-
         private void ListPickerSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var listPicker = sender as ListPicker;
@@ -274,7 +274,7 @@ namespace TransitWP7.View
                     break;
                 case UIViewState.OnlyStartEndInputsView:
                     this.OnlyStartEndInputViewAnimation.Begin();
-                    this.ApplicationBar.IsVisible = false;
+                    this.ApplicationBar.IsVisible = true;
                     break;
                 case UIViewState.MapViewOnly:
                     this.MapViewOnlyAnimation.Begin();
@@ -303,6 +303,12 @@ namespace TransitWP7.View
             {
                 this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
             }
+        }
+
+        private void ApplicationBarTransitSearch_Click(object sender, EventArgs e)
+        {
+            this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+            this.endingInput.Focus();
         }
     }
 }

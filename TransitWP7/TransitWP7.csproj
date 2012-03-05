@@ -173,6 +173,7 @@
     </Content>
     <Content Include="Content\About\Data.xml" />
     <Content Include="Images\appbar.crosshair.png" />
+    <Content Include="Images\appbar.transit.depart.png" />
     <Content Include="Images\light\bus.100x100.png" />
     <Content Include="Images\light\ferry.100x100.png" />
     <Content Include="Images\light\rail.100x100.png" />

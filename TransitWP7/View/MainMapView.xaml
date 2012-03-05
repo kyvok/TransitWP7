@@ -300,6 +300,7 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="{StaticResource PhoneBackgroundColor}" Opacity="{StaticResource GridOpacityValue}"  IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar.transit.depart.png" Text="Transit search" Click="ApplicationBarTransitSearch_Click" />
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.crosshair.png" Text="Locate Me" Click="ApplicationBarLocateMe_Click"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarDirectionsList_Click"/>
