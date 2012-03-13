@@ -119,6 +119,11 @@ namespace TransitWP7.ViewModel
 
                 return _locationSelectionViewModel;
             }
+
+            set
+            {
+                _locationSelectionViewModel = value;
+            }
         }
 
         public static DirectionsViewModel DirectionsViewModelStatic
@@ -132,6 +137,11 @@ namespace TransitWP7.ViewModel
 
                 return _directionsViewModel;
             }
+
+            set
+            {
+                _directionsViewModel = value;
+            }
         }
 
         public static SettingsViewModel SettingsViewModelStatic
@@ -144,6 +154,11 @@ namespace TransitWP7.ViewModel
                 }
 
                 return _settingsViewModel;
+            }
+
+            set
+            {
+                _settingsViewModel = value;
             }
         }
 
