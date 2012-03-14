@@ -115,6 +115,19 @@
                                 Opacity="0.5" />
             </maps:MapLayer>
             <maps:MapLayer>
+                <!-- TODO add the tap back that select steps. -->
+                <maps:Pushpin Location="{Binding Path=SelectedStartLocation.GeoCoordinate}"
+                              Visibility="{Binding Path=SelectedStartLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
+                              Content="A"
+                              Style="{StaticResource TransitStartPointPushpinStyle2}"
+                              PositionOrigin="Center"
+                              />
+                <maps:Pushpin Location="{Binding Path=SelectedEndLocation.GeoCoordinate}"
+                              Visibility="{Binding Path=SelectedEndLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
+                              Content="B"
+                              Style="{StaticResource TransitEndPointPushpinStyle2}"
+                              PositionOrigin="Center"
+                              />
                 <maps:MapItemsControl ItemsSource="{Binding Path=SelectedTransitTrip.ItinerarySteps}">
                     <maps:MapItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -126,19 +139,6 @@
                         </DataTemplate>
                     </maps:MapItemsControl.ItemTemplate>
                 </maps:MapItemsControl>
-                <!-- TODO add the tap back that select steps. -->
-                <maps:Pushpin Location="{Binding Path=SelectedStartLocation.GeoCoordinate}"
-                              Visibility="{Binding Path=SelectedStartLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
-                              Content="A"
-                              Style="{StaticResource TransitStartPointPushpinStyle}"
-                              PositionOrigin="Center"
-                              />
-                <maps:Pushpin Location="{Binding Path=SelectedEndLocation.GeoCoordinate}"
-                              Visibility="{Binding Path=SelectedEndLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
-                              Content="B"
-                              Style="{StaticResource TransitEndPointPushpinStyle}"
-                              PositionOrigin="Center"
-                              />
             </maps:MapLayer>
             <maps:Pushpin Name="meIndicator"
                           Location="{Binding Path=UserGeoCoordinate}"

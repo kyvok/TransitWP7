@@ -47,6 +47,7 @@
             <Setter Property="Background" Value="Black" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="ExtraBold" />
         </Style>
 
         <Style TargetType="m:Pushpin" x:Key="TransitStartPointPushpinStyle">
@@ -82,6 +83,41 @@
             <Setter Property="FontSize" Value="20" />
             <Setter Property="FontWeight" Value="ExtraBold" />
         </Style>
+
+        <Style TargetType="m:Pushpin" x:Key="TransitStartPointPushpinStyle2">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="m:Pushpin">
+                        <Canvas VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Path Stroke="Black" StrokeThickness="2" Fill="Green" Data="M 0,0 L -36,6 A 16,16 0 1 1 -36,-6 Z" />
+                            <ContentPresenter Canvas.Left="-58" Canvas.Top="-16" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="ExtraBold" />
+        </Style>
+        
+        <Style TargetType="m:Pushpin" x:Key="TransitEndPointPushpinStyle2">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="m:Pushpin">
+                        <Canvas VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Path Stroke="Black" StrokeThickness="2" Fill="Red" Data="M 0,0 L 36,6 A 16,16 0 1 0 36,-6 Z" />
+                            <ContentPresenter Canvas.Left="44" Canvas.Top="-16" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Black" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="ExtraBold" />
+        </Style>
+
 
         <!-- Hack: Cannot share CaretBrush otherwise they get in a bad state. So create one for each tile needed. -->
         <SolidColorBrush x:Key="StartEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
