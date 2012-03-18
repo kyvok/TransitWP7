@@ -25,8 +25,20 @@ namespace TransitWP7
                     using (var output = new StreamWriter(store.CreateFile(ErrorReportFileName)))
                     {
                         output.WriteLine(extra);
+                        output.WriteLine();
+                        output.WriteLine("Top level exception");
+                        output.WriteLine();
                         output.WriteLine(ex.Message);
                         output.WriteLine(ex.StackTrace);
+                        var ex1 = ex.GetBaseException();
+                        if (ex1 != ex)
+                        {
+                            output.WriteLine();
+                            output.WriteLine("Base exception");
+                            output.WriteLine();
+                            output.WriteLine(ex1.Message);
+                            output.WriteLine(ex1.StackTrace);
+                        }
                     }
                 }
             }
@@ -55,12 +67,12 @@ namespace TransitWP7
 
                 if (contents != null)
                 {
-                    var result = MessageBox.Show("A problem occurred the last time you ran this application. Would you like to send an email to report it?", "Problem Report", MessageBoxButton.OKCancel);
+                    var result = MessageBox.Show("A crash occurred the last time you ran Transitive. Would you like to send an email to report it?", "Problem Report", MessageBoxButton.OKCancel);
                     if (result == MessageBoxResult.OK)
                     {
                         var email = new EmailComposeTask();
                         email.To = "christopher.scrosati@gmail.com";
-                        email.Subject = "YourAppName auto-generated problem report";
+                        email.Subject = string.Format("Transitive v{0} crash report", System.Reflection.Assembly.GetExecutingAssembly().FullName.Split('=')[1].Split(',')[0]);
                         email.Body = contents;
                         SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication());
                         email.Show();

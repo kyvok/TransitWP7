@@ -91,7 +91,7 @@ namespace TransitWP7
                 System.Diagnostics.Debugger.Break();
             }
 
-            LittleWatson.ReportException(e.Exception, "Unhandled Navigation Exception in TransitWP7. Navigation URI: " + e.Uri.ToString());
+            LittleWatson.ReportException(e.Exception, "Navigation Failed at Navigation URI: " + e.Uri.ToString());
         }
 
         // Code to execute on Unhandled Exceptions
@@ -103,7 +103,7 @@ namespace TransitWP7
                 System.Diagnostics.Debugger.Break();
             }
 
-            LittleWatson.ReportException(e.ExceptionObject, "Unhandled Exception Error in TransitWP7");
+            LittleWatson.ReportException(e.ExceptionObject, "Unhandled Exception");
         }
 
         #region Phone application initialization
