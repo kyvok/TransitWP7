@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{3e22a826-25cb-436b-85dc-2980dc0e5009}" Title="TransitWP7" RuntimeType="Silverlight" Version="0.4.0.0" Genre="apps.normal"  Author="TransitWP7 author" Description="Sample description" Publisher="TransitWP7">
+  <App xmlns="" ProductID="{3e22a826-25cb-436b-85dc-2980dc0e5009}" Title="Transitive" RuntimeType="Silverlight" Version="0.4.0.0" Genre="apps.normal"  Author="TransitWP7 author" Description="Transitive is a transit and walking directions app." Publisher="TransitWP7">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_GAMERSERVICES"/>
@@ -27,7 +27,7 @@
         <TemplateType5>
           <BackgroundImageURI IsRelative="true" IsResource="false">Background.png</BackgroundImageURI>
           <Count>0</Count>
-          <Title>TransitWP7</Title>
+          <Title>Transitive</Title>
         </TemplateType5>
       </PrimaryToken>
     </Tokens>
