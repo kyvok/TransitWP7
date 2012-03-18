@@ -73,6 +73,14 @@ namespace TransitWP7.View
             Messenger.Default.Send(new NotificationMessage<bool>(true, "Unlocking UI"), MessengerToken.LockUiIndicator);
         }
 
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            // Ensure UI is correct when navigating back from other pages.
+            this.SetUIVisibility(this._viewModel.CurrentViewState);
+        }
+
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
             switch (this._viewModel.CurrentViewState)
@@ -283,6 +291,8 @@ namespace TransitWP7.View
             // the following is a workaround for the appbar preventing the update of binding for textbox
             this.startingInput.Text += " ";
             this.endingInput.Text += " ";
+            this.startingInput.Text = this.startingInput.Text.Remove(this.startingInput.Text.Length - 1, 1);
+            this.endingInput.Text = this.endingInput.Text.Remove(this.endingInput.Text.Length - 1, 1);
 
             this.endingInput.Focus();
         }
@@ -362,7 +372,10 @@ namespace TransitWP7.View
 
         private void MainMap_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            this.SetUIVisibility(MainMapViewModel.UIViewState.MapViewOnly);
+            if (this._viewModel.CurrentViewState != MainMapViewModel.UIViewState.ItineraryView)
+            {
+                this.SetUIVisibility(MainMapViewModel.UIViewState.MapViewOnly);
+            }
         }
 
         private void MainMap_MapPan(object sender, MapDragEventArgs e)
