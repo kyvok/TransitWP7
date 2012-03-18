@@ -38,7 +38,7 @@ namespace TransitWP7.View
                 {
                     if (this._viewModel.SelectedTransitTrip != null)
                     {
-                        this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem].GeoCoordinate, 16);
+                        this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem].GeoCoordinate, Globals.LocateMeZoomLevel);
                     }
                 });
 
@@ -56,6 +56,12 @@ namespace TransitWP7.View
             ClearMap,
             Settings,
             About
+        }
+
+        private enum AppBarIconOrder
+        {
+            NewSearch = 0,
+            LocateMe
         }
 
         protected override void OnNavigatingFrom(System.Windows.Navigation.NavigatingCancelEventArgs e)
@@ -117,7 +123,15 @@ namespace TransitWP7.View
                 this,
                 MessengerToken.MainMapProgressIndicator,
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
-                    () => this.SetProgressBarState(notificationMessage.Notification, notificationMessage.Content)));
+                    () =>
+                    {
+                        if (!NavigationService.CurrentSource.OriginalString.Contains("MainMapView"))
+                        {
+                            return;
+                        }
+
+                        this.SetProgressBarState(notificationMessage.Notification, notificationMessage.Content);
+                    }));
 
             Messenger.Default.Register<NotificationMessage<bool>>(
                 this,
@@ -127,6 +141,31 @@ namespace TransitWP7.View
                     {
                         this.IsEnabled = notificationMessage.Content;
                         this.ApplicationBar.IsVisible = notificationMessage.Content;
+                    }));
+
+            Messenger.Default.Register<NotificationMessage<bool>>(
+                this,
+                MessengerToken.EnableLocationButtonIndicator,
+                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                    () =>
+                    {
+                        if (!NavigationService.CurrentSource.OriginalString.Contains("MainMapView"))
+                        {
+                            return;
+                        }
+
+                        // TODO: possibly pass a small string to indicate a third state for the meIndicator.
+                        if (notificationMessage.Content)
+                        {
+                            this.meIndicator.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            this.meIndicator.Visibility = Visibility.Collapsed;
+                        }
+
+                        var locateMeButton = (ApplicationBarIconButton)this.ApplicationBar.Buttons[(int)AppBarIconOrder.LocateMe];
+                        locateMeButton.IsEnabled = notificationMessage.Content;
                     }));
 
             Messenger.Default.Register<NotificationMessage>(
@@ -208,8 +247,8 @@ namespace TransitWP7.View
 
         private void ApplicationBarLocateMe_Click(object sender, EventArgs e)
         {
-            // TODO: if not location enabled, ask permission
-            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 15);
+            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
+            this._viewModel.CenterMapGeoSet = false;
         }
 
         private void ApplicationBarDirectionsList_Click(object sender, EventArgs e)
@@ -239,7 +278,7 @@ namespace TransitWP7.View
         {
             this._viewModel.StartOver();
             this.SetUIVisibility(MainMapViewModel.UIViewState.OnlyStartEndInputsView);
-            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, 15);
+            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
 
             // the following is a workaround for the appbar preventing the update of binding for textbox
             this.startingInput.Text += " ";
@@ -319,6 +358,16 @@ namespace TransitWP7.View
         {
             this.SetUIVisibility(MainMapViewModel.UIViewState.OnlyStartEndInputsView);
             this.endingInput.Focus();
+        }
+
+        private void MainMap_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            this.SetUIVisibility(MainMapViewModel.UIViewState.MapViewOnly);
+        }
+
+        private void MainMap_MapPan(object sender, MapDragEventArgs e)
+        {
+            this._viewModel.CenterMapGeoSet = true;
         }
     }
 }

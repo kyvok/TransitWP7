@@ -8,12 +8,14 @@
         EndpointResolutionPopup,
         SelectedEndpoint,
         SelectedTransitTrip,
-        LockUiIndicator
+        LockUiIndicator,
+        EnableLocationButtonIndicator
     }
 
     public static class Globals
     {
         public const string MyCurrentLocationText = "My location";
+        public const double LocateMeZoomLevel = 17;
     }
 
     public static class PhonePageUri

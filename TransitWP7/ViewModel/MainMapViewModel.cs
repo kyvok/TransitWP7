@@ -25,6 +25,7 @@ namespace TransitWP7.ViewModel
         private TimeCondition _timeType;
         private GeoCoordinate _userGeoCoordinate;
         private GeoCoordinate _centerMapGeoCoordinate;
+        private bool _centerMapGeoSet;
 
         public MainMapViewModel()
         {
@@ -235,6 +236,23 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public bool CenterMapGeoSet
+        {
+            get
+            {
+                return this._centerMapGeoSet;
+            }
+
+            set
+            {
+                if (value != this._centerMapGeoSet)
+                {
+                    this._centerMapGeoSet = value;
+                    this.RaisePropertyChanged("CenterMapGeoSet");
+                }
+            }
+        }
+
         public ObservableCollection<TransitDescription> TransitDescriptionCollection
         {
             get
@@ -372,7 +390,7 @@ namespace TransitWP7.ViewModel
         {
             var dialogMessage = new DialogMessage(errorMsg, null)
             {
-                Caption = "Oups!",
+                Caption = "Oops!",
                 Button = MessageBoxButton.OK
             };
             Messenger.Default.Send(dialogMessage, MessengerToken.ErrorPopup);
@@ -395,15 +413,16 @@ namespace TransitWP7.ViewModel
             {
                 case GeoPositionStatus.Disabled:
                     ProcessErrorMessage("Location service is disabled. Some features won't work well.");
+                    Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
                 case GeoPositionStatus.NoData:
                 case GeoPositionStatus.Initializing:
                     Messenger.Default.Send(new NotificationMessage<bool>(true, "Acquiring your current location..."), MessengerToken.MainMapProgressIndicator);
+                    Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
                 case GeoPositionStatus.Ready:
                     Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
-                    break;
-                default:
+                    Messenger.Default.Send(new NotificationMessage<bool>(true, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
             }
         }
@@ -482,6 +501,10 @@ namespace TransitWP7.ViewModel
         private void GeoCoordinateWatcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             this.UserGeoCoordinate = e.Position.Location;
+            if (!this.CenterMapGeoSet)
+            {
+                this.CenterMapGeoCoordinate = this.UserGeoCoordinate;
+            }
         }
 
         private void GeoCoordinateWatcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
