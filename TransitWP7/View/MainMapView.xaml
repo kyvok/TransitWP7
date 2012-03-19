@@ -163,33 +163,42 @@
                 <TranslateTransform x:Name="bottomGridTranslate" X="0" Y="0" />
             </Grid.RenderTransform>
             
-            <ListBox Name="TransitTripsList" Margin="6,6,0,0" Width="444"
+            <ListBox Name="TransitTripsList" Margin="6" Width="468"
                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                          VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
                          Tap="TransitTripsList_Tap"
                          ItemsSource="{Binding Path=TransitDescriptionCollection}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                    	<Border BorderThickness="2,1,2,2" CornerRadius="10" Opacity="0.995" Margin="0,0,0,6">
+                    		<Border.BorderBrush>
+                    			<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+                    		</Border.BorderBrush>
+                        <Grid Height="106">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="340"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0">
-                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="75" FontWeight="ExtraBold" Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"/>
+                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="64" FontWeight="ExtraBold" Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"/>
                                 <Line VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="50" Y1="0" Y2="0" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Text="MINUTES" />
-                                <TextBlock FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            </StackPanel>
+                            <Line Margin="5,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="50" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" Grid.Column="1"/>
+                            <Grid Grid.Column="2">
+                            	<Grid.RowDefinitions>
+                            	   <RowDefinition Height="25" />
+                                   <RowDefinition Height="81"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock FontSize="18.667" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" FontWeight="Bold">
                                         <TextBlock.Inlines>
                                             <Run Text="{Binding DepartureTime}"/>
                                             <Run Text="  -  "/>
                                             <Run Text="{Binding ArrivalTime}"/>
                                         </TextBlock.Inlines>
                                 </TextBlock>
-                            </StackPanel>
-                            <Line Margin="5,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="50" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" Grid.Column="1"/>
-                            <ItemsControl ItemsSource="{Binding Path=ItinerarySteps, Converter={StaticResource ItineraryStepsCollapseWalkConverter}}" Margin="0,4,0,0" Grid.Column="2" VerticalAlignment="Center">
+                            <ItemsControl ItemsSource="{Binding Path=ItinerarySteps, Converter={StaticResource ItineraryStepsCollapseWalkConverter}}" Margin="0,4,0,0" VerticalAlignment="Center" Grid.Row="1">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
@@ -210,7 +219,9 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+                            </Grid>
                         </Grid>
+                        </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
