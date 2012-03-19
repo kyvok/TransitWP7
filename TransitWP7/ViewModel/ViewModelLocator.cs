@@ -69,7 +69,7 @@ namespace TransitWP7.ViewModel
                 var busRsp = (Response)bingMapsResponseSerializer.Deserialize(sr3);
                 foreach (Route route in busRsp.ResourceSets[0].Resources)
                 {
-                    TransitDescriptionsTestValues.Add(new TransitDescription(route));
+                    TransitDescriptionsTestValues.Add(new TransitDescription(route, TransitDescription.DirectionType.Transit));
                 }
 
                 sr1.Dispose();

@@ -177,7 +177,7 @@ namespace TransitWP7
                         queryState.TransitDescriptions = new List<TransitDescription>();
                     }
 
-                    queryState.TransitDescriptions.Add(new TransitDescription(route));
+                    queryState.TransitDescriptions.Add(new TransitDescription(route, TransitDescription.DirectionType.Transit));
                 }
             }
             else
@@ -205,7 +205,7 @@ namespace TransitWP7
             {
                 foreach (var route in result.Response.GetRoutes())
                 {
-                    var transitDescription = new TransitDescription(route);
+                    var transitDescription = new TransitDescription(route, TransitDescription.DirectionType.WalkOnly);
 
                     // ignore more than 90 minute walks.
                     if (transitDescription.TravelDuration > 60 * 90)
@@ -234,7 +234,7 @@ namespace TransitWP7
             }
             else
             {
-                proxyQueryResult.Error = new Exception("No transit or less then 90 minutes walk could be found.");
+                proxyQueryResult.Error = new Exception("No transit or reasonable walking directions could be found.");
                 ////if (queryState.SavedException != null)
                 ////{
                 ////    proxyQueryResult.Error = queryState.SavedException;

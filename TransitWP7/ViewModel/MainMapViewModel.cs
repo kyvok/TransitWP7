@@ -66,16 +66,6 @@ namespace TransitWP7.ViewModel
 #endif
         }
 
-        public enum UIViewState
-        {
-            OnlyStartEndInputsView,
-            MapViewOnly,
-            TransitOptionsView,
-            ItineraryView,
-        }
-
-        public UIViewState CurrentViewState { get; set; }
-
         public string StartLocationText
         {
             get
@@ -291,25 +281,21 @@ namespace TransitWP7.ViewModel
             }
         }
 
-        public void TryResolveEndpoints()
+        public void BeginCalculateTransit()
         {
             // This is a new search, clear old transit info.
             this.TransitDescriptionCollection.Clear();
             this.SelectedTransitTrip = null;
 
-            // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
-            Messenger.Default.Send(new NotificationMessage<bool>(false, "Locking UI"), MessengerToken.LockUiIndicator);
-
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
-                ProcessErrorMessage("Where are you starting from?");
+                ProcessErrorMessage("Start point not set", "Where are you starting from?");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(this.EndLocationText))
             {
-                ProcessErrorMessage("Where do you want to go?");
+                ProcessErrorMessage("End point not set", "Where do you want to go?");
                 return;
             }
 
@@ -317,49 +303,7 @@ namespace TransitWP7.ViewModel
             this.StartLocationText = this.StartLocationText.Trim();
             this.EndLocationText = this.EndLocationText.Trim();
 
-            if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
-            {
-                this.UpdateLocation("start", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
-                return;
-            }
-
-            if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
-            {
-                this.UpdateLocation("end", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
-                return;
-            }
-
-            if (this._isStartLocationStale)
-            {
-                ProxyQuery.GetLocationsAndBusiness(
-                    this.StartLocationText,
-                    this.UserGeoCoordinate,
-                    this.GetLocationsAndBusinessCallback,
-                    "start");
-                return;
-            }
-
-            if (this._isEndLocationStale)
-            {
-                ProxyQuery.GetLocationsAndBusiness(
-                    this.EndLocationText,
-                    this.UserGeoCoordinate,
-                    this.GetLocationsAndBusinessCallback,
-                    "end");
-                return;
-            }
-
-            // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Searching transit trips..."), MessengerToken.MainMapProgressIndicator);
-
-            // TODO: fix initial context state not set. Hacked up in view startup.
-            ProxyQuery.GetTransitDirections(
-                this._selectedStartLocation.GeoCoordinate,
-                this._selectedEndLocation.GeoCoordinate,
-                this.DateTime,
-                this.TimeType,
-                this.GetTransitDirectionsCallback,
-                null);
+            this.CoreCalculateTransit();
         }
 
         public void SetSelectedTransitTrip(int index)
@@ -386,11 +330,11 @@ namespace TransitWP7.ViewModel
             this.TransitDescriptionCollection.Clear();
         }
 
-        private static void ProcessErrorMessage(string errorMsg)
+        private static void ProcessErrorMessage(string title, string errorMsg)
         {
             var dialogMessage = new DialogMessage(errorMsg, null)
             {
-                Caption = "Oops!",
+                Caption = title,
                 Button = MessageBoxButton.OK
             };
             Messenger.Default.Send(dialogMessage, MessengerToken.ErrorPopup);
@@ -403,7 +347,7 @@ namespace TransitWP7.ViewModel
         {
             if (!DeviceNetworkInformation.IsNetworkAvailable)
             {
-                ProcessErrorMessage("Your phone's network is unavailable. An internet connection is required for finding transit routes.");
+                ProcessErrorMessage("No network is available", "An internet connection is required for finding new transit routes.");
             }
         }
 
@@ -412,7 +356,7 @@ namespace TransitWP7.ViewModel
             switch (status)
             {
                 case GeoPositionStatus.Disabled:
-                    ProcessErrorMessage("Your phone's location service is currently disabled. Functionality will be reduced until the service is enabled.");
+                    ProcessErrorMessage("Location services are off", "Functionality will be reduced until the location services are enabled. To turn them on, go to location settings on your phone settings.");
                     Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
                 case GeoPositionStatus.NoData:
@@ -427,11 +371,60 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        private void CoreCalculateTransit()
+        {
+            // Notify calcul in progress
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(false, "Locking UI"), MessengerToken.LockUiIndicator);
+
+            if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
+            {
+                this.UpdateLocation("start", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                return;
+            }
+
+            if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
+            {
+                this.UpdateLocation("end", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                return;
+            }
+
+            if (this._isStartLocationStale)
+            {
+                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText, this.UserGeoCoordinate, this.GetLocationsAndBusinessCallback, "start");
+                return;
+            }
+
+            if (this._isEndLocationStale)
+            {
+                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText, this.UserGeoCoordinate, this.GetLocationsAndBusinessCallback, "end");
+                return;
+            }
+
+            // Notify calcul in progress
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Searching transit trips..."), MessengerToken.MainMapProgressIndicator);
+
+            // Ensure time is up-to-date if using Now
+            if (this.TimeType == TimeCondition.Now)
+            {
+                this.DateTime = DateTime.Now;
+            }
+
+            // TODO: fix initial context state not set. Hacked up in view startup.
+            ProxyQuery.GetTransitDirections(
+                this._selectedStartLocation.GeoCoordinate,
+                this._selectedEndLocation.GeoCoordinate,
+                this.DateTime,
+                this.TimeType,
+                this.GetTransitDirectionsCallback,
+                null);
+        }
+
         private void GetLocationsAndBusinessCallback(ProxyQueryResult result)
         {
             if (result.Error != null)
             {
-                ProcessErrorMessage(result.Error.Message);
+                ProcessErrorMessage("Location not found", result.Error.Message);
                 return;
             }
 
@@ -464,7 +457,7 @@ namespace TransitWP7.ViewModel
                             this.SelectedEndLocation = location;
                         }
 
-                        TryResolveEndpoints();
+                        this.CoreCalculateTransit();
                     });
         }
 
@@ -476,7 +469,7 @@ namespace TransitWP7.ViewModel
 
             if (result.Error != null)
             {
-                ProcessErrorMessage(result.Error.Message);
+                ProcessErrorMessage("No transit found", result.Error.Message);
                 return;
             }
 

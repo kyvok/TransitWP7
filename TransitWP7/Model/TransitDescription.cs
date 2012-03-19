@@ -10,6 +10,7 @@ namespace TransitWP7
 
     public class TransitDescription : INotifyPropertyChanged
     {
+        private DirectionType transitType;
         private GeoCoordinate startLocation;
         private GeoCoordinate endLocation;
         private LocationRect mapView;
@@ -23,8 +24,9 @@ namespace TransitWP7
         {
         }
 
-        public TransitDescription(Route route)
+        public TransitDescription(Route route, DirectionType transitType)
         {
+            this.TransitType = transitType;
             this.StartLocation = route.RouteLegs[0].ActualStart.AsGeoCoordinate();
             this.EndLocation = route.RouteLegs[0].ActualEnd.AsGeoCoordinate();
             this.TravelDuration = route.TravelDuration;
@@ -52,6 +54,29 @@ namespace TransitWP7
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public enum DirectionType
+        {
+            Transit,
+            WalkOnly
+        }
+
+        public DirectionType TransitType
+        {
+            get
+            {
+                return this.transitType;
+            }
+
+            set
+            {
+                if (value != this.transitType)
+                {
+                    this.transitType = value;
+                    this.RaisePropertyChanged("TransitType");
+                }
+            }
+        }
 
         public GeoCoordinate StartLocation
         {
