@@ -44,13 +44,14 @@ namespace TransitWP7
                 stream.Dispose();
             }
 
-            {
-                var stream = storage.CreateFile(SettingsViewModelSavedInfo);
-                var xml = new XmlSerializer(typeof(SettingsViewModel));
-                xml.Serialize(stream, ViewModelLocator.SettingsViewModelStatic);
-                stream.Close();
-                stream.Dispose();
-            }
+            // Do not save settings view model
+            ////{
+            ////    var stream = storage.CreateFile(SettingsViewModelSavedInfo);
+            ////    var xml = new XmlSerializer(typeof(SettingsViewModel));
+            ////    xml.Serialize(stream, ViewModelLocator.SettingsViewModelStatic);
+            ////    stream.Close();
+            ////    stream.Dispose();
+            ////}
         }
 
         public static void Load()

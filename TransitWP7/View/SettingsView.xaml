@@ -20,13 +20,28 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="TransitWP7" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="settings" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="TRANSITIVE" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock Text="settings" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <toolkit:ToggleSwitch Content="Use location" IsChecked="{Binding Path=UseLocationSettings}"/>
+        <Grid Grid.Row="2" Margin="12,0,12,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <toolkit:ToggleSwitch Grid.Row="0"
+                                  Header="Use location services"
+                                  VerticalAlignment="Center"
+                                  IsChecked="{Binding Path=UseLocationSetting, Mode=TwoWay}"/>
+            <TextBlock Grid.Row="1" TextWrapping="Wrap"
+                       Margin="12"
+                       Text="Enable location services to help find more relevant local business information.
+                       
+If location services are turned off, the Transitive uses the center of the current map view to search for local business info.
+
+Modification takes effect on next application launch." />
         </Grid>
     </Grid>
  

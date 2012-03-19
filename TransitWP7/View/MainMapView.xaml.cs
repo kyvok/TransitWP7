@@ -23,6 +23,9 @@ namespace TransitWP7.View
         public MainMapView()
         {
             this.InitializeComponent();
+
+            this.FirstRunCheck();
+
             this._viewModel = ViewModelLocator.MainMapViewModelStatic;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
@@ -69,7 +72,7 @@ namespace TransitWP7.View
             Directions = 0,
             TransitOptions,
             ClearMap,
-            ////Settings,
+            Settings,
             About
         }
 
@@ -117,6 +120,36 @@ namespace TransitWP7.View
             }
 
             e.Cancel = true;
+        }
+
+        private void FirstRunCheck()
+        {
+            if (string.IsNullOrEmpty(ViewModelLocator.SettingsViewModelStatic.FirstLaunchSetting))
+            {
+                var title = "Allow Transitive to use location services?";
+
+                var description = "Transitive uses location services to obtain more accurate local business information. It also uses this information to display your current location on screen."
+                                 + "\r\n\r\n"
+                                 + "Your location information is sent to Bing Maps Search to find local businesses around you."
+                                 + "\r\n\r\n"
+                                 + "Select OK to use location services."
+                                 + "\r\n"
+                                 + "Select Cancel to not share your location."
+                                 + "\r\n\r\n"
+                                 + "You can change your preferences in the settings page at a later time.";
+
+                var result = MessageBox.Show(description, title, MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.OK)
+                {
+                    ViewModelLocator.SettingsViewModelStatic.UseLocationSetting = true;
+                }
+                else
+                {
+                    ViewModelLocator.SettingsViewModelStatic.UseLocationSetting = false;
+                }
+
+                ViewModelLocator.SettingsViewModelStatic.FirstLaunchSetting = "set";
+            }
         }
 
         private void RegisterForNotification(string propertyName, FrameworkElement element, PropertyChangedCallback callback)
@@ -343,7 +376,7 @@ namespace TransitWP7.View
                     this.ItineraryViewAnimation.Begin();
                     this.ApplicationBar.IsVisible = true;
                     this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
-                    
+
                     // set zoom a little lower so endpoints don't underlap overlays
                     this.mainMap.ZoomLevel = this.mainMap.TargetZoomLevel - 0.4;
                     break;
