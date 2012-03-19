@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.IsolatedStorage;
+﻿using System.IO.IsolatedStorage;
 using GalaSoft.MvvmLight;
 
 namespace TransitWP7.ViewModel
 {
     public class SettingsViewModel : ViewModelBase
     {
-        private readonly IsolatedStorageSettings _settings;
+        private const string FirstLaunchDoneKey = "FirstLaunchDone";
         private const string UseLocationSettingKey = "UseLocationSetting";
+        private readonly IsolatedStorageSettings _settings;
 
         public SettingsViewModel()
         {
@@ -21,11 +20,28 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        public string FirstLaunchSetting
+        {
+            get
+            {
+                return this.GetValueOrDefault(FirstLaunchDoneKey, string.Empty);
+            }
+
+            set
+            {
+                if (this.AddOrUpdate(FirstLaunchDoneKey, FirstLaunchDoneKey))
+                {
+                    this.SaveSettings();
+                    this.RaisePropertyChanged("FirstLaunchSetting");
+                }
+            }
+        }
+
         public bool UseLocationSetting
         {
             get
             {
-                return this.GetValueOrDefault(UseLocationSettingKey, true);
+                return this.GetValueOrDefault(UseLocationSettingKey, false);
             }
 
             set
@@ -36,6 +52,16 @@ namespace TransitWP7.ViewModel
                     this.RaisePropertyChanged("UseLocationSetting");
                 }
             }
+        }
+
+        private T GetValueOrDefault<T>(string key, T defaultValue)
+        {
+            if (this._settings.Contains(key))
+            {
+                return (T)this._settings[key];
+            }
+
+            return defaultValue;
         }
 
         private bool AddOrUpdate(string key, object value)
@@ -56,16 +82,6 @@ namespace TransitWP7.ViewModel
             }
 
             return valueChanged;
-        }
-
-        private T GetValueOrDefault<T>(string key, T defaultValue)
-        {
-            if (this._settings.Contains(key))
-            {
-                return (T)this._settings[key];
-            }
-
-            return defaultValue;
         }
 
         private void SaveSettings()

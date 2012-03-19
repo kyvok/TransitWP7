@@ -25,7 +25,6 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource Locator}, Path=MainMapViewModel}">
-
         <Grid.Resources>
             <converters:TravelDurationConverter x:Key="TravelDurationConverter"/>
             <converters:ItineraryStepsCollapseWalkConverter x:Key="ItineraryStepsCollapseWalkConverter"/>
@@ -146,6 +145,7 @@
             <maps:Pushpin Name="meIndicator"
                           Location="{Binding Path=UserGeoCoordinate}"
                           PositionOrigin="Center"
+                          Visibility="Collapsed"
                           Style="{StaticResource CurrentLocationPushpinStyle}" />
         </maps:Map>
 
@@ -309,8 +309,7 @@
                 <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarDirectionsList_Click"/>
                 <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarShowTransitOptions_Click"/>
                 <shell:ApplicationBarMenuItem Text="clear map" Click="ApplicationBarClearMap_Click"/>
-                <!-- Removing settings from the app for now. When readding, also modify the AppBarMenuItemOrder enum.-->
-                <!--<shell:ApplicationBarMenuItem Text="settings" Click="ApplicationBarSettings_Click" />-->
+                <shell:ApplicationBarMenuItem Text="settings" Click="ApplicationBarSettings_Click" />
                 <shell:ApplicationBarMenuItem Text="about" Click="ApplicationBarAbout_Click" />
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>

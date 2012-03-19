@@ -29,10 +29,17 @@ namespace TransitWP7.ViewModel
 
         public MainMapViewModel()
         {
-            this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) { MovementThreshold = 20 };
-            this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
-            this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
-            this._geoCoordinateWatcher.Start();
+            if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
+            {
+                this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) { MovementThreshold = 20 };
+                this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
+                this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
+                this._geoCoordinateWatcher.Start();
+            }
+            else
+            {
+                Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
+            }
 
             Messenger.Default.Register<NotificationMessage<LocationDescription>>(
                 this,
@@ -196,7 +203,15 @@ namespace TransitWP7.ViewModel
         {
             get
             {
-                return this._userGeoCoordinate;
+                if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
+                {
+                    return this._userGeoCoordinate;
+                }
+                else
+                {
+                    // Return CenterMapValue if user declined to share location.
+                    return this.CenterMapGeoCoordinate;
+                }
             }
 
             set
@@ -259,7 +274,10 @@ namespace TransitWP7.ViewModel
         public void DoServiceChecks()
         {
             CheckNetwork();
-            CheckLocationService(this._geoCoordinateWatcher.Status);
+            if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
+            {
+                CheckLocationService(this._geoCoordinateWatcher.Status);
+            }
         }
 
         public override void Cleanup()
@@ -377,16 +395,25 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
             Messenger.Default.Send(new NotificationMessage<bool>(false, "Locking UI"), MessengerToken.LockUiIndicator);
 
-            if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
+            if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
-                this.UpdateLocation("start", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
-                return;
-            }
+                if (this._isStartLocationStale
+                    && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.UpdateLocation(
+                        "start",
+                        new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                    return;
+                }
 
-            if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
-            {
-                this.UpdateLocation("end", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
-                return;
+                if (this._isEndLocationStale
+                    && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.UpdateLocation(
+                        "end",
+                        new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                    return;
+                }
             }
 
             if (this._isStartLocationStale)
