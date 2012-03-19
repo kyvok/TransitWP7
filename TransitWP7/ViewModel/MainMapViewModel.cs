@@ -365,7 +365,7 @@ namespace TransitWP7.ViewModel
         {
             if (!DeviceNetworkInformation.IsNetworkAvailable)
             {
-                ProcessErrorMessage("No network is available", "A network connection is required for calculating new transits. Previous transits are still accessible until cleared.");
+                ProcessErrorMessage("No network is available", "An internet connection is required for finding new transit routes.");
             }
         }
 
@@ -374,7 +374,7 @@ namespace TransitWP7.ViewModel
             switch (status)
             {
                 case GeoPositionStatus.Disabled:
-                    ProcessErrorMessage("Location services are off", "Some features might not perform as desired when location services are off. To turn them on, go to location settings on your phone settings.");
+                    ProcessErrorMessage("Location services are off", "Functionality will be reduced until the location services are enabled. To turn them on, go to location settings on your phone settings.");
                     Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
                 case GeoPositionStatus.NoData:

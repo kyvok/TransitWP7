@@ -24,6 +24,7 @@ namespace TransitWP7.View
             this._viewModel = ViewModelLocator.DirectionsViewModelStatic;
             this.Loaded += new System.Windows.RoutedEventHandler(this.DirectionsView_Loaded);
             var ran = new ScrollViewerUtilities();
+            this.Tap += (x, y) => { RaisePropertyChanged("SelectedItem"); };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -88,7 +88,7 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="46"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="{Binding StartTime, Converter={StaticResource DateTimeToTimeConverter}}" Grid.Row="0" FontStyle="Italic" FontSize="16"/>
+                                    <TextBlock Text="{Binding StartTime, Converter={StaticResource DateTimeToTimeConverter}}" Grid.Row="0" FontStyle="Normal" FontSize="18.667"/>
                                     <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Center" Height="46" Grid.Row="1"/>
                                 </Grid>
                             </Grid>
