@@ -33,6 +33,7 @@
             <converters:TimeConditionToDateTimePickerEnabledConverter x:Key="TimeConditionToDateTimePickerEnabledConverter"/>
             <converters:TimeConditionToIntConverter x:Key="TimeConditionToIntConverter"/>
             <converters:NullValueToVisibilityConverter x:Key="NullValueToVisibilityConverter" />
+            <converters:TransitTypeToVisibilityConverter x:Key="TransitTypeToVisibilityConverter" />
             <Storyboard x:Name="MapViewOnlyAnimation">
                 <DoubleAnimation Duration="00:00:00.5" To="-400" Storyboard.TargetName="topGridTranslate" Storyboard.TargetProperty="Y">
                     <DoubleAnimation.EasingFunction>
@@ -180,7 +181,7 @@
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="75" FontWeight="ExtraBold" Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"/>
                                 <Line VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="50" Y1="0" Y2="0" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" />
                                 <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Text="MINUTES" />
-                                <TextBlock FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding Path=TransitType, Converter={StaticResource TransitTypeToVisibilityConverter}}">
                                         <TextBlock.Inlines>
                                             <Run Text="{Binding DepartureTime}"/>
                                             <Run Text="  -  "/>
