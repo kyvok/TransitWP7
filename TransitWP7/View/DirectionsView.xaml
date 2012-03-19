@@ -17,16 +17,8 @@
 
     <Grid x:Name="LayoutRoot" Background="Transparent" DataContext="{Binding Source={StaticResource Locator}, Path=DirectionsViewModel.TransitDescription}">
         <Grid.Resources>
-            <converters:SequentialValueConverter x:Key="VisibilityScrollConverter">
-                <converters:NegateBoolConverter/>
-                <converters:BooleanToVisibilityConverter/>
-            </converters:SequentialValueConverter>
-            <converters:SequentialValueConverter x:Key="VisibilityConverter">
-                <converters:StepTypeToBooleanConverter/>
-                <converters:NegateBoolConverter/>
-                <converters:BooleanToVisibilityConverter/>
-            </converters:SequentialValueConverter>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
+            <converters:DateTimeToTimeConverter x:Key="DateTimeToTimeConverter"/>
         </Grid.Resources>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" x:Name="directionsListScrollViewer">
             <ItemsControl VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}">
@@ -37,40 +29,45 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Grid x:Name="ItemsPanel" Width="480">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="20"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Webdings" FontWeight="Bold" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionsViewPage, Converter={StaticResource VisibilityScrollConverter}}"/>
-                            <Grid Grid.Column="1">
+                        <Border Padding="0,6,0,6" Height="84" Margin="0,6">
+                            <Grid x:Name="ItemsPanel" Width="480" Height="84">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="34"/>
-                                    <ColumnDefinition Width="63"/>
-                                    <ColumnDefinition Width="310"/>
+                                    <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <Border Grid.Column="0" BorderThickness="1" CornerRadius="50" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" Height="25" Width="25" Background="{StaticResource PhoneForegroundBrush}" BorderBrush="{StaticResource PhoneBackgroundBrush}">
-                                    <TextBlock FontSize="18.667" Text="{Binding StepNumber}" Padding="0" Grid.ColumnSpan="2" Foreground="{StaticResource PhoneBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                </Border>
-                                <Grid Grid.Column="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="50"/>
-                                        <RowDefinition Height="23"/>
-                                    </Grid.RowDefinitions>
-                                    <ContentControl HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Width="50" Height="50">
-                                        <Rectangle StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}" Margin="0" Width="50" Height="50">
-                                            <Rectangle.OpacityMask>
-                                                <ImageBrush ImageSource="{Binding IconType, Converter={StaticResource ItineraryStepsToImageConverter}}"/>
-                                            </Rectangle.OpacityMask>
-                                        </Rectangle>
-                                    </ContentControl>
-                                    <TextBlock Text="{Binding BusNumber}" FontSize="18.667" FontStyle="Normal" VerticalAlignment="Center" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                                <Grid Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="34"/>
+                                        <ColumnDefinition Width="63"/>
+                                        <ColumnDefinition Width="310"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="50" Margin="0,-32,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Height="25" Width="25" Background="{StaticResource PhoneForegroundBrush}" BorderBrush="{StaticResource PhoneBackgroundBrush}">
+                                        <TextBlock FontSize="18.667" Text="{Binding StepNumber}" Padding="0" Grid.ColumnSpan="2" Foreground="{StaticResource PhoneBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50"/>
+                                            <RowDefinition Height="23"/>
+                                        </Grid.RowDefinitions>
+                                        <ContentControl HorizontalAlignment="Center" Grid.Row="0" VerticalAlignment="Center" Width="50" Height="50">
+                                            <Rectangle StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}" Margin="0" Width="50" Height="50">
+                                                <Rectangle.OpacityMask>
+                                                    <ImageBrush ImageSource="{Binding IconType, Converter={StaticResource ItineraryStepsToImageConverter}}"/>
+                                                </Rectangle.OpacityMask>
+                                            </Rectangle>
+                                        </ContentControl>
+                                        <TextBlock Text="{Binding BusNumber}" FontSize="18.667" FontStyle="Normal" VerticalAlignment="Center" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                                    </Grid>
+                                    <Grid Grid.Column="2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="46"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="{Binding StartTime, Converter={StaticResource DateTimeToTimeConverter}}" Grid.Row="0" FontStyle="Normal" FontSize="18.667"/>
+                                        <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Width="310"/>
+                                    </Grid>
                                 </Grid>
-                                <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Center" Height="46" Grid.Column="2"/>
                             </Grid>
-                            <TextBlock Text="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Webdings" Visibility="{Binding IsScrollBarScrolling, ElementName=DirectionsViewPage, Converter={StaticResource VisibilityScrollConverter}}"/>
-                        </Grid>
+                        </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

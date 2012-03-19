@@ -171,7 +171,7 @@
                          ItemsSource="{Binding Path=TransitDescriptionCollection}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="2,1,2,2" CornerRadius="10" Opacity="0.995" Margin="0,0,0,6">
+                        <Border BorderThickness="2,1,2,2" CornerRadius="10" Margin="0,0,0,6">
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
                             </Border.BorderBrush>
