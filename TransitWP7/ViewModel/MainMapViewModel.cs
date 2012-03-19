@@ -289,13 +289,13 @@ namespace TransitWP7.ViewModel
 
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
-                ProcessErrorMessage("Where are you starting from?");
+                ProcessErrorMessage("Start point not set", "Where are you starting from?");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(this.EndLocationText))
             {
-                ProcessErrorMessage("Where do you want to go?");
+                ProcessErrorMessage("End point not set", "Where do you want to go?");
                 return;
             }
 
@@ -330,11 +330,11 @@ namespace TransitWP7.ViewModel
             this.TransitDescriptionCollection.Clear();
         }
 
-        private static void ProcessErrorMessage(string errorMsg)
+        private static void ProcessErrorMessage(string title, string errorMsg)
         {
             var dialogMessage = new DialogMessage(errorMsg, null)
             {
-                Caption = "Oops!",
+                Caption = title,
                 Button = MessageBoxButton.OK
             };
             Messenger.Default.Send(dialogMessage, MessengerToken.ErrorPopup);
@@ -347,7 +347,7 @@ namespace TransitWP7.ViewModel
         {
             if (!DeviceNetworkInformation.IsNetworkAvailable)
             {
-                ProcessErrorMessage("No network is available. Internet connection is required for calculating new transits.");
+                ProcessErrorMessage("No network is available", "A network connection is required for calculating new transits. Previous transits are still accessible until cleared.");
             }
         }
 
@@ -356,7 +356,7 @@ namespace TransitWP7.ViewModel
             switch (status)
             {
                 case GeoPositionStatus.Disabled:
-                    ProcessErrorMessage("Location service is disabled. Some features won't work well.");
+                    ProcessErrorMessage("Location services are off", "Some features might not perform as desired when location services are off. To turn them on, go to location settings on your phone settings.");
                     Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
                 case GeoPositionStatus.NoData:
@@ -418,7 +418,7 @@ namespace TransitWP7.ViewModel
         {
             if (result.Error != null)
             {
-                ProcessErrorMessage(result.Error.Message);
+                ProcessErrorMessage("Location not found", result.Error.Message);
                 return;
             }
 
@@ -463,7 +463,7 @@ namespace TransitWP7.ViewModel
 
             if (result.Error != null)
             {
-                ProcessErrorMessage(result.Error.Message);
+                ProcessErrorMessage("No transit found", result.Error.Message);
                 return;
             }
 
