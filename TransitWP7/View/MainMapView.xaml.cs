@@ -209,7 +209,7 @@ namespace TransitWP7.View
                 else
                 {
                     this.Focus();
-                    this._viewModel.TryResolveEndpoints();
+                    this._viewModel.BeginCalculateTransit();
                 }
             }
         }
@@ -310,7 +310,7 @@ namespace TransitWP7.View
 
         private void GoButton_Click(object sender, RoutedEventArgs e)
         {
-            this._viewModel.TryResolveEndpoints();
+            this._viewModel.BeginCalculateTransit();
         }
 
         private void ApplicationBarAbout_Click(object sender, EventArgs e)

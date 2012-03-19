@@ -291,15 +291,11 @@ namespace TransitWP7.ViewModel
             }
         }
 
-        public void TryResolveEndpoints()
+        public void BeginCalculateTransit()
         {
             // This is a new search, clear old transit info.
             this.TransitDescriptionCollection.Clear();
             this.SelectedTransitTrip = null;
-
-            // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
-            Messenger.Default.Send(new NotificationMessage<bool>(false, "Locking UI"), MessengerToken.LockUiIndicator);
 
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
@@ -317,49 +313,7 @@ namespace TransitWP7.ViewModel
             this.StartLocationText = this.StartLocationText.Trim();
             this.EndLocationText = this.EndLocationText.Trim();
 
-            if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
-            {
-                this.UpdateLocation("start", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
-                return;
-            }
-
-            if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
-            {
-                this.UpdateLocation("end", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
-                return;
-            }
-
-            if (this._isStartLocationStale)
-            {
-                ProxyQuery.GetLocationsAndBusiness(
-                    this.StartLocationText,
-                    this.UserGeoCoordinate,
-                    this.GetLocationsAndBusinessCallback,
-                    "start");
-                return;
-            }
-
-            if (this._isEndLocationStale)
-            {
-                ProxyQuery.GetLocationsAndBusiness(
-                    this.EndLocationText,
-                    this.UserGeoCoordinate,
-                    this.GetLocationsAndBusinessCallback,
-                    "end");
-                return;
-            }
-
-            // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Searching transit trips..."), MessengerToken.MainMapProgressIndicator);
-
-            // TODO: fix initial context state not set. Hacked up in view startup.
-            ProxyQuery.GetTransitDirections(
-                this._selectedStartLocation.GeoCoordinate,
-                this._selectedEndLocation.GeoCoordinate,
-                this.DateTime,
-                this.TimeType,
-                this.GetTransitDirectionsCallback,
-                null);
+            this.CoreCalculateTransit();
         }
 
         public void SetSelectedTransitTrip(int index)
@@ -427,6 +381,49 @@ namespace TransitWP7.ViewModel
             }
         }
 
+        private void CoreCalculateTransit()
+        {
+            // Notify calcul in progress
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(false, "Locking UI"), MessengerToken.LockUiIndicator);
+
+            if (this._isStartLocationStale && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
+            {
+                this.UpdateLocation("start", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                return;
+            }
+
+            if (this._isEndLocationStale && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
+            {
+                this.UpdateLocation("end", new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                return;
+            }
+
+            if (this._isStartLocationStale)
+            {
+                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText, this.UserGeoCoordinate, this.GetLocationsAndBusinessCallback, "start");
+                return;
+            }
+
+            if (this._isEndLocationStale)
+            {
+                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText, this.UserGeoCoordinate, this.GetLocationsAndBusinessCallback, "end");
+                return;
+            }
+
+            // Notify calcul in progress
+            Messenger.Default.Send(new NotificationMessage<bool>(true, "Searching transit trips..."), MessengerToken.MainMapProgressIndicator);
+
+            // TODO: fix initial context state not set. Hacked up in view startup.
+            ProxyQuery.GetTransitDirections(
+                this._selectedStartLocation.GeoCoordinate,
+                this._selectedEndLocation.GeoCoordinate,
+                this.DateTime,
+                this.TimeType,
+                this.GetTransitDirectionsCallback,
+                null);
+        }
+
         private void GetLocationsAndBusinessCallback(ProxyQueryResult result)
         {
             if (result.Error != null)
@@ -464,7 +461,7 @@ namespace TransitWP7.ViewModel
                             this.SelectedEndLocation = location;
                         }
 
-                        TryResolveEndpoints();
+                        this.CoreCalculateTransit();
                     });
         }
 
