@@ -404,6 +404,12 @@ namespace TransitWP7.ViewModel
             // Notify calcul in progress
             Messenger.Default.Send(new NotificationMessage<bool>(true, "Searching transit trips..."), MessengerToken.MainMapProgressIndicator);
 
+            // Ensure time is up-to-date if using Now
+            if (this.TimeType == TimeCondition.Now)
+            {
+                this.DateTime = DateTime.Now;
+            }
+
             // TODO: fix initial context state not set. Hacked up in view startup.
             ProxyQuery.GetTransitDirections(
                 this._selectedStartLocation.GeoCoordinate,
