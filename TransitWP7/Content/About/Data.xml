@@ -5,30 +5,30 @@
        ...then you need to override the 'Title' attribute of the 'App' node to provide the correct title explicitly here! -->
   <!-- The AdditionalNotes attribute has no equivalent in the WMAppManifest.xml; you can only define its content here -->
   <!-- Explicitly set any of the attributes to an empty string to remove it (including its label) from the dialog -->
-  <App Author="[Your name here]"
-       Publisher="[Publisher]"       
-       AdditionalNotes="" />
+  <App Author="BC Software"
+       Publisher=""
+       AdditionalNotes="Submit your ideas and suggestions to the support email." />
   <Items>
     <!-- Create a MainItem entry to configure the front page -->
     <!-- The Titel attribute defines the title of the pivot item -->
-    <!-- The Label (and review buttong content) attributes can override the default values to what you like, and also help with localization -->
+    <!-- The Label (and review button content) attributes can override the default values to what you like, and also help with localization -->
     <MainItem Title="about"
               AppAuthorLabel="by"
               AppDescriptionLabel="Description:"
               AppPublisherLabel="Publisher:"
               AppVersionLabel="Version:"
               AppAdditionalNotesLabel="Additional Notes:"
-              AppReviewButtonContent="Review this app!">
+              AppReviewButtonContent="Submit Review on Marketplace">
       <Links>
         <!-- A collection of links presented on the front page. -->
         <!-- By using different protocols like http or mailto you can invoke the respective applications -->
         <!-- The Label attribute defines an additional label placed in front of the hyperlink -->
         <!-- Use this to provide contact/support details for your app -->
-        <Link NavigateUri="http://www.example.com"
+        <!--<Link NavigateUri="http://www.example.com"
                Content="http://www.example.com"
-               Label="Web:" />
-        <Link NavigateUri="mailto:support@example.com"
-               Content="support@example.com"
+               Label="Web:" />-->
+        <Link NavigateUri="mailto:TransitiveWP7@live.com"
+               Content="TransitiveWP7@live.com"
                Label="Support:" />
       </Links>
     </MainItem>
@@ -36,6 +36,11 @@
     <!-- The Title attribute defines the title of the pivot item -->
     <!-- Each Item can be a remote item (fetched from a Uri) or a local item (using its content), or both (local content is the fallback value if fetching the network content fails) -->
     <!-- Supported types are "text" and "xaml", where text is nicely formatted automatically, and XAML is handled by the built-in XamlReader -->
+    <Item Title="help"
+           Type="text">
+      Local business search
+      Transitive provides Local Business results that are more accurate if you allow the application to use your phone location service. Otherwise, the Local Business results will be pulled from around your center map view.
+    </Item>
     <Item Title="history"
            Type="text">
       0.4.0.0

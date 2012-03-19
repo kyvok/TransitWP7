@@ -71,7 +71,7 @@ namespace TransitWP7
                     if (result == MessageBoxResult.OK)
                     {
                         var email = new EmailComposeTask();
-                        email.To = "christopher.scrosati@gmail.com";
+                        email.To = Globals.SupportEmailAddress;
                         email.Subject = string.Format("Transitive v{0} crash report", System.Reflection.Assembly.GetExecutingAssembly().FullName.Split('=')[1].Split(',')[0]);
                         email.Body = contents;
                         SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication());

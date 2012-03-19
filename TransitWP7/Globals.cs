@@ -16,6 +16,7 @@
     {
         public const string MyCurrentLocationText = "My location";
         public const double LocateMeZoomLevel = 17;
+        public const string SupportEmailAddress = "TransitiveWP7@live.com";
     }
 
     public static class PhonePageUri

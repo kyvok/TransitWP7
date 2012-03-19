@@ -54,7 +54,7 @@ namespace TransitWP7.View
             Directions = 0,
             TransitOptions,
             ClearMap,
-            Settings,
+            ////Settings,
             About
         }
 
