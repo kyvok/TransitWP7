@@ -39,9 +39,7 @@
                        Margin="12"
                        Text="Enable location services to help find more relevant local business information.
                        
-If location services are turned off, the Transitive uses the center of the current map view to search for local business info.
-
-Modification takes effect on next application launch." />
+If location services are turned off, Transitive uses the center of the current map view to search for local business info." />
         </Grid>
     </Grid>
  

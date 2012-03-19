@@ -12,7 +12,7 @@ namespace TransitWP7.ViewModel
 {
     public class MainMapViewModel : ViewModelBase
     {
-        private readonly GeoCoordinateWatcher _geoCoordinateWatcher;
+        private GeoCoordinateWatcher _geoCoordinateWatcher;
         private ObservableCollection<TransitDescription> _transitDescriptionCollection = new ObservableCollection<TransitDescription>();
         private string _startLocationText;
         private bool _isStartLocationStale = true;
@@ -29,17 +29,7 @@ namespace TransitWP7.ViewModel
 
         public MainMapViewModel()
         {
-            if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
-            {
-                this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) { MovementThreshold = 20 };
-                this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
-                this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
-                this._geoCoordinateWatcher.Start();
-            }
-            else
-            {
-                Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
-            }
+            this.InitializeGeoCoordinateWatcher();
 
             Messenger.Default.Register<NotificationMessage<LocationDescription>>(
                 this,
@@ -277,6 +267,23 @@ namespace TransitWP7.ViewModel
             if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
                 CheckLocationService(this._geoCoordinateWatcher.Status);
+            }
+        }
+
+        public void InitializeGeoCoordinateWatcher()
+        {
+            if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting && this._geoCoordinateWatcher == null)
+            {
+                this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 20 };
+                this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
+                this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
+                this._geoCoordinateWatcher.Start();
+            }
+            else if (this._geoCoordinateWatcher != null)
+            {
+                this._geoCoordinateWatcher.Stop();
+                Messenger.Default.Send(
+                    new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
             }
         }
 

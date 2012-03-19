@@ -15,6 +15,8 @@ using TransitWP7.ViewModel;
 
 namespace TransitWP7.View
 {
+    using System.Threading;
+
     // TODO: Localize this app properly. Will need a resource file.
     public partial class MainMapView : PhoneApplicationPage
     {
@@ -23,8 +25,6 @@ namespace TransitWP7.View
         public MainMapView()
         {
             this.InitializeComponent();
-
-            this.FirstRunCheck();
 
             this._viewModel = ViewModelLocator.MainMapViewModelStatic;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
@@ -44,8 +44,6 @@ namespace TransitWP7.View
                         this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem].GeoCoordinate, Globals.LocateMeZoomLevel);
                     }
                 });
-
-            this._viewModel.DoServiceChecks();
 
             if (this._viewModel.SelectedTransitTrip != null)
             {
@@ -99,6 +97,8 @@ namespace TransitWP7.View
 
             // Ensure UI is correct when navigating back from other pages.
             this.SetUIVisibility(this.CurrentViewState);
+
+            ThreadPool.QueueUserWorkItem(_ => { DispatcherHelper.UIDispatcher.BeginInvoke(() => { this.FirstRunCheck(); }); });
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
@@ -128,15 +128,15 @@ namespace TransitWP7.View
             {
                 var title = "Allow Transitive to use location services?";
 
-                var description = "Transitive uses location services to obtain more accurate local business information. It also uses this information to display your current location on screen."
+                var description = "Transitive uses your location to obtain more accurate local business information. It also uses this information to display your location on screen."
                                  + "\r\n\r\n"
-                                 + "Your location information is sent to Bing Maps Search to find local businesses around you."
+                                 + "Your location information is only sent to Bing Maps Search to find local businesses and calculate transit routes."
                                  + "\r\n\r\n"
                                  + "Select OK to use location services."
                                  + "\r\n"
                                  + "Select Cancel to not share your location."
                                  + "\r\n\r\n"
-                                 + "You can change your preferences in the settings page at a later time.";
+                                 + "You can change your preferences in the settings page.";
 
                 var result = MessageBox.Show(description, title, MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.OK)
@@ -150,6 +150,9 @@ namespace TransitWP7.View
 
                 ViewModelLocator.SettingsViewModelStatic.FirstLaunchSetting = "set";
             }
+
+            this._viewModel.InitializeGeoCoordinateWatcher();
+            this._viewModel.DoServiceChecks();
         }
 
         private void RegisterForNotification(string propertyName, FrameworkElement element, PropertyChangedCallback callback)
