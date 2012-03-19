@@ -172,7 +172,9 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\About\Data.xml" />
+    <Content Include="Content\About\Data.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Images\appbar.crosshair.png" />
     <Content Include="Images\appbar.transit.depart.png" />
     <Content Include="Images\light\bus.100x100.png" />
