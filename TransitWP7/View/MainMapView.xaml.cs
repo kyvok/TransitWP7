@@ -45,13 +45,21 @@ namespace TransitWP7.View
                     }
                 });
 
+            // Must be able to quit application with BackKey press when opening the app.
+            // So show the map view always when starting up.
+            this.SetUIVisibility(UIViewState.MapViewOnly);
+
+            // Additional logic for application start up view.
             if (this._viewModel.SelectedTransitTrip != null)
             {
-                this.SetUIVisibility(UIViewState.ItineraryView);
+                this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
+
+                // set zoom a little lower so endpoints don't underlap overlays
+                this.mainMap.ZoomLevel = this.mainMap.TargetZoomLevel - 0.4;
             }
-            else
+            else if (!this._viewModel.CenterMapGeoSet && ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
-                this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+                this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
             }
 
             LittleWatson.CheckForPreviousException();
@@ -98,7 +106,8 @@ namespace TransitWP7.View
             // Ensure UI is correct when navigating back from other pages.
             this.SetUIVisibility(this.CurrentViewState);
 
-            ThreadPool.QueueUserWorkItem(_ => { DispatcherHelper.UIDispatcher.BeginInvoke(() => { this.FirstRunCheck(); }); });
+            // Use background thread for this.
+            ThreadPool.QueueUserWorkItem(_ => DispatcherHelper.UIDispatcher.BeginInvoke(this.FirstRunCheck));
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
@@ -378,10 +387,14 @@ namespace TransitWP7.View
                 case UIViewState.ItineraryView:
                     this.ItineraryViewAnimation.Begin();
                     this.ApplicationBar.IsVisible = true;
-                    this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
+                    if (this._viewModel.SelectedTransitTrip != null)
+                    {
+                        this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
 
-                    // set zoom a little lower so endpoints don't underlap overlays
-                    this.mainMap.ZoomLevel = this.mainMap.TargetZoomLevel - 0.4;
+                        // set zoom a little lower so endpoints don't underlap overlays
+                        this.mainMap.ZoomLevel = this.mainMap.TargetZoomLevel - 0.4;
+                    }
+
                     break;
                 case UIViewState.TransitOptionsView:
                     this.TransitOptionsViewAnimation.Begin();

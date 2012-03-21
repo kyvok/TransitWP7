@@ -274,7 +274,7 @@ namespace TransitWP7.ViewModel
         {
             if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting && this._geoCoordinateWatcher == null)
             {
-                this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 20 };
+                this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) { MovementThreshold = 10 };
                 this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
                 this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
                 this._geoCoordinateWatcher.Start();
@@ -404,6 +404,12 @@ namespace TransitWP7.ViewModel
 
             if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
+                if (this._geoCoordinateWatcher.Status != GeoPositionStatus.Ready)
+                {
+                    ProcessErrorMessage("Your location is unknown", "With location services enabled, your current position must be known to get transit information.");
+                    return;
+                }
+
                 if (this._isStartLocationStale
                     && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
                 {

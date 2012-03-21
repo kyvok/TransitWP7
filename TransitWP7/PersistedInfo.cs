@@ -61,7 +61,7 @@ namespace TransitWP7
             if (storage.FileExists(MainMapViewModelSavedInfo)
                 && storage.FileExists(DirectionsViewModelSavedInfo)
                 && storage.FileExists(LocationSelectionViewModelSavedInfo)
-                && storage.FileExists(SettingsViewModelSavedInfo))
+                /*&& storage.FileExists(SettingsViewModelSavedInfo)*/)
             {
                 try
                 {
@@ -89,13 +89,14 @@ namespace TransitWP7
                         stream.Dispose();
                     }
 
-                    {
-                        var stream = storage.OpenFile(SettingsViewModelSavedInfo, FileMode.Open);
-                        var xml = new XmlSerializer(typeof(SettingsViewModel));
-                        ViewModelLocator.SettingsViewModelStatic = xml.Deserialize(stream) as SettingsViewModel;
-                        stream.Close();
-                        stream.Dispose();
-                    }
+                    // settings view model is not saved
+                    ////{
+                    ////    var stream = storage.OpenFile(SettingsViewModelSavedInfo, FileMode.Open);
+                    ////    var xml = new XmlSerializer(typeof(SettingsViewModel));
+                    ////    ViewModelLocator.SettingsViewModelStatic = xml.Deserialize(stream) as SettingsViewModel;
+                    ////    stream.Close();
+                    ////    stream.Dispose();
+                    ////}
                 }
                 catch (Exception)
                 {
