@@ -57,7 +57,7 @@ namespace TransitWP7.View
                 // set zoom a little lower so endpoints don't underlap overlays
                 this.mainMap.ZoomLevel = this.mainMap.TargetZoomLevel - 0.4;
             }
-            else if (!this._viewModel.CenterMapGeoSet && ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
+            else if (!this._viewModel.CenterMapGeoSet && ViewModelLocator.SettingsViewModelStatic.UseLocationSetting && this._viewModel.UserGeoCoordinate != null)
             {
                 this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
             }

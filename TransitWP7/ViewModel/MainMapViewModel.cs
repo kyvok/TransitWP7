@@ -29,8 +29,6 @@ namespace TransitWP7.ViewModel
 
         public MainMapViewModel()
         {
-            this.InitializeGeoCoordinateWatcher();
-
             Messenger.Default.Register<NotificationMessage<LocationDescription>>(
                 this,
                 MessengerToken.SelectedEndpoint,
@@ -199,8 +197,8 @@ namespace TransitWP7.ViewModel
                 }
                 else
                 {
-                    // Return CenterMapValue if user declined to share location.
-                    return this.CenterMapGeoCoordinate;
+                    // We don't know where the user is at all
+                    return null;
                 }
             }
 
@@ -268,31 +266,44 @@ namespace TransitWP7.ViewModel
             {
                 CheckLocationService(this._geoCoordinateWatcher.Status);
             }
+            else
+            {
+                // disable the locate me button
+                Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
+            }
         }
 
         public void InitializeGeoCoordinateWatcher()
         {
-            if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting && this._geoCoordinateWatcher == null)
+            if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
-                this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) { MovementThreshold = 10 };
-                this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
-                this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
-                this._geoCoordinateWatcher.Start();
+                if (this._geoCoordinateWatcher == null)
+                {
+                    this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = Globals.MovementThreshold };
+                    this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
+                    this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
+                    this._geoCoordinateWatcher.Start();
+                }
             }
-            else if (this._geoCoordinateWatcher != null)
+            else
+            {
+                this.DisposeGeoCoordinateWatcher();
+            }
+        }
+
+        public void DisposeGeoCoordinateWatcher()
+        {
+            if (this._geoCoordinateWatcher != null)
             {
                 this._geoCoordinateWatcher.Stop();
-                Messenger.Default.Send(
-                    new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
+                this._geoCoordinateWatcher.Dispose();
+                this._geoCoordinateWatcher = null;
             }
         }
 
         public override void Cleanup()
         {
-            if (this._geoCoordinateWatcher != null)
-            {
-                this._geoCoordinateWatcher.Dispose();
-            }
+            this.DisposeGeoCoordinateWatcher();
 
             base.Cleanup();
         }
@@ -431,13 +442,13 @@ namespace TransitWP7.ViewModel
 
             if (this._isStartLocationStale)
             {
-                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText, this.UserGeoCoordinate, this.GetLocationsAndBusinessCallback, "start");
+                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate, this.GetLocationsAndBusinessCallback, "start");
                 return;
             }
 
             if (this._isEndLocationStale)
             {
-                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText, this.UserGeoCoordinate, this.GetLocationsAndBusinessCallback, "end");
+                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate, this.GetLocationsAndBusinessCallback, "end");
                 return;
             }
 
