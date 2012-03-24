@@ -105,11 +105,17 @@
     <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
     <Compile Include="LittleWatson.cs" />
     <Compile Include="PersistedInfo.cs" />
-    <Compile Include="SR.Designer.cs">
+    <Compile Include="Resources\SR.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SR.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\SR.es-ES.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SR.es-ES.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\SRHelper.cs" />
     <Compile Include="ViewModel\LocationSelectionViewModel.cs" />
     <Compile Include="ViewModel\DirectionsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
@@ -201,8 +207,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ApiKeys.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="SR.es-ES.resx" />
-    <EmbeddedResource Include="SR.resx">
+    <EmbeddedResource Include="Resources\SR.es-ES.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SR.es-ES.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SR.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SR.Designer.cs</LastGenOutput>
     </EmbeddedResource>

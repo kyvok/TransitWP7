@@ -161,6 +161,18 @@
   <data name="ErrorMsgTitleUnknownLocation" xml:space="preserve">
     <value>Your location is unknown</value>
   </data>
+  <data name="FirstRunAuthorizeLocationDesc" xml:space="preserve">
+    <value>Transitive uses your location to obtain more accurate local business information. It also uses this information to display your location on screen.
+Your location information is only sent to Bing Maps Search to find local businesses and calculate transit routes.
+
+Select OK to use location services.
+Select Cancel to not share your location.
+
+You can change your preferences in the settings page.</value>
+  </data>
+  <data name="FirstRunAuthorizeLocationTitle" xml:space="preserve">
+    <value>Allow Transitive to use location services?</value>
+  </data>
   <data name="LittleWatsonDialogDesc" xml:space="preserve">
     <value>A crash occurred the last time you ran Transitive. Would you like to send an email to report it?</value>
   </data>

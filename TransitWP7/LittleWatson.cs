@@ -6,6 +6,12 @@ using Microsoft.Phone.Tasks;
 
 namespace TransitWP7
 {
+    using System.Threading;
+
+    using GalaSoft.MvvmLight.Threading;
+
+    using TransitWP7.Resources;
+
     // More info about this error reporting class here:
     // http://blogs.msdn.com/b/andypennell/archive/2010/11/01/error-reporting-on-windows-phone-7.aspx
     // Can also be transformed as a http reporting service here:
@@ -67,16 +73,19 @@ namespace TransitWP7
 
                 if (contents != null)
                 {
-                    var result = MessageBox.Show(SR.LittleWatsonDialogDesc, SR.LittleWatsonDialogTitle, MessageBoxButton.OKCancel);
-                    if (result == MessageBoxResult.OK)
-                    {
-                        var email = new EmailComposeTask();
-                        email.To = Globals.SupportEmailAddress;
-                        email.Subject = string.Format("Transitive v{0} crash report", System.Reflection.Assembly.GetExecutingAssembly().FullName.Split('=')[1].Split(',')[0]);
-                        email.Body = contents;
-                        SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication());
-                        email.Show();
-                    }
+                    ThreadPool.QueueUserWorkItem(_ => DispatcherHelper.UIDispatcher.BeginInvoke(() =>
+                        {
+                            var result = MessageBox.Show(SR.LittleWatsonDialogDesc, SR.LittleWatsonDialogTitle, MessageBoxButton.OKCancel);
+                            if (result == MessageBoxResult.OK)
+                            {
+                                var email = new EmailComposeTask();
+                                email.To = Globals.SupportEmailAddress;
+                                email.Subject = string.Format("Transitive v{0} crash report", System.Reflection.Assembly.GetExecutingAssembly().FullName.Split('=')[1].Split(',')[0]);
+                                email.Body = contents;
+                                SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication());
+                                email.Show();
+                            }
+                        }));
                 }
             }
             catch (Exception)

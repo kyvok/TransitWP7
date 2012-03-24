@@ -20,6 +20,9 @@ namespace TransitWP7
             // Global handler for uncaught exceptions. 
             this.UnhandledException += this.Application_UnhandledException;
 
+            // Load persisted info BEFORE initializing the component to ensure they are bound properly.
+            PersistedInfo.Load();
+
             // Standard Silverlight initialization
             this.InitializeComponent();
 
