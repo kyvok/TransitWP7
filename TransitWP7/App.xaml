@@ -9,6 +9,7 @@
              xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:ViewModel="clr-namespace:TransitWP7.ViewModel"
+             xmlns:TransitWP7="clr-namespace:TransitWP7"
              mc:Ignorable="d">
     <!--Application Resources-->
     <Application.Resources>
@@ -164,6 +165,7 @@
             </Setter>
         </Style>
 
+        <TransitWP7:SR x:Key="SR" />
         <ViewModel:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
     </Application.Resources>
     <Application.ApplicationLifetimeObjects>

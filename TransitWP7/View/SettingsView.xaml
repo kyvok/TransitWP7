@@ -32,14 +32,12 @@
             </Grid.RowDefinitions>
             
             <toolkit:ToggleSwitch Grid.Row="0"
-                                  Header="Use location services"
+                                  Header="{Binding Path=ViewSettingsSetting1Title, Source={StaticResource SR}}"
                                   VerticalAlignment="Center"
                                   IsChecked="{Binding Path=UseLocationSetting, Mode=TwoWay}"/>
             <TextBlock Grid.Row="1" TextWrapping="Wrap"
                        Margin="12"
-                       Text="Enable location services to help find more relevant local business information.
-                       
-If location services are turned off, Transitive uses the center of the current map view to search for local business info." />
+                       Text="{Binding Path=ViewSettingsSetting1HelpText, Source={StaticResource SR}}" />
         </Grid>
     </Grid>
  

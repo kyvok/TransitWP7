@@ -30,8 +30,8 @@ namespace TransitWP7.View
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
-            this.startingInput.ItemsSource = new ObservableCollection<string> { Globals.MyCurrentLocationText };
-            this.endingInput.ItemsSource = new ObservableCollection<string> { Globals.MyCurrentLocationText };
+            this.startingInput.ItemsSource = new ObservableCollection<string> { SR.MyCurrentLocationText };
+            this.endingInput.ItemsSource = new ObservableCollection<string> { SR.MyCurrentLocationText };
 
             this.RegisterNotifications();
             this.RegisterForNotification(

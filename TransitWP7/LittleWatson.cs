@@ -67,7 +67,7 @@ namespace TransitWP7
 
                 if (contents != null)
                 {
-                    var result = MessageBox.Show("A crash occurred the last time you ran Transitive. Would you like to send an email to report it?", "Problem Report", MessageBoxButton.OKCancel);
+                    var result = MessageBox.Show(SR.LittleWatsonDialogDesc, SR.LittleWatsonDialogTitle, MessageBoxButton.OKCancel);
                     if (result == MessageBoxResult.OK)
                     {
                         var email = new EmailComposeTask();

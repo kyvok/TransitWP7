@@ -325,13 +325,13 @@ namespace TransitWP7.ViewModel
 
             if (string.IsNullOrWhiteSpace(this.StartLocationText))
             {
-                ProcessErrorMessage("Start point not set", "Where are you starting from?");
+                ProcessErrorMessage(SR.ErrorMsgTitleStartPointNotSet, SR.ErrorMsgDescStartPointNotSet);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(this.EndLocationText))
             {
-                ProcessErrorMessage("End point not set", "Where do you want to go?");
+                ProcessErrorMessage(SR.ErrorMsgTitleEndPointNotSet, SR.ErrorMsgDescEndPointNotSet);
                 return;
             }
 
@@ -354,7 +354,7 @@ namespace TransitWP7.ViewModel
 
         internal void StartOver()
         {
-            this.StartLocationText = Globals.MyCurrentLocationText;
+            this.StartLocationText = SR.MyCurrentLocationText;
             this._isStartLocationStale = true;
             this.EndLocationText = string.Empty;
             this._isEndLocationStale = true;
@@ -383,7 +383,7 @@ namespace TransitWP7.ViewModel
         {
             if (!DeviceNetworkInformation.IsNetworkAvailable)
             {
-                ProcessErrorMessage("No network is available", "An internet connection is required for finding new transit routes.");
+                ProcessErrorMessage(SR.ErrorMsgTitleNoNetwork, SR.ErrorMsgDescNoNetwork);
             }
         }
 
@@ -392,12 +392,12 @@ namespace TransitWP7.ViewModel
             switch (status)
             {
                 case GeoPositionStatus.Disabled:
-                    ProcessErrorMessage("Location services are off", "Functionality will be reduced until the location services are enabled. To turn them on, go to location settings on your phone settings.");
+                    ProcessErrorMessage(SR.ErrorMsgTitleLocationServicesOff, SR.ErrorMsgDescLocationServicesOff);
                     Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
                 case GeoPositionStatus.NoData:
                 case GeoPositionStatus.Initializing:
-                    Messenger.Default.Send(new NotificationMessage<bool>(true, "Acquiring your current location..."), MessengerToken.MainMapProgressIndicator);
+                    Messenger.Default.Send(new NotificationMessage<bool>(true, SR.ProgressBarAcquiringLocation), MessengerToken.MainMapProgressIndicator);
                     Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
                 case GeoPositionStatus.Ready:
@@ -410,32 +410,32 @@ namespace TransitWP7.ViewModel
         private void CoreCalculateTransit()
         {
             // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Resolving endpoints..."), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(true, SR.ProgressBarSearchingEndpoint), MessengerToken.MainMapProgressIndicator);
             Messenger.Default.Send(new NotificationMessage<bool>(false, "Locking UI"), MessengerToken.LockUiIndicator);
 
             if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
                 if (this._geoCoordinateWatcher.Status != GeoPositionStatus.Ready)
                 {
-                    ProcessErrorMessage("Your location is unknown", "With location services enabled, your current position must be known to get transit information.");
+                    ProcessErrorMessage(SR.ErrorMsgTitleUnknownLocation, SR.ErrorMsgDescUnknownLocation);
                     return;
                 }
 
                 if (this._isStartLocationStale
-                    && Globals.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
+                    && SR.MyCurrentLocationText.Equals(this.StartLocationText, StringComparison.OrdinalIgnoreCase))
                 {
                     this.UpdateLocation(
                         "start",
-                        new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                        new LocationDescription(this.UserGeoCoordinate) { DisplayName = SR.MyCurrentLocationText });
                     return;
                 }
 
                 if (this._isEndLocationStale
-                    && Globals.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
+                    && SR.MyCurrentLocationText.Equals(this.EndLocationText, StringComparison.OrdinalIgnoreCase))
                 {
                     this.UpdateLocation(
                         "end",
-                        new LocationDescription(this.UserGeoCoordinate) { DisplayName = Globals.MyCurrentLocationText });
+                        new LocationDescription(this.UserGeoCoordinate) { DisplayName = SR.MyCurrentLocationText });
                     return;
                 }
             }
@@ -453,7 +453,7 @@ namespace TransitWP7.ViewModel
             }
 
             // Notify calcul in progress
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Searching transit trips..."), MessengerToken.MainMapProgressIndicator);
+            Messenger.Default.Send(new NotificationMessage<bool>(true, SR.ProgressBarSearchingTrips), MessengerToken.MainMapProgressIndicator);
 
             // Ensure time is up-to-date if using Now
             if (this.TimeType == TimeCondition.Now)
@@ -475,7 +475,7 @@ namespace TransitWP7.ViewModel
         {
             if (result.Error != null)
             {
-                ProcessErrorMessage("Location not found", result.Error.Message);
+                ProcessErrorMessage(SR.ErrorMsgTitleLocationNotFound, result.Error.Message);
                 return;
             }
 
@@ -520,7 +520,7 @@ namespace TransitWP7.ViewModel
 
             if (result.Error != null)
             {
-                ProcessErrorMessage("No transit found", result.Error.Message);
+                ProcessErrorMessage(SR.ErrorMsgTitleNoTransitFound, result.Error.Message);
                 return;
             }
 
