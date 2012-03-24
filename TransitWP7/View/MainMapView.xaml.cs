@@ -13,13 +13,11 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Shell;
+using TransitWP7.Resources;
 using TransitWP7.ViewModel;
 
 namespace TransitWP7.View
 {
-
-    using TransitWP7.Resources;
-
     // TODO: Localize this app properly. Will need a resource file.
     public partial class MainMapView : PhoneApplicationPage
     {
@@ -377,10 +375,10 @@ namespace TransitWP7.View
         private void SetUIVisibility(UIViewState uiState)
         {
             // Stop all UI animation first to prevent concurrency issues.
-            this.ItineraryViewAnimation.Stop();
-            this.TransitOptionsViewAnimation.Stop();
-            this.OnlyStartEndInputViewAnimation.Stop();
-            this.MapViewOnlyAnimation.Stop();
+            this.ItineraryViewAnimation.Pause();
+            this.TransitOptionsViewAnimation.Pause();
+            this.OnlyStartEndInputViewAnimation.Pause();
+            this.MapViewOnlyAnimation.Pause();
 
             switch (uiState)
             {
