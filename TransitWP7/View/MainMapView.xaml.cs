@@ -382,6 +382,12 @@ namespace TransitWP7.View
 
         private void SetUIVisibility(UIViewState uiState)
         {
+            // Stop all UI animation first to prevent concurrency issues.
+            this.ItineraryViewAnimation.Stop();
+            this.TransitOptionsViewAnimation.Stop();
+            this.OnlyStartEndInputViewAnimation.Stop();
+            this.MapViewOnlyAnimation.Stop();
+
             switch (uiState)
             {
                 case UIViewState.ItineraryView:
