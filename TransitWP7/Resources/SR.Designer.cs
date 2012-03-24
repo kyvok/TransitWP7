@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TransitWP7 {
+namespace TransitWP7.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace TransitWP7 {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TransitWP7.SR", typeof(SR).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TransitWP7.Resources.SR", typeof(SR).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -183,6 +183,30 @@ namespace TransitWP7 {
         public static string ErrorMsgTitleUnknownLocation {
             get {
                 return ResourceManager.GetString("ErrorMsgTitleUnknownLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transitive uses your location to obtain more accurate local business information. It also uses this information to display your location on screen.
+        ///Your location information is only sent to Bing Maps Search to find local businesses and calculate transit routes.
+        ///
+        ///Select OK to use location services.
+        ///Select Cancel to not share your location.
+        ///
+        ///You can change your preferences in the settings page..
+        /// </summary>
+        public static string FirstRunAuthorizeLocationDesc {
+            get {
+                return ResourceManager.GetString("FirstRunAuthorizeLocationDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow Transitive to use location services?.
+        /// </summary>
+        public static string FirstRunAuthorizeLocationTitle {
+            get {
+                return ResourceManager.GetString("FirstRunAuthorizeLocationTitle", resourceCulture);
             }
         }
         

@@ -31,15 +31,13 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!--Header="{Binding Path=ViewSettingsSetting1Title, Source={StaticResource SR}}"-->
             <toolkit:ToggleSwitch Grid.Row="0"
-                                  Header="Use Location Services"
+                                  Header="{Binding Path=SR.ViewSettingsSetting1Title, Source={StaticResource SR}}"
                                   VerticalAlignment="Center"
                                   IsChecked="{Binding Path=UseLocationSetting, Mode=TwoWay}"/>
-            <!--Text="{Binding Path=ViewSettingsSetting1HelpText, Source={StaticResource SR}}"-->
             <TextBlock Grid.Row="1" TextWrapping="Wrap"
                        Margin="12"
-                       Text="HelpText" />
+                       Text="{Binding Path=SR.ViewSettingsSetting1HelpText, Source={StaticResource SR}}" />
         </Grid>
     </Grid>
  

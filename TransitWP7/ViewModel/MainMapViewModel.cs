@@ -7,6 +7,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Phone.Net.NetworkInformation;
+using TransitWP7.Resources;
 
 namespace TransitWP7.ViewModel
 {

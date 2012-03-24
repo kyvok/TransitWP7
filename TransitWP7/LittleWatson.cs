@@ -10,6 +10,8 @@ namespace TransitWP7
 
     using GalaSoft.MvvmLight.Threading;
 
+    using TransitWP7.Resources;
+
     // More info about this error reporting class here:
     // http://blogs.msdn.com/b/andypennell/archive/2010/11/01/error-reporting-on-windows-phone-7.aspx
     // Can also be transformed as a http reporting service here:

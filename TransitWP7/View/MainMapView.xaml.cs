@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Device.Location;
+using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,7 +17,8 @@ using TransitWP7.ViewModel;
 
 namespace TransitWP7.View
 {
-    using System.Threading;
+
+    using TransitWP7.Resources;
 
     // TODO: Localize this app properly. Will need a resource file.
     public partial class MainMapView : PhoneApplicationPage
@@ -135,19 +138,7 @@ namespace TransitWP7.View
         {
             if (string.IsNullOrEmpty(ViewModelLocator.SettingsViewModelStatic.FirstLaunchSetting))
             {
-                var title = "Allow Transitive to use location services?";
-
-                var description = "Transitive uses your location to obtain more accurate local business information. It also uses this information to display your location on screen."
-                                 + "\r\n\r\n"
-                                 + "Your location information is only sent to Bing Maps Search to find local businesses and calculate transit routes."
-                                 + "\r\n\r\n"
-                                 + "Select OK to use location services."
-                                 + "\r\n"
-                                 + "Select Cancel to not share your location."
-                                 + "\r\n\r\n"
-                                 + "You can change your preferences in the settings page.";
-
-                var result = MessageBox.Show(description, title, MessageBoxButton.OKCancel);
+                var result = MessageBox.Show(SR.FirstRunAuthorizeLocationDesc, SR.FirstRunAuthorizeLocationTitle, MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.OK)
                 {
                     ViewModelLocator.SettingsViewModelStatic.UseLocationSetting = true;
@@ -264,6 +255,7 @@ namespace TransitWP7.View
             if (e.Key == Key.Enter)
             {
                 var textBox = sender as AutoCompleteBox;
+                Debug.Assert(textBox != null, "textBox should be AutoCompleteBox");
                 if (textBox.Name == "startingInput")
                 {
                     this.endingInput.Focus();
@@ -280,6 +272,7 @@ namespace TransitWP7.View
         {
             this.ApplicationBar.IsVisible = false;
             var inputBox = sender as AutoCompleteBox;
+            Debug.Assert(inputBox != null, "inputBox should be AutoCompleteBox");
             inputBox.MinimumPrefixLength = 1;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
             inputBox.BorderBrush = Application.Current.Resources["UnderliningBorderBrush"] as Brush;
@@ -301,6 +294,7 @@ namespace TransitWP7.View
         private void InputBox_LostFocus(object sender, RoutedEventArgs e)
         {
             var inputBox = sender as AutoCompleteBox;
+            Debug.Assert(inputBox != null, "inputBox should be AutoCompleteBox");
             inputBox.MinimumPrefixLength = -1;
             if (this.bottomGridTranslate.Y != 0)
             {
