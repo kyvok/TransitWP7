@@ -165,7 +165,7 @@
             </Setter>
         </Style>
 
-        <TransitWP7:SR x:Key="SR" />
+        <!--<TransitWP7:SR x:Key="SR" />-->
         <ViewModel:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
     </Application.Resources>
     <Application.ApplicationLifetimeObjects>
