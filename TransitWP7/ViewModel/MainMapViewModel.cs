@@ -61,6 +61,19 @@ namespace TransitWP7.ViewModel
 #endif
         }
 
+        public GeoCoordinateWatcher GeoCoordinateWatcher
+        {
+            get
+            {
+                if (this._geoCoordinateWatcher == null)
+                {
+                    this.InitializeGeoCoordinateWatcher();
+                }
+
+                return this._geoCoordinateWatcher;
+            }
+        }
+
         public string StartLocationText
         {
             get
@@ -264,7 +277,7 @@ namespace TransitWP7.ViewModel
             CheckNetwork();
             if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
-                CheckLocationService(this._geoCoordinateWatcher.Status);
+                CheckLocationService(this.GeoCoordinateWatcher.Status);
             }
             else
             {
@@ -415,7 +428,7 @@ namespace TransitWP7.ViewModel
 
             if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
-                if (this._geoCoordinateWatcher.Status != GeoPositionStatus.Ready)
+                if (this.GeoCoordinateWatcher.Status != GeoPositionStatus.Ready)
                 {
                     ProcessErrorMessage(SR.ErrorMsgTitleUnknownLocation, SR.ErrorMsgDescUnknownLocation);
                     return;
