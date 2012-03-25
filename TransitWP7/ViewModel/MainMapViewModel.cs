@@ -6,11 +6,14 @@ using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
+using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Net.NetworkInformation;
 using TransitWP7.Resources;
 
 namespace TransitWP7.ViewModel
 {
+    using Microsoft.Phone.Controls.Maps.Platform;
+
     public class MainMapViewModel : ViewModelBase
     {
         private GeoCoordinateWatcher _geoCoordinateWatcher;
@@ -25,6 +28,7 @@ namespace TransitWP7.ViewModel
         private DateTime _dateTime;
         private TimeCondition _timeType;
         private GeoCoordinate _userGeoCoordinate;
+        private LocationCollection _uncertaintyCirclePoints = new LocationCollection();
         private GeoCoordinate _centerMapGeoCoordinate;
         private bool _centerMapGeoSet;
 
@@ -208,7 +212,35 @@ namespace TransitWP7.ViewModel
                 if (value != this._userGeoCoordinate)
                 {
                     this._userGeoCoordinate = value;
+                    this.UncertaintyCirclePoints = this.DrawACircle(
+                        this._userGeoCoordinate,
+                        (value.HorizontalAccuracy + value.VerticalAccuracy) / 2);
                     this.RaisePropertyChanged("UserGeoCoordinate");
+                }
+            }
+        }
+
+        public LocationCollection UncertaintyCirclePoints
+        {
+            get
+            {
+                if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
+                {
+                    return this._uncertaintyCirclePoints;
+                }
+                else
+                {
+                    // We don't know where the user is at all
+                    return null;
+                }
+            }
+
+            set
+            {
+                if (value != this._uncertaintyCirclePoints)
+                {
+                    this._uncertaintyCirclePoints = value;
+                    this.RaisePropertyChanged("UncertaintyCirclePoints");
                 }
             }
         }
@@ -406,6 +438,36 @@ namespace TransitWP7.ViewModel
                     Messenger.Default.Send(new NotificationMessage<bool>(true, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
             }
+        }
+
+        private LocationCollection DrawACircle(Location location, double radiusInMeters)
+        {
+            ////const double EarthRadiusInMiles = 3956.0;
+            const double EarthRadiusInKilometers = 6367.0;
+            var locations = new LocationCollection();
+            Func<double, double> toRadian = val => val * (Math.PI / 180);
+
+            // coordinates in radians
+            var lat = toRadian(location.Latitude);
+            var lon = toRadian(location.Longitude);
+
+            // angular distance covered on earths surface. normalized to km.
+            var angularDist = radiusInMeters / 1000 / EarthRadiusInKilometers;
+            for (var x = 0; x <= 360; x++)
+            {
+                // radians
+                var radX = toRadian(x);
+                var circlePtLatRad = Math.Asin((Math.Sin(lat) * Math.Cos(angularDist)) + (Math.Cos(lat) * Math.Sin(angularDist) * Math.Cos(radX)));
+                var circlePtLngRad = lon + Math.Atan2(Math.Sin(radX) * Math.Cos(lat) * Math.Sin(angularDist), Math.Cos(angularDist) - (Math.Sin(lat) * Math.Sin(circlePtLatRad)));
+                locations.Add(
+                    new GeoCoordinate
+                    {
+                        Longitude = 180.0 * circlePtLngRad / Math.PI,
+                        Latitude = 180.0 * circlePtLatRad / Math.PI
+                    });
+            }
+
+            return locations;
         }
 
         private void CoreCalculateTransit()

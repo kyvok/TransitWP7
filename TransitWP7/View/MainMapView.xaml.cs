@@ -431,7 +431,7 @@ namespace TransitWP7.View
         private void ApplicationBarTransitSearch_Click(object sender, EventArgs e)
         {
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
-            this.endingInput.Focus();
+            this.startingInput.Focus();
         }
 
         private void MainMap_Tap(object sender, System.Windows.Input.GestureEventArgs e)
