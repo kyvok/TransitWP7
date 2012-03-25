@@ -2,6 +2,7 @@
 
 namespace TransitWP7
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Device.Location;
@@ -39,6 +40,21 @@ namespace TransitWP7
             foreach (var topLeg in route.RouteLegs[0].ItineraryItems)
             {
                 this.ItinerarySteps.Add(new ItineraryStep(topLeg, ++stepNumber));
+
+                // calculate the walking start and end times
+                if (this.ItinerarySteps[stepNumber - 1].IconType == "Walk")
+                {
+                    if (stepNumber == 1)
+                    {
+                        this.ItinerarySteps[stepNumber - 1].StartTime = route.RouteLegs[0].StartTime;
+                    }
+                    else
+                    {
+                        this.ItinerarySteps[stepNumber - 1].StartTime = this.ItinerarySteps[stepNumber - 2].EndTime;
+                    }
+
+                    this.ItinerarySteps[stepNumber - 1].EndTime = this.ItinerarySteps[stepNumber - 1].StartTime + TimeSpan.FromSeconds(topLeg.TravelDuration);
+                }
             }
 
             this.ItinerarySteps[0].StepType = ItineraryStep.ItineraryStepType.FirstStep;

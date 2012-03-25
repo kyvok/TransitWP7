@@ -50,7 +50,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Padding="0,12" Height="108" BorderBrush="{StaticResource PhoneAccentBrush}" BorderThickness="0,6">
+                        <Border Padding="0,12" Height="108" BorderBrush="{StaticResource PhoneAccentBrush}" BorderThickness="0,6,0,0">
                             <Grid x:Name="ItemsPanel" Width="480" Height="84">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="20"/>
@@ -89,7 +89,11 @@
                                             <RowDefinition Height="Auto"/>
                                             <RowDefinition Height="46"/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="{Binding StartTime, Converter={StaticResource DateTimeToTimeConverter}}" Grid.Row="0" FontStyle="Normal" FontSize="18.667"/>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                            <TextBlock Text="{Binding StartTime, Converter={StaticResource DateTimeToTimeConverter}}" FontStyle="Normal" FontSize="18.667"/>
+                                            <TextBlock Text="-" FontStyle="Normal" FontSize="18.667"/>
+                                            <TextBlock Text="{Binding EndTime, Converter={StaticResource DateTimeToTimeConverter}}" FontStyle="Normal" FontSize="18.667"/>
+                                        </StackPanel>
                                         <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Width="310"/>
                                     </Grid>
                                 </Grid>

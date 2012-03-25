@@ -34,7 +34,7 @@ namespace TransitWP7
             this.BusNumber = item.TransitLine != null ? item.TransitLine.AbbreviatedName : string.Empty;
             this.IconType = item.IconType.ToString().StartsWith("N") ? string.Empty : item.IconType.ToString();
             this.StartTime = item.Time;
-            this.EndTime = this.StartTime + TimeSpan.FromSeconds(item.TravelDuration);
+            this.EndTime = item.Time;
 
             this.hints = new ObservableCollection<string>();
             if (item.Hint != null)
@@ -149,6 +149,21 @@ namespace TransitWP7
                 {
                     this.endtime = value;
                     this.RaisePropertyChanged("EndTime");
+                }
+            }
+        }
+
+        public TimeSpan TravelDuration
+        {
+            get
+            {
+                if (this.EndTime != null && this.StartTime != null)
+                {
+                    return this.StartTime - this.EndTime;
+                }
+                else
+                {
+                    return TimeSpan.FromSeconds(0);
                 }
             }
         }
