@@ -42,9 +42,27 @@ namespace TransitWP7.View
                 {
                     this._selectedItem = value;
                     this.RaisePropertyChanged("SelectedItem");
+                    this.RaisePropertyChanged("ShowRightArrow");
+                    this.RaisePropertyChanged("ShowLeftArrow");
                 }
 
                 this.AnimateSnapScrollViewer();
+            }
+        }
+
+        public bool ShowLeftArrow
+        {
+            get
+            {
+                return !this.IsScrollBarScrolling && this.SelectedItem != 0;
+            }
+        }
+
+        public bool ShowRightArrow
+        {
+            get
+            {
+                return !this.IsScrollBarScrolling && this.SelectedItem != this.directionsList.Items.Count - 1;
             }
         }
 
@@ -61,6 +79,8 @@ namespace TransitWP7.View
                 {
                     this._isScrollBarScrolling = value;
                     this.RaisePropertyChanged("IsScrollBarScrolling");
+                    this.RaisePropertyChanged("ShowRightArrow");
+                    this.RaisePropertyChanged("ShowLeftArrow");
 
                     // snap the scrollviewer into place. the screen is 480px.
                     if (this._isScrollBarScrolling == false)
