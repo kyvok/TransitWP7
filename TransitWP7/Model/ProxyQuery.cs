@@ -136,7 +136,10 @@ namespace TransitWP7
                 queryState.SavedException = result.Error;
             }
 
+            // orderby is a stable sort
+            // the result is we get locations ordered by name, and then by distance
             queryState.LocationDescriptions = SortLocationDescriptionsByDistance(queryState.LocationDescriptions, queryState.UserLocation);
+            queryState.LocationDescriptions = queryState.LocationDescriptions.OrderBy(locationdescription => locationdescription.DisplayName).ToList<LocationDescription>();
 
             // call user callback
             var proxyQueryResult = new ProxyQueryResult() { UserState = queryState.UserState };
