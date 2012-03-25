@@ -208,7 +208,7 @@ namespace TransitWP7
                     var transitDescription = new TransitDescription(route, TransitDescription.DirectionType.WalkOnly);
 
                     // ignore more than 90 minute walks.
-                    if (transitDescription.TravelDuration > 60 * 90)
+                    if (transitDescription.TravelDuration > TimeSpan.FromMinutes(90).TotalSeconds)
                     {
                         continue;
                     }

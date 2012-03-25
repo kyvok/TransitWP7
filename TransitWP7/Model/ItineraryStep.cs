@@ -153,6 +153,21 @@ namespace TransitWP7
             }
         }
 
+        public TimeSpan TravelDuration
+        {
+            get
+            {
+                if (this.EndTime != null && this.StartTime != null)
+                {
+                    return this.StartTime - this.EndTime;
+                }
+                else
+                {
+                    return TimeSpan.FromSeconds(0);
+                }
+            }
+        }
+
         public string TravelMode
         {
             get
