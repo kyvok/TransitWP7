@@ -6,16 +6,12 @@ using TransitWP7.ViewModel;
 
 namespace TransitWP7
 {
-    using System.Collections.Generic;
-
-    using GalaSoft.MvvmLight;
-
     public static class PersistedInfo
     {
         private const string MainMapViewModelSavedInfo = "MainMapVM.xml";
         private const string DirectionsViewModelSavedInfo = "DirectionsVM.xml";
         private const string LocationSelectionViewModelSavedInfo = "LocationSelectionVM.xml";
-        private const string SettingsViewModelSavedInfo = "SettingsVM.xml";
+        ////private const string SettingsViewModelSavedInfo = "SettingsVM.xml";
 
         public static void Save()
         {
@@ -56,7 +52,7 @@ namespace TransitWP7
 
         public static void Load()
         {
-            IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication();
+            var storage = IsolatedStorageFile.GetUserStoreForApplication();
 
             if (storage.FileExists(MainMapViewModelSavedInfo)
                 && storage.FileExists(DirectionsViewModelSavedInfo)
@@ -103,8 +99,22 @@ namespace TransitWP7
                 }
                 finally
                 {
-                    storage.DeleteFile(MainMapViewModelSavedInfo);
+                    SafeDeleteFile(storage, MainMapViewModelSavedInfo);
+                    SafeDeleteFile(storage, DirectionsViewModelSavedInfo);
+                    SafeDeleteFile(storage, LocationSelectionViewModelSavedInfo);
+                    ////SafeDeleteFile(storage, SettingsViewModelStatic);
                 }
+            }
+        }
+
+        private static void SafeDeleteFile(IsolatedStorageFile storage, string fileName)
+        {
+            try
+            {
+                storage.DeleteFile(fileName);
+            }
+            catch (Exception)
+            {
             }
         }
     }

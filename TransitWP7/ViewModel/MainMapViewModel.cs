@@ -447,7 +447,7 @@ namespace TransitWP7.ViewModel
                     Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
                 case GeoPositionStatus.Ready:
-                    Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+                    Messenger.Default.Send(new NotificationMessage<bool>(false, SR.ProgressBarAcquiringLocation), MessengerToken.MainMapProgressIndicator);
                     Messenger.Default.Send(new NotificationMessage<bool>(true, string.Empty), MessengerToken.EnableLocationButtonIndicator);
                     break;
             }
@@ -491,9 +491,15 @@ namespace TransitWP7.ViewModel
 
             if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
             {
+                // Wait for location to be available
                 if (this.GeoCoordinateWatcher.Status != GeoPositionStatus.Ready)
                 {
-                    ProcessErrorMessage(SR.ErrorMsgTitleUnknownLocation, SR.ErrorMsgDescUnknownLocation);
+                    CheckLocationService(this.GeoCoordinateWatcher.Status);
+                    System.Threading.ThreadPool.QueueUserWorkItem(_ =>
+                        {
+                            System.Threading.Thread.Sleep(1000);
+                            DispatcherHelper.UIDispatcher.BeginInvoke(this.CoreCalculateTransit);
+                        });
                     return;
                 }
 

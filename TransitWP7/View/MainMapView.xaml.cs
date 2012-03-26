@@ -18,7 +18,6 @@ using TransitWP7.ViewModel;
 
 namespace TransitWP7.View
 {
-    // TODO: Localize this app properly. Will need a resource file.
     public partial class MainMapView : PhoneApplicationPage
     {
         private readonly MainMapViewModel _viewModel;
@@ -320,6 +319,12 @@ namespace TransitWP7.View
 
         private void SetProgressBarState(string message, bool state)
         {
+            // TODO: remove this Workaround for agressive check location status progress bar message. Real fix needs to preserve history of progress messages.
+            if (message == SR.ProgressBarAcquiringLocation && message != SystemTray.ProgressIndicator.Text)
+            {
+                return;
+            }
+
             SystemTray.ProgressIndicator.Text = message;
             SystemTray.ProgressIndicator.IsIndeterminate = state;
             SystemTray.ProgressIndicator.IsVisible = state;
