@@ -7,7 +7,7 @@ namespace TransitWP7.View
     public partial class LocationSelectionView : PhoneApplicationPage
     {
         private readonly LocationSelectionViewModel _viewModel;
-        private const string PageTitleStringFormat = "Which {0} location did you mean?";
+        private const string PageTitleStringFormat = "Which '{0}' did you want?";
 
         public LocationSelectionView()
         {
@@ -19,7 +19,7 @@ namespace TransitWP7.View
         {
             base.OnNavigatedTo(arg);
             this._viewModel.EndpointName = this.NavigationContext.QueryString["endpoint"];
-            this.PageTitle.Text = string.Format(PageTitleStringFormat, this._viewModel.EndpointName);
+            this.PageTitle.Text = string.Format(PageTitleStringFormat, this.NavigationContext.QueryString["query"]);
         }
 
         private void ResultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

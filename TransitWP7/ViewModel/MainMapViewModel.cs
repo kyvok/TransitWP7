@@ -524,13 +524,13 @@ namespace TransitWP7.ViewModel
 
             if (this._isStartLocationStale)
             {
-                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate, this.GetLocationsAndBusinessCallback, "start");
+                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate, this.GetLocationsAndBusinessCallback, new[] { "start", this.StartLocationText });
                 return;
             }
 
             if (this._isEndLocationStale)
             {
-                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate, this.GetLocationsAndBusinessCallback, "end");
+                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate, this.GetLocationsAndBusinessCallback, new[] { "end", this.EndLocationText });
                 return;
             }
 
@@ -561,14 +561,16 @@ namespace TransitWP7.ViewModel
                 return;
             }
 
+            var userState = (string[])result.UserState;
+
             if (result.LocationDescriptions.Count == 1)
             {
-                this.UpdateLocation(result.UserState as string, result.LocationDescriptions[0]);
+                this.UpdateLocation(userState[0], result.LocationDescriptions[0]);
             }
             else
             {
-                Messenger.Default.Send(new NotificationMessage<List<LocationDescription>>(result.LocationDescriptions, result.UserState as string), MessengerToken.EndpointResolutionPopup);
-                Messenger.Default.Send(new NotificationMessage(result.UserState as string), MessengerToken.EndpointResolutionPopup);
+                Messenger.Default.Send(new NotificationMessage<List<LocationDescription>>(result.LocationDescriptions, userState[0]), MessengerToken.EndpointResolutionPopup);
+                Messenger.Default.Send(new NotificationMessage<string>(userState[1], userState[0]), MessengerToken.EndpointResolutionPopup);
             }
         }
 

@@ -235,13 +235,13 @@ namespace TransitWP7.View
                         locateMeButton.IsEnabled = notificationMessage.Content;
                     }));
 
-            Messenger.Default.Register<NotificationMessage>(
+            Messenger.Default.Register<NotificationMessage<string>>(
                 this,
                 MessengerToken.EndpointResolutionPopup,
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () => NavigationService.Navigate(
                         new Uri(
-                            string.Format("{0}?endpoint={1}", PhonePageUri.LocationSelectionView, notificationMessage.Notification),
+                            string.Format("{0}?endpoint={1}&query={2}", PhonePageUri.LocationSelectionView, notificationMessage.Notification, notificationMessage.Content),
                             UriKind.Relative))));
 
             Messenger.Default.Register<NotificationMessage>(
