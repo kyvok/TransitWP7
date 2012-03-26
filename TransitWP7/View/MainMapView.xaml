@@ -142,7 +142,6 @@
                     </maps:MapItemsControl.ItemTemplate>
                 </maps:MapItemsControl>
             </maps:MapLayer>
-            <maps:MapPolygon Fill="LightGray" Stroke="Black" StrokeThickness="2" Opacity="{StaticResource GridOpacityValue}" Locations=""/>
             <maps:MapLayer>
                 <!--<maps:MapPolygon Stroke="Black" StrokeThickness="2" Locations="{Binding Path=UncertaintyCirclePoints}">
                     <maps:MapPolygon.Fill>

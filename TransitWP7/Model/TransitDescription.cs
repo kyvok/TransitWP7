@@ -46,7 +46,8 @@ namespace TransitWP7
                 {
                     if (stepNumber == 1)
                     {
-                        this.ItinerarySteps[stepNumber - 1].StartTime = route.RouteLegs[0].StartTime;
+                        // WalkOnly directions needs to be set a default time. Using current time
+                        this.ItinerarySteps[stepNumber - 1].StartTime = this.TransitType == DirectionType.WalkOnly ? DateTime.Now : route.RouteLegs[0].StartTime;
                     }
                     else
                     {

@@ -341,6 +341,7 @@ namespace TransitWP7.View
             this._viewModel.StartOver();
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
+            this.directionsStepView.SelectedItem = 0;
 
             // the following is a workaround for the appbar preventing the update of binding for textbox
             this.startingInput.Text += " ";
@@ -424,6 +425,7 @@ namespace TransitWP7.View
 
             if (this._viewModel.SelectedTransitTrip != null)
             {
+                this.directionsStepView.SelectedItem = 0;
                 this.SetUIVisibility(UIViewState.ItineraryView);
             }
         }

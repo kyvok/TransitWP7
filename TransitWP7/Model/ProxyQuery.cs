@@ -136,10 +136,7 @@ namespace TransitWP7
                 queryState.SavedException = result.Error;
             }
 
-            // orderby is a stable sort
-            // the result is we get locations ordered by name, and then by distance
             queryState.LocationDescriptions = SortLocationDescriptionsByDistance(queryState.LocationDescriptions, queryState.UserLocation);
-            queryState.LocationDescriptions = queryState.LocationDescriptions.OrderBy(locationdescription => locationdescription.DisplayName).ToList<LocationDescription>();
 
             // call user callback
             var proxyQueryResult = new ProxyQueryResult() { UserState = queryState.UserState };
@@ -157,14 +154,25 @@ namespace TransitWP7
 
         private static List<LocationDescription> SortLocationDescriptionsByDistance(IEnumerable<LocationDescription> locations, GeoCoordinate center)
         {
+            // Using 80 miles since Phonebook is 80 miles and that 99% case is a local search for transit.
+            // http://msdn.microsoft.com/en-us/library/dd250980.aspx
+            // 80 miles * 1.6 miles per km * 1000 m per km
+            const double MaxRange = 80 * 1.6 * 1000;
+
             if (locations == null)
             {
                 return null;
             }
 
-            var presort = locations.ToDictionary(k => k, v => v.GeoCoordinate.GetDistanceTo(center));
-            var sorted = presort.OrderBy(kvp => kvp.Value);
-            return sorted.Select(items => items.Key).ToList();
+            // orderby is a stable sort
+            // the result is we get locations ordered by name, and then by distance
+            var sorted = locations.ToDictionary(k => k, v => v.GeoCoordinate.GetDistanceTo(center))
+                        .OrderBy(kvp => kvp.Value)
+                        .Where(kvp => kvp.Value <= MaxRange)
+                        .Select(items => items.Key)
+                        .OrderBy(loc => loc.DisplayName)
+                        .ToList();
+            return sorted;
         }
 
         private static void GetTransitDirectionsCallback(BingMapsQueryResult result)
@@ -238,14 +246,6 @@ namespace TransitWP7
             else
             {
                 proxyQueryResult.Error = new Exception("No transit or reasonable walking directions could be found.");
-                ////if (queryState.SavedException != null)
-                ////{
-                ////    proxyQueryResult.Error = queryState.SavedException;
-                ////}
-                ////else
-                ////{
-                ////    proxyQueryResult.Error = new Exception("no results");
-                ////}
             }
 
             queryState.UserCallback(proxyQueryResult);
