@@ -294,7 +294,7 @@
                         <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Center" />
                         <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Center"/>
                         <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Center"/>
-                        <toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Center" />
+                        <!--<toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Center" />-->
                     </toolkit:ListPicker>
                     <toolkit:DatePicker Name="datePicker"
                                         Background="{StaticResource TransparentBrush}"
