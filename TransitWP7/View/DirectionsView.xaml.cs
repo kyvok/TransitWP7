@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Phone.Controls;
 using TransitWP7.ViewModel;
 
@@ -19,9 +20,13 @@ namespace TransitWP7.View
             this._viewModel = ViewModelLocator.DirectionsViewModelStatic;
         }
 
-        private void ItemsPanel_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void DirectionsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            return;
+            if (this.directionsList.SelectedIndex != -1)
+            {
+                Messenger.Default.Send(new NotificationMessage<int>(this.directionsList.SelectedIndex, string.Empty), MessengerToken.TripStepSelection);
+                this.NavigationService.GoBack();
+            }
         }
     }
 }

@@ -2,14 +2,15 @@
 {
     public enum MessengerToken
     {
-        ErrorPopup,
-        MainMapProgressIndicator,
-        TransitTripsReady,
+        EnableLocationButtonIndicator,
         EndpointResolutionPopup,
+        ErrorPopup,
+        LockUiIndicator,
+        MainMapProgressIndicator,
         SelectedEndpoint,
         SelectedTransitTrip,
-        LockUiIndicator,
-        EnableLocationButtonIndicator
+        TransitTripsReady,
+        TripStepSelection
     }
 
     public static class Globals

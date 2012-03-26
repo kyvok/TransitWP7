@@ -38,13 +38,10 @@ namespace TransitWP7.View
 
             set
             {
-                if (this._selectedItem != value)
-                {
-                    this._selectedItem = value;
-                    this.RaisePropertyChanged("SelectedItem");
-                    this.RaisePropertyChanged("ShowRightArrow");
-                    this.RaisePropertyChanged("ShowLeftArrow");
-                }
+                this._selectedItem = value;
+                this.RaisePropertyChanged("SelectedItem");
+                this.RaisePropertyChanged("ShowRightArrow");
+                this.RaisePropertyChanged("ShowLeftArrow");
 
                 this.AnimateSnapScrollViewer();
             }
@@ -54,7 +51,7 @@ namespace TransitWP7.View
         {
             get
             {
-                return !this.IsScrollBarScrolling && this.SelectedItem != 0;
+                return !this.IsScrollBarScrolling && this.SelectedItem > 0;
             }
         }
 

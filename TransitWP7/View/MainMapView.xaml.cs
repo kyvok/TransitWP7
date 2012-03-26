@@ -41,7 +41,7 @@ namespace TransitWP7.View
                 {
                     if (this._viewModel.SelectedTransitTrip != null)
                     {
-                        this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem].GeoCoordinate, Globals.LocateMeZoomLevel);
+                        this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem == -1 ? 0 : directionsStepView.SelectedItem].GeoCoordinate, Globals.LocateMeZoomLevel);
                     }
                 });
 
@@ -176,6 +176,15 @@ namespace TransitWP7.View
                         var result = MessageBox.Show(dialogMessage.Content, dialogMessage.Caption, dialogMessage.Button);
                         dialogMessage.ProcessCallback(result);
                     }));
+
+            Messenger.Default.Register<NotificationMessage<int>>(
+               this,
+               MessengerToken.TripStepSelection,
+               notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                   () =>
+                   {
+                       this.directionsStepView.SelectedItem = notificationMessage.Content;
+                   }));
 
             Messenger.Default.Register<NotificationMessage<bool>>(
                 this,
@@ -346,7 +355,7 @@ namespace TransitWP7.View
             this._viewModel.StartOver();
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
-            this.directionsStepView.SelectedItem = 0;
+            this.directionsStepView.SelectedItem = -1;
 
             // the following is a workaround for the appbar preventing the update of binding for textbox
             this.startingInput.Text += " ";
@@ -393,10 +402,13 @@ namespace TransitWP7.View
                     this.ApplicationBar.IsVisible = true;
                     if (this._viewModel.SelectedTransitTrip != null)
                     {
-                        this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
+                        if (this.directionsStepView.SelectedItem == -1)
+                        {
+                            this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
 
-                        // set zoom a little lower so endpoints don't underlap overlays
-                        this.mainMap.ZoomLevel = this.mainMap.TargetZoomLevel - 0.4;
+                            // set zoom a little lower so endpoints don't underlap overlays
+                            this.mainMap.ZoomLevel = this.mainMap.TargetZoomLevel - 0.4;
+                        }
                     }
 
                     break;
@@ -430,7 +442,7 @@ namespace TransitWP7.View
 
             if (this._viewModel.SelectedTransitTrip != null)
             {
-                this.directionsStepView.SelectedItem = 0;
+                this.directionsStepView.SelectedItem = -1;
                 this.SetUIVisibility(UIViewState.ItineraryView);
             }
         }
