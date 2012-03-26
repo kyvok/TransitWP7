@@ -85,7 +85,9 @@ namespace TransitWP7.View
         private enum AppBarIconOrder
         {
             NewSearch = 0,
-            LocateMe
+            LocateMe,
+            Results,
+            Steps
         }
 
         private UIViewState CurrentViewState { get; set; }
@@ -402,6 +404,7 @@ namespace TransitWP7.View
                     this.ApplicationBar.IsVisible = true;
                     if (this._viewModel.SelectedTransitTrip != null)
                     {
+                        // TODO does the following ever is true?
                         if (this.directionsStepView.SelectedItem == -1)
                         {
                             this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
@@ -432,6 +435,13 @@ namespace TransitWP7.View
             var appbarmenuTrips = (ApplicationBarMenuItem)this.ApplicationBar.MenuItems[(int)AppBarMenuItemOrder.TransitOptions];
             appbarmenuTrips.IsEnabled = this._viewModel.TransitDescriptionCollection != null
                                      && this._viewModel.TransitDescriptionCollection.Count != 0;
+
+            var appbariconResults = (ApplicationBarIconButton)this.ApplicationBar.Buttons[(int)AppBarIconOrder.Results];
+            appbariconResults.IsEnabled = this._viewModel.TransitDescriptionCollection != null
+                                       && this._viewModel.TransitDescriptionCollection.Count != 0;
+
+            var appbariconSteps = (ApplicationBarIconButton)this.ApplicationBar.Buttons[(int)AppBarIconOrder.Steps];
+            appbariconSteps.IsEnabled = this._viewModel.SelectedTransitTrip != null;
 
             this.CurrentViewState = uiState;
         }
@@ -464,6 +474,16 @@ namespace TransitWP7.View
         private void MainMap_MapPan(object sender, MapDragEventArgs e)
         {
             this._viewModel.CenterMapGeoSet = true;
+        }
+
+        private void ApplicationBarShowResults_Click(object sender, EventArgs e)
+        {
+            this.SetUIVisibility(UIViewState.TransitOptionsView);
+        }
+
+        private void ApplicationBarShowSteps_Click(object sender, EventArgs e)
+        {
+            this.SetUIVisibility(UIViewState.ItineraryView);
         }
     }
 }

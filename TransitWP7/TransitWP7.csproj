@@ -187,8 +187,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Images\appbar.crosshair.png" />
-    <Resource Include="Images\appbar.list.png" />
-    <Resource Include="Images\appbar.transit.connection.png" />
+    <Content Include="Images\appbar.list.png" />
+    <Content Include="Images\appbar.transit.connection.png" />
     <Content Include="Images\appbar.transit.depart.png" />
     <Content Include="Images\light\bus.100x100.png" />
     <Content Include="Images\light\ferry.100x100.png" />
