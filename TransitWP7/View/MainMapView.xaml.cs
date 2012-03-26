@@ -255,7 +255,6 @@ namespace TransitWP7.View
         private void ShowTransitTripsList()
         {
             this.SetUIVisibility(UIViewState.TransitOptionsView);
-            this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
         }
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
@@ -416,6 +415,7 @@ namespace TransitWP7.View
 
                     break;
                 case UIViewState.TransitOptionsView:
+                    this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
                     this.TransitOptionsViewAnimation.Begin();
                     this.ApplicationBar.IsVisible = false;
                     break;
