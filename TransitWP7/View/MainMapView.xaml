@@ -307,12 +307,13 @@
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=timePicker}"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"/>
-                    <Button Width="50"
-                            VerticalAlignment="Top"
-                            Content="&#8658;"
-                            BorderThickness="0"
-                            Padding="0" Margin="0"
-                            Click="GoButton_Click" />
+                    <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="50" Tap="ContentControl_Tap">
+                        <Rectangle StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}" Margin="0" Width="50" Height="50">
+                            <Rectangle.OpacityMask>
+                                <ImageBrush ImageSource="/Images/appbar.transit.depart.png"/>
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </ContentControl>
                 </StackPanel>
             </StackPanel>
         </Grid>
