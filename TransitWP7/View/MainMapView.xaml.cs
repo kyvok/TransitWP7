@@ -379,7 +379,7 @@ namespace TransitWP7.View
             NavigationService.Navigate(new Uri(PhonePageUri.SettingsView, UriKind.Relative));
         }
 
-        private void GoButton_Click(object sender, RoutedEventArgs e)
+        private void ContentControl_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             this._viewModel.BeginCalculateTransit();
         }
