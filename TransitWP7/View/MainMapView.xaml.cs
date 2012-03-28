@@ -476,11 +476,6 @@ namespace TransitWP7.View
             this._viewModel.CenterMapGeoSet = true;
         }
 
-        private void ApplicationBarShowResults_Click(object sender, EventArgs e)
-        {
-            this.SetUIVisibility(UIViewState.TransitOptionsView);
-        }
-
         private void ApplicationBarShowSteps_Click(object sender, EventArgs e)
         {
             this.SetUIVisibility(UIViewState.ItineraryView);

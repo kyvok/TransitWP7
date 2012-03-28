@@ -324,7 +324,7 @@
         <shell:ApplicationBar BackgroundColor="{StaticResource PhoneBackgroundColor}" Opacity="{StaticResource GridOpacityValue}"  IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.transit.depart.png" Text="Search" Click="ApplicationBarTransitSearch_Click" />
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.crosshair.png" Text="Locate Me" Click="ApplicationBarLocateMe_Click" IsEnabled="False"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar.list.png" Text="Results" Click="ApplicationBarShowResults_Click"  IsEnabled="False"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar.list.png" Text="Results" Click="ApplicationBarShowTransitOptions_Click"  IsEnabled="False"/>
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.transit.connection.png" Text="Steps" Click="ApplicationBarShowSteps_Click" IsEnabled="False"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarDirectionsList_Click"/>
