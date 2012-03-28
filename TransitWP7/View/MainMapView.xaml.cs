@@ -361,10 +361,10 @@ namespace TransitWP7.View
             // the following is a workaround for the appbar preventing the update of binding for textbox
             this.startingInput.Text += " ";
             this.endingInput.Text += " ";
-            this.startingInput.Text = this.startingInput.Text.Remove(this.startingInput.Text.Length - 1, 1);
-            this.endingInput.Text = this.endingInput.Text.Remove(this.endingInput.Text.Length - 1, 1);
+            this.startingInput.Text = this.startingInput.Text.TrimEnd();
+            this.endingInput.Text = this.endingInput.Text.TrimEnd();
 
-            this.endingInput.Focus();
+            this.startingInput.Focus();
         }
 
         private void ListPickerSizeChanged(object sender, SizeChangedEventArgs e)
@@ -421,7 +421,7 @@ namespace TransitWP7.View
                     break;
                 case UIViewState.OnlyStartEndInputsView:
                     this.OnlyStartEndInputViewAnimation.Begin();
-                    this.ApplicationBar.IsVisible = true;
+                    this.ApplicationBar.IsVisible = false;
                     break;
                 case UIViewState.MapViewOnly:
                     this.MapViewOnlyAnimation.Begin();
@@ -459,6 +459,7 @@ namespace TransitWP7.View
 
         private void ApplicationBarTransitSearch_Click(object sender, EventArgs e)
         {
+            this.ApplicationBar.IsVisible = false;
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
             this.startingInput.Focus();
         }
