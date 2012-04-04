@@ -1,8 +1,8 @@
-using System.Diagnostics;
-using System.Xml.Serialization;
-
 namespace BingApisLib.BingMapsRestApi
 {
+    using System.Diagnostics;
+    using System.Xml.Serialization;
+
     // TODO: Finish converting this to JSON
 
     /// <summary>

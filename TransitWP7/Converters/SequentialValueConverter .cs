@@ -2,18 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Globalization;
-    using System.Windows;
     using System.Windows.Data;
 
     public class SequentialValueConverter : List<IValueConverter>, IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            object returnValue = value;
+            var returnValue = value;
             
-            foreach (IValueConverter converter in this)
+            foreach (var converter in this)
             {
                 returnValue = converter.Convert(returnValue, targetType, parameter, culture);
             }

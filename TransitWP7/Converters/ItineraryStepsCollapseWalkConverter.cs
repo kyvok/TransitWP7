@@ -3,8 +3,8 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Globalization;
-    using System.Windows;
     using System.Windows.Data;
+    using TransitWP7.Model;
 
     public class ItineraryStepsCollapseWalkConverter : IValueConverter
     {
@@ -18,7 +18,7 @@
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var itinerarySteps = value as ObservableCollection<ItineraryStep>;
+            var itinerarySteps = (ObservableCollection<ItineraryStep>)value;
 
             var collapsedSteps = new ObservableCollection<CollapsedItineraryStep>();
             foreach (var itineraryStep in itinerarySteps)
@@ -30,10 +30,8 @@
                 {
                     continue;
                 }
-                else
-                {
-                    collapsedSteps.Add(step);
-                }
+
+                collapsedSteps.Add(step);
             }
 
             return collapsedSteps;

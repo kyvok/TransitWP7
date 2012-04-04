@@ -1,22 +1,19 @@
-﻿using System;
-using System.Device.Location;
-using System.IO;
-using System.Net;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
-
-namespace BingApisLib.BingMapsRestApi
+﻿namespace BingApisLib.BingMapsRestApi
 {
+    using System;
+    using System.Device.Location;
+    using System.Net;
+    using System.Text;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// Helper class to query BingMaps resources.
     /// </summary>
     public static class BingMapsQuery
     {
-        private static OutputParameters defaultOutputParameters = new OutputParameters(OutputFormat.Xml, suppressStatus: true);
-        private static KeyParameter defaultKeyParameter = new KeyParameter(ApiKeys.BingMapsKey);
-        private static XmlSerializer bingMapsResponseSerializer = new XmlSerializer(typeof(Response));
+        private static readonly OutputParameters DefaultOutputParameters = new OutputParameters(OutputFormat.Xml, suppressStatus: true);
+        private static readonly KeyParameter DefaultKeyParameter = new KeyParameter(ApiKeys.BingMapsKey);
+        private static readonly XmlSerializer BingMapsResponseSerializer = new XmlSerializer(typeof(Response));
 
         /// <summary>
         /// Takes a latitude/longitude location and query for the information related to this location.
@@ -27,7 +24,7 @@ namespace BingApisLib.BingMapsRestApi
         public static void GetLocationInfo(GeoCoordinate point, Action<BingMapsQueryResult> callback, object userState)
         {
             var queryUri = ConstructQueryUri(
-                "Locations/" + point.AsBingMapsPoint().ToString(), null);
+                "Locations/" + point.AsBingMapsPoint(), null);
             ExecuteQuery(queryUri, callback, userState);
         }
 
@@ -101,51 +98,29 @@ namespace BingApisLib.BingMapsRestApi
         /// <returns>The REST URL representing the resource query.</returns>
         private static Uri ConstructQueryUri(string resourcePath, string resourceQueryParameters)
         {
-            const string BingMapsRESTServicesBaseAddress = "http://dev.virtualearth.net/REST/v1/";
+            const string BingMapsRestServicesBaseAddress = "http://dev.virtualearth.net/REST/v1/";
 
             var uri = new StringBuilder();
-            uri.Append(BingMapsRESTServicesBaseAddress);
+            uri.Append(BingMapsRestServicesBaseAddress);
             uri.Append(resourcePath);
             uri.Append("?");
             uri.Append(resourceQueryParameters);
-            uri.Append(defaultOutputParameters);
-            uri.Append(defaultKeyParameter);
+            uri.Append(DefaultOutputParameters);
+            uri.Append(DefaultKeyParameter);
 
             return new Uri(uri.ToString());
         }
 
         private static void ExecuteQuery(Uri queryUri, Action<BingMapsQueryResult> callback, object userState)
         {
-            var httpRequest = WebRequest.Create(queryUri) as HttpWebRequest;
+            var httpRequest = (HttpWebRequest)WebRequest.Create(queryUri);
             var context = new BingMapsRequestContext(httpRequest, new BingMapsQueryAsyncCallback(callback, userState));
-
-            ////Observable.FromAsyncPattern<WebResponse>(httpRequest.BeginGetResponse, httpRequest.EndGetResponse)()
-            ////    .Subscribe<WebResponse>(httpResponse =>
-            ////            {
-            ////                var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
-            ////                if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
-            ////                {
-            ////                    var exceptionMessage = new StringBuilder();
-            ////                    exceptionMessage.AppendLine("One or more error were returned by the query:");
-            ////                    foreach (var errorDetail in response.ErrorDetails)
-            ////                    {
-            ////                        exceptionMessage.Append("  ");
-            ////                        exceptionMessage.AppendLine(errorDetail);
-            ////                    }
-            ////                    context.AsyncCallback.Notify(new Exception(exceptionMessage.ToString()));
-            ////                }
-            ////                else
-            ////                {
-            ////                    context.AsyncCallback.Notify(response);
-            ////                }
-            ////            });
-
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
 
         private static void HttpRequestCompleted(IAsyncResult asyncResult)
         {
-            var context = asyncResult.AsyncState as BingMapsRequestContext;
+            var context = (BingMapsRequestContext)asyncResult.AsyncState;
             if (context.AsyncCallback == null)
             {
                 throw new InvalidOperationException("Unexpected exception, no BingMapsQueryAsyncCallback!");
@@ -154,15 +129,7 @@ namespace BingApisLib.BingMapsRestApi
             try
             {
                 var httpResponse = context.HttpRequest.EndGetResponse(asyncResult);
-                var response = (Response)bingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
-                ////var jsonSerializer = new JsonSerializer();
-                ////var streamReader = new StreamReader(httpResponse.GetResponseStream());
-                ////var stringReader = new StringReader(streamReader.ReadToEnd());
-                ////var jsonTextReader = new JsonTextReader(stringReader);
-                ////var response = jsonSerializer.Deserialize<Response>(jsonTextReader);
-                ////var dcjs = new DataContractJsonSerializer(typeof (Response));
-                ////var responseObj = dcjs.ReadObject(httpResponse.GetResponseStream());
-                ////var response = responseObj as Response;
+                var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
                 if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
                 {
                     var exceptionMessage = new StringBuilder();

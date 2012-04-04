@@ -1,12 +1,11 @@
-﻿using System;
-using System.Device.Location;
-using System.Net;
-using System.Text;
-using System.Xml.Serialization;
-using Newtonsoft.Json;
-
-namespace BingApisLib.BingSearchRestApi
+﻿namespace BingApisLib.BingSearchRestApi
 {
+    using System;
+    using System.Device.Location;
+    using System.Net;
+    using System.Text;
+    using Newtonsoft.Json;
+
     public enum AdultOption
     {
         Off,
@@ -44,17 +43,16 @@ namespace BingApisLib.BingSearchRestApi
     /// </summary>
     public static class BingSearchQuery
     {
-        private static XmlSerializer bingSearchResponseSerializer = new XmlSerializer(typeof(SearchResponse));
-
         /// <summary>
         /// Takes a latitude/longitude location and query for the information related to this location.
         /// </summary>
-        /// <param name="point">Location on map.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="userLocation">Location on map.</param>
         /// <param name="callback">Callback that will use the response result.</param>
         /// <param name="userState">An object to pass to the callback</param>
         public static void GetBusinessInfo(string query, GeoCoordinate userLocation, Action<BingSearchQueryResult> callback, object userState)
         {
-            var request = new PhonebookRequest()
+            var request = new PhonebookRequest
             {
                 Query = query,
                 Latitude = userLocation.Latitude,
@@ -62,7 +60,7 @@ namespace BingApisLib.BingSearchRestApi
                 Radius = 80,
                 Count = 20,
                 SortBy = PhonebookSortOption.Distance,
-                Sources = new SourceType[] { SourceType.PhoneBook },
+                Sources = new[] { SourceType.PhoneBook },
                 AppId = ApiKeys.BingSearchKey
             };
             var queryUri = ConstructQueryUri(request.ToString());
@@ -77,10 +75,10 @@ namespace BingApisLib.BingSearchRestApi
         /// <param name="userState">An object to pass to the callback</param>
         public static void GetSpellSuggestions(string query, Action<BingSearchQueryResult> callback, object userState)
         {
-            var request = new SpellRequest()
+            var request = new SpellRequest
             {
                 Query = query,
-                Sources = new SourceType[] { SourceType.Spell },
+                Sources = new[] { SourceType.Spell },
                 AppId = ApiKeys.BingSearchKey
             };
             var queryUri = ConstructQueryUri(request.ToString());
@@ -94,10 +92,10 @@ namespace BingApisLib.BingSearchRestApi
         /// <returns>The REST URL representing the resource query.</returns>
         private static Uri ConstructQueryUri(string resourceQueryParameters)
         {
-            const string BingSearchRESTServicesBaseAddress = "http://api.bing.net/json.aspx";
+            const string BingSearchRestServicesBaseAddress = "http://api.bing.net/json.aspx";
 
             var uri = new StringBuilder();
-            uri.Append(BingSearchRESTServicesBaseAddress);
+            uri.Append(BingSearchRestServicesBaseAddress);
             uri.Append("?");
             uri.Append(resourceQueryParameters);
 
@@ -106,14 +104,14 @@ namespace BingApisLib.BingSearchRestApi
 
         private static void ExecuteQuery(Uri queryUri, Action<BingSearchQueryResult> callback, object userState)
         {
-            var httpRequest = WebRequest.Create(queryUri) as HttpWebRequest;
+            var httpRequest = (HttpWebRequest)WebRequest.Create(queryUri);
             var context = new BingSearchRequestContext(httpRequest, new BingSearchQueryAsyncCallback(callback, userState));
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
 
         private static void HttpRequestCompleted(IAsyncResult asyncResult)
         {
-            var context = asyncResult.AsyncState as BingSearchRequestContext;
+            var context = (BingSearchRequestContext)asyncResult.AsyncState;
             if (context.AsyncCallback == null)
             {
                 throw new InvalidOperationException("Unexpected exception, no BingMapsQueryAsyncCallback!");
@@ -122,9 +120,8 @@ namespace BingApisLib.BingSearchRestApi
             try
             {
                 var httpResponse = context.HttpRequest.EndGetResponse(asyncResult);
-                ////var response = (SearchResponse)BingSearchResponseSerializer.Deserialize(httpResponse.GetResponseStream());
-                string jsonString = string.Empty;
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
+                string jsonString;
+                using (var reader = new System.IO.StreamReader(httpResponse.GetResponseStream()))
                 {
                     jsonString = reader.ReadToEnd();
                 }
@@ -133,9 +130,9 @@ namespace BingApisLib.BingSearchRestApi
                 var response = wrapper.SearchResponse;
                 if (response.Errors != null && response.Errors.Length > 0)
                 {
-                    StringBuilder exceptionMessage = new StringBuilder();
+                    var exceptionMessage = new StringBuilder();
                     exceptionMessage.AppendLine("One or more error were returned by the query:");
-                    foreach (Error errorDetail in response.Errors)
+                    foreach (var errorDetail in response.Errors)
                     {
                         exceptionMessage.Append("  ");
                         exceptionMessage.AppendLine(errorDetail.Message);
@@ -177,26 +174,26 @@ namespace BingApisLib.BingSearchRestApi
     {
         // required
         public string AppId { get; set; }
-      
+
         public string Query { get; set; }
-        
+
         public SourceType[] Sources { get; set; }
 
         // optional
         public string Version { get; set; }
 
         public string Market { get; set; }
-        
+
         public AdultOption? Adult { get; set; }
-        
+
         public string UILanguage { get; set; }
-        
+
         public double? Latitude { get; set; }
-        
+
         public double? Longitude { get; set; }
-        
+
         public double? Radius { get; set; }
-        
+
         public SearchOption[] Options { get; set; }
 
         public override string ToString()
@@ -264,7 +261,7 @@ namespace BingApisLib.BingSearchRestApi
 
         // do not use
         public string FileType { get; set; }
-        
+
         public PhonebookSortOption? SortBy { get; set; }
 
         // TODO: do we want this LocID parameter?
@@ -288,11 +285,11 @@ namespace BingApisLib.BingSearchRestApi
             if (this.SortBy.HasValue)
             {
                 builder.Append("&Phonebook.SortBy=");
-                builder.Append(this.SortBy.ToString());
+                builder.Append(this.SortBy.Value.ToString());
             }
 
             // TODO: insert FileType
-            return base.ToString() + builder.ToString();
+            return base.ToString() + builder;
         }
     }
 

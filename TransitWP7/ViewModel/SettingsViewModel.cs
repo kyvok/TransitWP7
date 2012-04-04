@@ -1,8 +1,8 @@
-﻿using System.IO.IsolatedStorage;
-using GalaSoft.MvvmLight;
-
-namespace TransitWP7.ViewModel
+﻿namespace TransitWP7.ViewModel
 {
+    using System.IO.IsolatedStorage;
+    using GalaSoft.MvvmLight;
+
     public class SettingsViewModel : ViewModelBase
     {
         private const string FirstLaunchDoneKey = "FirstLaunchDone";

@@ -1,26 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Media;
-
-using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Phone.Controls;
-using TransitWP7.ViewModel;
-
-namespace TransitWP7.View
+﻿namespace TransitWP7.View
 {
+    using GalaSoft.MvvmLight.Messaging;
+    using Microsoft.Phone.Controls;
+
     public partial class DirectionsView : PhoneApplicationPage
     {
-        private readonly DirectionsViewModel _viewModel;
-
         public DirectionsView()
         {
             this.InitializeComponent();
-            this._viewModel = ViewModelLocator.DirectionsViewModelStatic;
         }
 
-        private void DirectionsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void DirectionsListSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (this.directionsList.SelectedIndex != -1)
             {

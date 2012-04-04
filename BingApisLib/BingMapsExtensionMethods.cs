@@ -1,8 +1,8 @@
-﻿using System.Device.Location;
-using Microsoft.Phone.Controls.Maps;
-
-namespace BingApisLib
+﻿namespace BingApisLib
 {
+    using System.Device.Location;
+    using Microsoft.Phone.Controls.Maps;
+
     public static class BingMapsExtensionMethods
     {
         public static BingMapsRestApi.BoundingBox AsBingMapsBoundingBox(this LocationRect locRect)

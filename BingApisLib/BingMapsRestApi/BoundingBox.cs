@@ -1,8 +1,8 @@
-using System.Diagnostics;
-using System.Xml.Serialization;
-
 namespace BingApisLib.BingMapsRestApi
 {
+    using System.Diagnostics;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// Represents a BingMaps BoundingBox type as defined in http://msdn.microsoft.com/en-us/library/ff701726.aspx
     /// </summary>

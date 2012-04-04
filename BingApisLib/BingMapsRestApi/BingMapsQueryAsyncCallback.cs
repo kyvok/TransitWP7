@@ -1,12 +1,11 @@
-﻿using System;
-using System.Net;
-
-namespace BingApisLib.BingMapsRestApi
+﻿namespace BingApisLib.BingMapsRestApi
 {
+    using System;
+
     internal class BingMapsQueryAsyncCallback
     {
-        private readonly Action<BingMapsQueryResult> callback;
-        private object userState;
+        private readonly Action<BingMapsQueryResult> _callback;
+        private readonly object _userState;
 
         public BingMapsQueryAsyncCallback(Action<BingMapsQueryResult> callback, object userState)
         {
@@ -15,28 +14,26 @@ namespace BingApisLib.BingMapsRestApi
                 throw new ArgumentNullException("callback");
             }
 
-            this.callback = callback;
-            this.userState = userState;
+            this._callback = callback;
+            this._userState = userState;
         }
 
-        public HttpWebRequest HttpWebRequest { get; private set; }
-
         /// <summary>
-        /// Invokes the callback with a result that contains an exception.
+        /// Invokes the _callback with a result that contains an exception.
         /// </summary>
         /// <param name="exception">The exception that occured.</param>
         public void Notify(Exception exception)
         {
-            this.callback(new BingMapsQueryResult(exception, this.userState));
+            this._callback(new BingMapsQueryResult(exception, this._userState));
         }
 
         /// <summary>
-        /// Invokes the callback with a result that contains the response.
+        /// Invokes the _callback with a result that contains the response.
         /// </summary>
         /// <param name="response">The Bing Maps response object.</param>
         public void Notify(Response response)
         {
-            this.callback(new BingMapsQueryResult(response, this.userState));
+            this._callback(new BingMapsQueryResult(response, this._userState));
         }
     }
 }

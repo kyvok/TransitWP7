@@ -105,8 +105,8 @@
 
         <maps:Map Name="mainMap" ScaleVisibility="Visible"
                   Center="{Binding CenterMapGeoCoordinate, Mode=TwoWay}"
-                  MapPan="MainMap_MapPan"
-                  Tap="MainMap_Tap">
+                  MapPan="MainMapMapPan"
+                  Tap="MainMapTap">
             <maps:MapLayer>
                 <maps:MapPolyline StrokeLineJoin="Round"
                                 Stroke="MediumBlue"
@@ -137,7 +137,7 @@
                                       Content="{Binding StepNumber}"
                                       Style="{StaticResource TransitStepPushpinStyle}"
                                       PositionOrigin="Center"
-                                      Tap="Pushpin_Tap"/>
+                                      Tap="PushpinTap"/>
                         </DataTemplate>
                     </maps:MapItemsControl.ItemTemplate>
                 </maps:MapItemsControl>
@@ -174,7 +174,7 @@
             <ListBox Name="TransitTripsList" Margin="6" Width="468"
                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                          VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                         Tap="TransitTripsList_Tap"
+                         Tap="TransitTripsListTap"
                          ItemsSource="{Binding Path=TransitDescriptionCollection}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -255,8 +255,8 @@
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
-                             GotFocus="InputBox_GotFocus"
-                             LostFocus="InputBox_LostFocus"
+                             GotFocus="InputBoxGotFocus"
+                             LostFocus="InputBoxLostFocus"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource StartEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>
@@ -275,8 +275,8 @@
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
-                             GotFocus="InputBox_GotFocus"
-                             LostFocus="InputBox_LostFocus"
+                             GotFocus="InputBoxGotFocus"
+                             LostFocus="InputBoxLostFocus"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource EndEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>
@@ -307,7 +307,7 @@
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=timePicker}"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"/>
-                    <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="50" Tap="ContentControl_Tap">
+                    <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="50" Tap="ContentControlTap">
                         <Rectangle StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}" Margin="0" Width="50" Height="50">
                             <Rectangle.OpacityMask>
                                 <ImageBrush ImageSource="/Images/appbar.transit.depart.png"/>
@@ -322,16 +322,16 @@
 
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="{StaticResource PhoneBackgroundColor}" Opacity="{StaticResource GridOpacityValue}"  IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar.transit.depart.png" Text="Search" Click="ApplicationBarTransitSearch_Click" />
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar.crosshair.png" Text="Locate Me" Click="ApplicationBarLocateMe_Click" IsEnabled="False"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar.list.png" Text="Results" Click="ApplicationBarShowTransitOptions_Click"  IsEnabled="False"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar.transit.connection.png" Text="Steps" Click="ApplicationBarShowSteps_Click" IsEnabled="False"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar.transit.depart.png" Text="Search" Click="ApplicationBarTransitSearchClick" />
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar.crosshair.png" Text="Locate Me" Click="ApplicationBarLocateMeClick" IsEnabled="False"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar.list.png" Text="Results" Click="ApplicationBarShowTransitOptionsClick"  IsEnabled="False"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar.transit.connection.png" Text="Steps" Click="ApplicationBarShowStepsClick" IsEnabled="False"/>
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarDirectionsList_Click"/>
-                <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarShowTransitOptions_Click"/>
-                <shell:ApplicationBarMenuItem Text="clear map" Click="ApplicationBarClearMap_Click"/>
-                <shell:ApplicationBarMenuItem Text="settings" Click="ApplicationBarSettings_Click" />
-                <shell:ApplicationBarMenuItem Text="about" Click="ApplicationBarAbout_Click" />
+                <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarDirectionsListClick"/>
+                <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarShowTransitOptionsClick"/>
+                <shell:ApplicationBarMenuItem Text="clear map" Click="ApplicationBarClearMapClick"/>
+                <shell:ApplicationBarMenuItem Text="settings" Click="ApplicationBarSettingsClick" />
+                <shell:ApplicationBarMenuItem Text="about" Click="ApplicationBarAboutClick" />
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>

@@ -1,9 +1,10 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Threading;
-
-namespace TransitWP7.ViewModel
+﻿namespace TransitWP7.ViewModel
 {
+    using GalaSoft.MvvmLight;
+    using GalaSoft.MvvmLight.Messaging;
+    using GalaSoft.MvvmLight.Threading;
+    using TransitWP7.Model;
+
     public class DirectionsViewModel : ViewModelBase
     {
         private TransitDescription _transitDescription;

@@ -1,7 +1,7 @@
-using System.Runtime.Serialization;
-
 namespace BingApisLib.BingMapsRestApi
 {
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// http://msdn.microsoft.com/en-us/library/hh441731.aspx
     /// </summary>

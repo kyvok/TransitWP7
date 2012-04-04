@@ -1,6 +1,4 @@
-﻿// Copyright info
-
-namespace TransitWP7
+﻿namespace TransitWP7.Model
 {
     public enum TimeCondition
     {

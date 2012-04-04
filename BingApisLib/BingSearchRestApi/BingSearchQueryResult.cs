@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace BingApisLib.BingSearchRestApi
+﻿namespace BingApisLib.BingSearchRestApi
 {
+    using System;
+
     public class BingSearchQueryResult
     {
         public BingSearchQueryResult(SearchResponse response)

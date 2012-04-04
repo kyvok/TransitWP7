@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Device.Location;
-using System.Windows;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Threading;
-using Microsoft.Phone.Controls.Maps;
-using Microsoft.Phone.Net.NetworkInformation;
-using TransitWP7.Resources;
-
-namespace TransitWP7.ViewModel
+﻿namespace TransitWP7.ViewModel
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Device.Location;
+    using System.Windows;
+    using GalaSoft.MvvmLight;
+    using GalaSoft.MvvmLight.Messaging;
+    using GalaSoft.MvvmLight.Threading;
+    using Microsoft.Phone.Controls.Maps;
     using Microsoft.Phone.Controls.Maps.Platform;
+    using Microsoft.Phone.Net.NetworkInformation;
+    using TransitWP7.Model;
+    using TransitWP7.Resources;
 
     public class MainMapViewModel : ViewModelBase
     {
@@ -37,22 +37,13 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Register<NotificationMessage<LocationDescription>>(
                 this,
                 MessengerToken.SelectedEndpoint,
-                notificationMessage =>
-                {
-                    if (notificationMessage.Notification.Equals("start"))
-                    {
-                        this.UpdateLocation("start", notificationMessage.Content);
-                    }
-                    else
-                    {
-                        this.UpdateLocation("end", notificationMessage.Content);
-                    }
-                });
+                notificationMessage => this.UpdateLocation(
+                    notificationMessage.Notification.Equals("start") ? "start" : "end", notificationMessage.Content));
 
             this.DateTime = DateTime.Now;
             this.TimeType = TimeCondition.Now;
 
-            DeviceNetworkInformation.NetworkAvailabilityChanged += this.DeviceNetworkInformation_NetworkAvailabilityChanged;
+            DeviceNetworkInformation.NetworkAvailabilityChanged += this.DeviceNetworkInformationNetworkAvailabilityChanged;
 
 #if DEBUG
             if (IsInDesignModeStatic)
@@ -213,11 +204,9 @@ namespace TransitWP7.ViewModel
                 {
                     return this._userGeoCoordinate;
                 }
-                else
-                {
-                    // We don't know where the user is at all
-                    return null;
-                }
+
+                // We don't know where the user is at all
+                return null;
             }
 
             set
@@ -241,11 +230,9 @@ namespace TransitWP7.ViewModel
                 {
                     return this._uncertaintyCirclePoints;
                 }
-                else
-                {
-                    // We don't know where the user is at all
-                    return null;
-                }
+
+                // We don't know where the user is at all
+                return null;
             }
 
             set
@@ -326,8 +313,8 @@ namespace TransitWP7.ViewModel
                 if (this._geoCoordinateWatcher == null)
                 {
                     this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = Globals.MovementThreshold };
-                    this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcher_PositionChanged;
-                    this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcher_StatusChanged;
+                    this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcherPositionChanged;
+                    this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcherStatusChanged;
                     this._geoCoordinateWatcher.Start();
                 }
             }
@@ -455,7 +442,6 @@ namespace TransitWP7.ViewModel
 
         private LocationCollection DrawACircle(Location location, double radiusInMeters)
         {
-            ////const double EarthRadiusInMiles = 3956.0;
             const double EarthRadiusInKilometers = 6367.0;
             var locations = new LocationCollection();
             Func<double, double> toRadian = val => val * (Math.PI / 180);
@@ -621,12 +607,12 @@ namespace TransitWP7.ViewModel
             Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
         }
 
-        private void DeviceNetworkInformation_NetworkAvailabilityChanged(object sender, NetworkNotificationEventArgs e)
+        private void DeviceNetworkInformationNetworkAvailabilityChanged(object sender, NetworkNotificationEventArgs e)
         {
             CheckNetwork();
         }
 
-        private void GeoCoordinateWatcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        private void GeoCoordinateWatcherPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
         {
             this.UserGeoCoordinate = e.Position.Location;
             if (!this.CenterMapGeoSet)
@@ -635,7 +621,7 @@ namespace TransitWP7.ViewModel
             }
         }
 
-        private void GeoCoordinateWatcher_StatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
+        private void GeoCoordinateWatcherStatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
         {
             CheckLocationService(e.Status);
         }

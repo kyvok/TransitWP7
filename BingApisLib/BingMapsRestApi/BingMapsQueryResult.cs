@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace BingApisLib.BingMapsRestApi
+﻿namespace BingApisLib.BingMapsRestApi
 {
+    using System;
+
     public class BingMapsQueryResult
     {
         public BingMapsQueryResult(Response response)

@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Threading;
-
-namespace TransitWP7.ViewModel
+﻿namespace TransitWP7.ViewModel
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using GalaSoft.MvvmLight;
+    using GalaSoft.MvvmLight.Messaging;
+    using GalaSoft.MvvmLight.Threading;
+    using TransitWP7.Model;
+
     public class LocationSelectionViewModel : ViewModelBase
     {
         private string _endpointName = "end";

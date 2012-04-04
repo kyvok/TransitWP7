@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Device.Location;
-using System.Linq;
-using BingApisLib.BingMapsRestApi;
-using BingApisLib.BingSearchRestApi;
-
-// TODO: walk does not need start and stop time
-namespace TransitWP7
+﻿// TODO: walk does not need start and stop time
+namespace TransitWP7.Model
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Device.Location;
+    using System.Linq;
+    using BingApisLib.BingMapsRestApi;
+    using BingApisLib.BingSearchRestApi;
+
     /// <summary>
     /// Calls REST APIs and isolate their type mapping by converting to transitive types.
     /// </summary>
@@ -58,9 +58,9 @@ namespace TransitWP7
 
         private static void GetLocationInfoCallback(BingMapsQueryResult result)
         {
-            var queryState = result.UserState as QueryState;
+            var queryState = (QueryState)result.UserState;
 
-            var proxyQueryResult = new ProxyQueryResult() { UserState = queryState.UserState };
+            var proxyQueryResult = new ProxyQueryResult { UserState = queryState.UserState };
             if (result.Error == null)
             {
                 foreach (var location in result.Response.GetLocations())
@@ -83,7 +83,7 @@ namespace TransitWP7
 
         private static void GetLocationsFromQueryCallback(BingMapsQueryResult result)
         {
-            var queryState = result.UserState as QueryState;
+            var queryState = (QueryState)result.UserState;
 
             if (result.Error == null)
             {
@@ -114,7 +114,7 @@ namespace TransitWP7
 
         private static void GetBusinessFromQueryCallback(BingSearchQueryResult result)
         {
-            var queryState = result.UserState as QueryState;
+            var queryState = (QueryState)result.UserState;
 
             if (result.Error == null)
             {
@@ -139,7 +139,7 @@ namespace TransitWP7
             queryState.LocationDescriptions = SortLocationDescriptionsByDistance(queryState.LocationDescriptions, queryState.UserLocation);
 
             // call user callback
-            var proxyQueryResult = new ProxyQueryResult() { UserState = queryState.UserState };
+            var proxyQueryResult = new ProxyQueryResult { UserState = queryState.UserState };
             if (queryState.LocationDescriptions != null && queryState.LocationDescriptions.Count > 0)
             {
                 proxyQueryResult.LocationDescriptions = queryState.LocationDescriptions;
@@ -177,7 +177,7 @@ namespace TransitWP7
 
         private static void GetTransitDirectionsCallback(BingMapsQueryResult result)
         {
-            var queryState = result.UserState as QueryState;
+            var queryState = (QueryState)result.UserState;
 
             if (result.Error == null)
             {
@@ -210,7 +210,7 @@ namespace TransitWP7
 
         private static void GetWalkingDirectionsCallback(BingMapsQueryResult result)
         {
-            var queryState = result.UserState as QueryState;
+            var queryState = (QueryState)result.UserState;
 
             if (result.Error == null)
             {
@@ -238,7 +238,7 @@ namespace TransitWP7
             }
 
             // call user callback
-            var proxyQueryResult = new ProxyQueryResult() { UserState = queryState.UserState };
+            var proxyQueryResult = new ProxyQueryResult { UserState = queryState.UserState };
             if (queryState.TransitDescriptions != null && queryState.TransitDescriptions.Count > 0)
             {
                 proxyQueryResult.TransitDescriptions = queryState.TransitDescriptions;
@@ -254,13 +254,21 @@ namespace TransitWP7
         private class QueryState
         {
             public string Query { get; set; }
+
             public GeoCoordinate UserLocation { get; set; }
+
             public GeoCoordinate StartLocation { get; set; }
+            
             public GeoCoordinate EndLocation { get; set; }
+            
             public List<LocationDescription> LocationDescriptions { get; set; }
+            
             public List<TransitDescription> TransitDescriptions { get; set; }
+            
             public Exception SavedException { get; set; }
+            
             public Action<ProxyQueryResult> UserCallback { get; set; }
+            
             public object UserState { get; set; }
         }
     }
@@ -268,8 +276,11 @@ namespace TransitWP7
     public class ProxyQueryResult
     {
         public object UserState { get; set; }
+
         public List<LocationDescription> LocationDescriptions { get; set; }
+        
         public List<TransitDescription> TransitDescriptions { get; set; }
+        
         public Exception Error { get; set; }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.Phone.Controls;
-using TransitWP7.ViewModel;
-
-namespace TransitWP7.View
+﻿namespace TransitWP7.View
 {
+    using Microsoft.Phone.Controls;
+    using TransitWP7.ViewModel;
+
     public partial class LocationSelectionView : PhoneApplicationPage
     {
         private readonly LocationSelectionViewModel _viewModel;
@@ -22,7 +21,7 @@ namespace TransitWP7.View
             this.PageTitle.Text = string.Format(PageTitleStringFormat, this.NavigationContext.QueryString["query"]);
         }
 
-        private void ResultsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void ResultsListSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             this._viewModel.SelectionMade(this.resultsList.SelectedIndex);
             this.NavigationService.GoBack();

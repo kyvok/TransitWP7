@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Device.Location;
-using System.Text;
-using Microsoft.Phone.Controls.Maps;
-
-namespace BingApisLib.BingMapsRestApi
+﻿namespace BingApisLib.BingMapsRestApi
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Device.Location;
+    using System.Text;
+    using Microsoft.Phone.Controls.Maps;
+
     public enum OutputFormat
     {
         Xml,
@@ -74,11 +74,6 @@ namespace BingApisLib.BingMapsRestApi
 
         // TODO: this only supports a subset of the actual enum
         public List<EntityType> IncludeEntityTypes { get; set; }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
     }
     
     // TODO: this needs review
@@ -143,15 +138,15 @@ namespace BingApisLib.BingMapsRestApi
             if (this.Avoid != null && this.Avoid.Count != 0)
             {
                 builder.Append("&avoid=");
-                bool moreThanOne = false;
-                for (int i = 0; i < this.Avoid.Count; i++)
+                var moreThanOne = false;
+                foreach (AvoidType t in this.Avoid)
                 {
                     if (moreThanOne)
                     {
                         builder.Append(",");
                     }
 
-                    builder.Append(this.Avoid[i]);
+                    builder.Append(t);
                     moreThanOne = true;
                 }
             }
@@ -246,10 +241,8 @@ namespace BingApisLib.BingMapsRestApi
             {
                 return base.ToString() + "&maxSolns=" + this.MaxSolutions;
             }
-            else
-            {
-                return base.ToString();
-            }
+
+            return base.ToString();
         }
     }
 

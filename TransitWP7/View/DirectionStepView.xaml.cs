@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using Microsoft.Phone.Controls;
-using TransitWP7.ViewModel;
-
-namespace TransitWP7.View
+﻿namespace TransitWP7.View
 {
+    using System.Collections;
+    using System.ComponentModel;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
+    using System.Windows.Media.Animation;
+
     public partial class DirectionStepView : UserControl, INotifyPropertyChanged
     {
-        private readonly DirectionsViewModel _viewModel;
-        private bool alreadyHookedScrollEvents = false;
+        private bool _alreadyHookedScrollEvents;
         private bool _isScrollBarScrolling;
         private int _selectedItem;
 
@@ -21,10 +17,8 @@ namespace TransitWP7.View
         {
             this.InitializeComponent();
             this._selectedItem = 0;
-            this._viewModel = ViewModelLocator.DirectionsViewModelStatic;
-            this.Loaded += new System.Windows.RoutedEventHandler(this.DirectionsView_Loaded);
-            var ran = new ScrollViewerUtilities();
-            this.Tap += (x, y) => { RaisePropertyChanged("SelectedItem"); };
+            this.Loaded += this.DirectionsViewLoaded;
+            this.Tap += (x, y) => this.RaisePropertyChanged("SelectedItem");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -89,14 +83,14 @@ namespace TransitWP7.View
             }
         }
 
-        public void DirectionsView_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        public void DirectionsViewLoaded(object sender, RoutedEventArgs e)
         {
-            if (this.alreadyHookedScrollEvents)
+            if (this._alreadyHookedScrollEvents)
             {
                 return;
             }
 
-            this.alreadyHookedScrollEvents = true;
+            this._alreadyHookedScrollEvents = true;
             var element = VisualTreeHelper.GetChild(this.directionsListScrollViewer, 0) as FrameworkElement;
             VisualStateGroup scrollStateGroup = null;
             if (element != null)
@@ -131,34 +125,6 @@ namespace TransitWP7.View
             ((DoubleAnimation)this.snapScrollViewer.Children[0]).From = this.directionsListScrollViewer.HorizontalOffset;
             ((DoubleAnimation)this.snapScrollViewer.Children[0]).To = 480 * this.SelectedItem;
             this.snapScrollViewer.Begin();
-        }
-    }
-
-    // technique from http://marlongrech.wordpress.com/2009/09/14/how-to-set-wpf-scrollviewer-verticaloffset-and-horizontal-offset/
-    // does not work though.
-    public class ScrollViewerUtilities
-    {
-        public static readonly DependencyProperty HorizontalOffsetProperty =
-            DependencyProperty.RegisterAttached(
-            "HorizontalOffset",
-            typeof(double),
-            typeof(ScrollViewerUtilities),
-            new PropertyMetadata(OnHorizontalOffsetChanged));
-
-        public static double GetHorizontalOffset(DependencyObject d)
-        {
-            return (double)d.GetValue(HorizontalOffsetProperty);
-        }
-
-        public static void SetHorizontalOffset(DependencyObject d, double value)
-        {
-            d.SetValue(HorizontalOffsetProperty, value);
-        }
-
-        private static void OnHorizontalOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var viewer = (ScrollViewer)d;
-            viewer.ScrollToHorizontalOffset((double)e.NewValue);
         }
     }
 

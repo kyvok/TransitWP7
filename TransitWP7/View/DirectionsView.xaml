@@ -20,7 +20,7 @@
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
             <converters:DateTimeToTimeConverter x:Key="DateTimeToTimeConverter"/>
         </Grid.Resources>
-        <ListBox VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}" SelectionChanged="DirectionsList_SelectionChanged">
+        <ListBox VerticalAlignment="Top" x:Name="directionsList" ItemsSource="{Binding ItinerarySteps}" SelectionChanged="DirectionsListSelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border Padding="0,6,0,6" Height="84" Margin="0,6">

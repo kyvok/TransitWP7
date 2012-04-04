@@ -1,15 +1,12 @@
-﻿using System;
-using System.IO;
-using System.IO.IsolatedStorage;
-using System.Windows;
-using Microsoft.Phone.Tasks;
-
-namespace TransitWP7
+﻿namespace TransitWP7
 {
+    using System;
+    using System.IO;
+    using System.IO.IsolatedStorage;
     using System.Threading;
-
+    using System.Windows;
     using GalaSoft.MvvmLight.Threading;
-
+    using Microsoft.Phone.Tasks;
     using TransitWP7.Resources;
 
     // More info about this error reporting class here:

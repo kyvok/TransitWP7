@@ -2,8 +2,8 @@
 {
     using System;
     using System.Globalization;
-    using System.Windows;
     using System.Windows.Data;
+    using TransitWP7.Model;
 
     public class StepTypeToBooleanConverter : IValueConverter
     {

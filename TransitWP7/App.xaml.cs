@@ -1,16 +1,15 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Navigation;
-using GalaSoft.MvvmLight.Threading;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-
-namespace TransitWP7
+﻿namespace TransitWP7
 {
+    using System.Windows;
+    using System.Windows.Navigation;
+    using GalaSoft.MvvmLight.Threading;
+    using Microsoft.Phone.Controls;
+    using Microsoft.Phone.Shell;
+
     public partial class App : Application
     {
         // Avoid double-initialization
-        private bool phoneApplicationInitialized = false;
+        private bool _phoneApplicationInitialized;
 
         /// <summary>
         /// Constructor for the Application object.
@@ -94,7 +93,7 @@ namespace TransitWP7
                 System.Diagnostics.Debugger.Break();
             }
 
-            LittleWatson.ReportException(e.Exception, "Navigation Failed at Navigation URI: " + e.Uri.ToString());
+            LittleWatson.ReportException(e.Exception, "Navigation Failed at Navigation URI: " + e.Uri);
         }
 
         // Code to execute on Unhandled Exceptions
@@ -114,7 +113,7 @@ namespace TransitWP7
         // Do not add any additional code to this method
         private void InitializePhoneApplication()
         {
-            if (this.phoneApplicationInitialized)
+            if (this._phoneApplicationInitialized)
             {
                 return;
             }
@@ -128,7 +127,7 @@ namespace TransitWP7
             this.RootFrame.NavigationFailed += this.RootFrame_NavigationFailed;
 
             // Ensure we don't initialize again
-            this.phoneApplicationInitialized = true;
+            this._phoneApplicationInitialized = true;
         }
 
         // Do not add any additional code to this method

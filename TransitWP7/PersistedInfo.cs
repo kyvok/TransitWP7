@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
-using System.IO.IsolatedStorage;
-using System.Xml.Serialization;
-using TransitWP7.ViewModel;
-
-namespace TransitWP7
+﻿namespace TransitWP7
 {
+    using System;
+    using System.IO;
+    using System.IO.IsolatedStorage;
+    using System.Xml.Serialization;
+    using TransitWP7.ViewModel;
+
     public static class PersistedInfo
     {
         private const string MainMapViewModelSavedInfo = "MainMapVM.xml";

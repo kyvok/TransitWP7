@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Device.Location;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
-using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Threading;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Controls.Maps;
-using Microsoft.Phone.Shell;
-using TransitWP7.Resources;
-using TransitWP7.ViewModel;
-
-namespace TransitWP7.View
+﻿namespace TransitWP7.View
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Device.Location;
+    using System.Threading;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Input;
+    using System.Windows.Media;
+    using GalaSoft.MvvmLight.Messaging;
+    using GalaSoft.MvvmLight.Threading;
+    using Microsoft.Phone.Controls;
+    using Microsoft.Phone.Controls.Maps;
+    using Microsoft.Phone.Shell;
+    using TransitWP7.Resources;
+    using TransitWP7.ViewModel;
+
     public partial class MainMapView : PhoneApplicationPage
     {
         private readonly MainMapViewModel _viewModel;
@@ -138,15 +137,7 @@ namespace TransitWP7.View
             if (string.IsNullOrEmpty(ViewModelLocator.SettingsViewModelStatic.FirstLaunchSetting))
             {
                 var result = MessageBox.Show(SR.FirstRunAuthorizeLocationDesc, SR.FirstRunAuthorizeLocationTitle, MessageBoxButton.OKCancel);
-                if (result == MessageBoxResult.OK)
-                {
-                    ViewModelLocator.SettingsViewModelStatic.UseLocationSetting = true;
-                }
-                else
-                {
-                    ViewModelLocator.SettingsViewModelStatic.UseLocationSetting = false;
-                }
-
+                ViewModelLocator.SettingsViewModelStatic.UseLocationSetting = result == MessageBoxResult.OK;
                 ViewModelLocator.SettingsViewModelStatic.FirstLaunchSetting = "set";
             }
 
@@ -156,7 +147,7 @@ namespace TransitWP7.View
 
         private void RegisterForNotification(string propertyName, FrameworkElement element, PropertyChangedCallback callback)
         {
-            // Bind to a depedency property
+            // Bind to a dependency property
             var b = new Binding(propertyName) { Source = element };
             var prop = DependencyProperty.RegisterAttached(
                 "ListenAttached" + propertyName,
@@ -224,14 +215,7 @@ namespace TransitWP7.View
                         }
 
                         // TODO: possibly pass a small string to indicate a third state for the meIndicator.
-                        if (notificationMessage.Content)
-                        {
-                            this.meIndicator.Visibility = Visibility.Visible;
-                        }
-                        else
-                        {
-                            this.meIndicator.Visibility = Visibility.Collapsed;
-                        }
+                        this.meIndicator.Visibility = notificationMessage.Content ? Visibility.Visible : Visibility.Collapsed;
 
                         var locateMeButton = (ApplicationBarIconButton)this.ApplicationBar.Buttons[(int)AppBarIconOrder.LocateMe];
                         locateMeButton.IsEnabled = notificationMessage.Content;
@@ -261,8 +245,7 @@ namespace TransitWP7.View
         {
             if (e.Key == Key.Enter)
             {
-                var textBox = sender as AutoCompleteBox;
-                Debug.Assert(textBox != null, "textBox should be AutoCompleteBox");
+                var textBox = (AutoCompleteBox)sender;
                 if (textBox.Name == "startingInput")
                 {
                     this.endingInput.Focus();
@@ -275,11 +258,10 @@ namespace TransitWP7.View
             }
         }
 
-        private void InputBox_GotFocus(object sender, RoutedEventArgs e)
+        private void InputBoxGotFocus(object sender, RoutedEventArgs e)
         {
             this.ApplicationBar.IsVisible = false;
-            var inputBox = sender as AutoCompleteBox;
-            Debug.Assert(inputBox != null, "inputBox should be AutoCompleteBox");
+            var inputBox = (AutoCompleteBox)sender;
             inputBox.MinimumPrefixLength = 1;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
             inputBox.BorderBrush = Application.Current.Resources["UnderliningBorderBrush"] as Brush;
@@ -298,10 +280,9 @@ namespace TransitWP7.View
             }
         }
 
-        private void InputBox_LostFocus(object sender, RoutedEventArgs e)
+        private void InputBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            var inputBox = sender as AutoCompleteBox;
-            Debug.Assert(inputBox != null, "inputBox should be AutoCompleteBox");
+            var inputBox = (AutoCompleteBox)sender;
             inputBox.MinimumPrefixLength = -1;
             if (this.bottomGridTranslate.Y != 0)
             {
@@ -316,13 +297,13 @@ namespace TransitWP7.View
             this.endingInput.Text = temp;
         }
 
-        private void ApplicationBarLocateMe_Click(object sender, EventArgs e)
+        private void ApplicationBarLocateMeClick(object sender, EventArgs e)
         {
             this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
             this._viewModel.CenterMapGeoSet = false;
         }
 
-        private void ApplicationBarDirectionsList_Click(object sender, EventArgs e)
+        private void ApplicationBarDirectionsListClick(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
         }
@@ -340,18 +321,18 @@ namespace TransitWP7.View
             SystemTray.ProgressIndicator.IsVisible = state;
         }
 
-        private void Pushpin_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void PushpinTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            var pushpin = sender as Pushpin;
+            var pushpin = (Pushpin)sender;
             this.directionsStepView.SelectedItem = ((int)pushpin.Content) - 1;
         }
 
-        private void ApplicationBarShowTransitOptions_Click(object sender, EventArgs e)
+        private void ApplicationBarShowTransitOptionsClick(object sender, EventArgs e)
         {
             this.ShowTransitTripsList();
         }
 
-        private void ApplicationBarClearMap_Click(object sender, EventArgs e)
+        private void ApplicationBarClearMapClick(object sender, EventArgs e)
         {
             this._viewModel.StartOver();
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
@@ -369,21 +350,21 @@ namespace TransitWP7.View
 
         private void ListPickerSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var listPicker = sender as ListPicker;
+            var listPicker = (ListPicker)sender;
             listPicker.Background = new SolidColorBrush(Colors.Transparent);
         }
 
-        private void ApplicationBarSettings_Click(object sender, EventArgs e)
+        private void ApplicationBarSettingsClick(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri(PhonePageUri.SettingsView, UriKind.Relative));
         }
 
-        private void ContentControl_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void ContentControlTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             this._viewModel.BeginCalculateTransit();
         }
 
-        private void ApplicationBarAbout_Click(object sender, EventArgs e)
+        private void ApplicationBarAboutClick(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/YourLastAboutDialog;component/AboutPage.xaml", UriKind.Relative));
         }
@@ -446,7 +427,7 @@ namespace TransitWP7.View
             this.CurrentViewState = uiState;
         }
 
-        private void TransitTripsList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void TransitTripsListTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             this._viewModel.SetSelectedTransitTrip(this.TransitTripsList.SelectedIndex);
 
@@ -457,14 +438,14 @@ namespace TransitWP7.View
             }
         }
 
-        private void ApplicationBarTransitSearch_Click(object sender, EventArgs e)
+        private void ApplicationBarTransitSearchClick(object sender, EventArgs e)
         {
             this.ApplicationBar.IsVisible = false;
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
             this.startingInput.Focus();
         }
 
-        private void MainMap_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        private void MainMapTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             if (this.CurrentViewState != UIViewState.ItineraryView)
             {
@@ -472,12 +453,12 @@ namespace TransitWP7.View
             }
         }
 
-        private void MainMap_MapPan(object sender, MapDragEventArgs e)
+        private void MainMapMapPan(object sender, MapDragEventArgs e)
         {
             this._viewModel.CenterMapGeoSet = true;
         }
 
-        private void ApplicationBarShowSteps_Click(object sender, EventArgs e)
+        private void ApplicationBarShowStepsClick(object sender, EventArgs e)
         {
             this.SetUIVisibility(UIViewState.ItineraryView);
         }

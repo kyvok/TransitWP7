@@ -1,6 +1,4 @@
-﻿// Copyright info
-
-namespace TransitWP7
+﻿namespace TransitWP7.Model
 {
     using System;
     using System.Collections.ObjectModel;
@@ -10,17 +8,17 @@ namespace TransitWP7
 
     public class ItineraryStep : INotifyPropertyChanged
     {
-        private GeoCoordinate geoCoordinate;
-        private ObservableCollection<ItineraryStep> childItinerarySteps;
-        private string instruction;
-        private ObservableCollection<string> hints;
-        private DateTime starttime;
-        private DateTime endtime;
-        private string travelMode;
-        private string busNumber;
-        private string iconType;
-        private int stepNumber;
-        private ItineraryStepType stepType;
+        private GeoCoordinate _geoCoordinate;
+        private ObservableCollection<ItineraryStep> _childItinerarySteps;
+        private string _instruction;
+        private ObservableCollection<string> _hints;
+        private DateTime _starttime;
+        private DateTime _endtime;
+        private string _travelMode;
+        private string _busNumber;
+        private string _iconType;
+        private int _stepNumber;
+        private ItineraryStepType _stepType;
 
         public ItineraryStep()
         {
@@ -30,22 +28,22 @@ namespace TransitWP7
         {
             this.GeoCoordinate = item.ManeuverPoint.AsGeoCoordinate();
             this.Instruction = item.Instruction.Value;
-            this.TravelMode = item.Detail.Mode != null ? item.Detail.Mode : string.Empty;
+            this.TravelMode = item.Detail.Mode ?? string.Empty;
             this.BusNumber = item.TransitLine != null ? item.TransitLine.AbbreviatedName : string.Empty;
             this.IconType = item.IconType.ToString().StartsWith("N") ? string.Empty : item.IconType.ToString();
             this.StartTime = item.Time;
             this.EndTime = item.Time;
 
-            this.hints = new ObservableCollection<string>();
+            this._hints = new ObservableCollection<string>();
             if (item.Hint != null)
             {
                 foreach (var hint in item.Hint)
                 {
-                    this.hints.Add(hint);
+                    this._hints.Add(hint);
                 }
             }
 
-            this.stepNumber = stepNumber;
+            this._stepNumber = stepNumber;
 
             this.ChildItinerarySteps = new ObservableCollection<ItineraryStep>();
             if (item.ChildItineraryItems != null)
@@ -72,14 +70,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.geoCoordinate;
+                return this._geoCoordinate;
             }
 
             set
             {
-                if (value != this.geoCoordinate)
+                if (value != this._geoCoordinate)
                 {
-                    this.geoCoordinate = value;
+                    this._geoCoordinate = value;
                     this.RaisePropertyChanged("GeoCoordinate");
                 }
             }
@@ -89,14 +87,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.instruction;
+                return this._instruction;
             }
 
             set
             {
-                if (value != this.instruction)
+                if (value != this._instruction)
                 {
-                    this.instruction = value;
+                    this._instruction = value;
                     this.RaisePropertyChanged("Instruction");
                 }
             }
@@ -106,14 +104,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.hints;
+                return this._hints;
             }
 
             set
             {
-                if (value != this.hints)
+                if (value != this._hints)
                 {
-                    this.hints = value;
+                    this._hints = value;
                     this.RaisePropertyChanged("Hints");
                 }
             }
@@ -123,14 +121,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.starttime;
+                return this._starttime;
             }
 
             set
             {
-                if (value != this.starttime)
+                if (value != this._starttime)
                 {
-                    this.starttime = value;
+                    this._starttime = value;
                     this.RaisePropertyChanged("StartTime");
                 }
             }
@@ -140,14 +138,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.endtime;
+                return this._endtime;
             }
 
             set
             {
-                if (value != this.endtime)
+                if (value != this._endtime)
                 {
-                    this.endtime = value;
+                    this._endtime = value;
                     this.RaisePropertyChanged("EndTime");
                 }
             }
@@ -157,14 +155,7 @@ namespace TransitWP7
         {
             get
             {
-                if (this.EndTime != null && this.StartTime != null)
-                {
-                    return this.StartTime - this.EndTime;
-                }
-                else
-                {
-                    return TimeSpan.FromSeconds(0);
-                }
+                return this.StartTime - this.EndTime;
             }
         }
 
@@ -172,14 +163,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.travelMode;
+                return this._travelMode;
             }
 
             set
             {
-                if (value != this.travelMode)
+                if (value != this._travelMode)
                 {
-                    this.travelMode = value;
+                    this._travelMode = value;
                     this.RaisePropertyChanged("TravelMode");
                 }
             }
@@ -189,14 +180,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.busNumber;
+                return this._busNumber;
             }
 
             set
             {
-                if (value != this.busNumber)
+                if (value != this._busNumber)
                 {
-                    this.busNumber = value;
+                    this._busNumber = value;
                     this.RaisePropertyChanged("BusNumber");
                 }
             }
@@ -206,14 +197,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.iconType;
+                return this._iconType;
             }
 
             set
             {
-                if (value != this.iconType)
+                if (value != this._iconType)
                 {
-                    this.iconType = value;
+                    this._iconType = value;
                     this.RaisePropertyChanged("IconType");
                 }
             }
@@ -223,14 +214,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.stepNumber;
+                return this._stepNumber;
             }
 
             set
             {
-                if (value != this.stepNumber)
+                if (value != this._stepNumber)
                 {
-                    this.stepNumber = value;
+                    this._stepNumber = value;
                     this.RaisePropertyChanged("StepNumber");
                 }
             }
@@ -240,14 +231,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.stepType;
+                return this._stepType;
             }
 
             set
             {
-                if (value != this.stepType)
+                if (value != this._stepType)
                 {
-                    this.stepType = value;
+                    this._stepType = value;
                     this.RaisePropertyChanged("StepType");
                 }
             }
@@ -257,14 +248,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.childItinerarySteps;
+                return this._childItinerarySteps;
             }
 
             set
             {
-                if (value != this.childItinerarySteps)
+                if (value != this._childItinerarySteps)
                 {
-                    this.childItinerarySteps = value;
+                    this._childItinerarySteps = value;
                     this.RaisePropertyChanged("ChildItinerarySteps");
                 }
             }

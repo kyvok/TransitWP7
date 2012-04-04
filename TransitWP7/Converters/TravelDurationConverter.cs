@@ -1,9 +1,9 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-
-namespace TransitWP7.Converters
+﻿namespace TransitWP7.Converters
 {
+    using System;
+    using System.Globalization;
+    using System.Windows.Data;
+
     public class TravelDurationConverter : IValueConverter
     {
         /// <summary>

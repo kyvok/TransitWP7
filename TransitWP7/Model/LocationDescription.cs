@@ -1,8 +1,5 @@
-﻿// Copyright info
-
-namespace TransitWP7
+﻿namespace TransitWP7.Model
 {
-    using System;
     using System.ComponentModel;
     using System.Device.Location;
     using BingApisLib.BingMapsRestApi;
@@ -10,13 +7,13 @@ namespace TransitWP7
 
     public class LocationDescription : INotifyPropertyChanged
     {
-        private string displayName;
-        private string formattedAddress;
-        private string city;
-        private string stateOrProvince;
-        private string postalCode;
-        private string confidence;
-        private GeoCoordinate geoCoordinate;
+        private string _displayName;
+        private string _formattedAddress;
+        private string _city;
+        private string _stateOrProvince;
+        private string _postalCode;
+        private string _confidence;
+        private GeoCoordinate _geoCoordinate;
 
         public LocationDescription()
         {
@@ -60,14 +57,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.displayName;
+                return this._displayName;
             }
 
             set
             {
-                if (value != this.displayName)
+                if (value != this._displayName)
                 {
-                    this.displayName = value;
+                    this._displayName = value;
                     this.RaisePropertyChanged("DisplayName");
                 }
             }
@@ -77,14 +74,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.formattedAddress;
+                return this._formattedAddress;
             }
 
             set
             {
-                if (value != this.formattedAddress)
+                if (value != this._formattedAddress)
                 {
-                    this.formattedAddress = value;
+                    this._formattedAddress = value;
                     this.RaisePropertyChanged("FormattedAddress");
                 }
             }
@@ -94,14 +91,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.city;
+                return this._city;
             }
 
             set
             {
-                if (value != this.city)
+                if (value != this._city)
                 {
-                    this.city = value;
+                    this._city = value;
                     this.RaisePropertyChanged("City");
                 }
             }
@@ -111,14 +108,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.stateOrProvince;
+                return this._stateOrProvince;
             }
 
             set
             {
-                if (value != this.stateOrProvince)
+                if (value != this._stateOrProvince)
                 {
-                    this.stateOrProvince = value;
+                    this._stateOrProvince = value;
                     this.RaisePropertyChanged("StateOrProvince");
                 }
             }
@@ -128,14 +125,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.postalCode;
+                return this._postalCode;
             }
 
             set
             {
-                if (value != this.postalCode)
+                if (value != this._postalCode)
                 {
-                    this.postalCode = value;
+                    this._postalCode = value;
                     this.RaisePropertyChanged("PostalCode");
                 }
             }
@@ -145,14 +142,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.confidence;
+                return this._confidence;
             }
 
             set
             {
-                if (value != this.confidence)
+                if (value != this._confidence)
                 {
-                    this.confidence = value;
+                    this._confidence = value;
                     this.RaisePropertyChanged("Confidence");
                 }
             }
@@ -162,14 +159,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.geoCoordinate;
+                return this._geoCoordinate;
             }
 
             set
             {
-                if (value != this.geoCoordinate)
+                if (value != this._geoCoordinate)
                 {
-                    this.geoCoordinate = value;
+                    this._geoCoordinate = value;
                     this.RaisePropertyChanged("GeoCoordinate");
                 }
             }

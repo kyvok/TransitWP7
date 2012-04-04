@@ -1,6 +1,4 @@
-﻿// Copyright info
-
-namespace TransitWP7
+﻿namespace TransitWP7.Model
 {
     using System;
     using System.Collections.ObjectModel;
@@ -11,15 +9,15 @@ namespace TransitWP7
 
     public class TransitDescription : INotifyPropertyChanged
     {
-        private DirectionType transitType;
-        private GeoCoordinate startLocation;
-        private GeoCoordinate endLocation;
-        private LocationRect mapView;
-        private double travelDuration;
-        private string arrivalTime;
-        private string departureTime;
-        private ObservableCollection<ItineraryStep> itinerarySteps;
-        private LocationCollection pathPoints;
+        private DirectionType _transitType;
+        private GeoCoordinate _startLocation;
+        private GeoCoordinate _endLocation;
+        private LocationRect _mapView;
+        private double _travelDuration;
+        private string _arrivalTime;
+        private string _departureTime;
+        private ObservableCollection<ItineraryStep> _itinerarySteps;
+        private LocationCollection _pathPoints;
 
         public TransitDescription()
         {
@@ -82,14 +80,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.transitType;
+                return this._transitType;
             }
 
             set
             {
-                if (value != this.transitType)
+                if (value != this._transitType)
                 {
-                    this.transitType = value;
+                    this._transitType = value;
                     this.RaisePropertyChanged("TransitType");
                 }
             }
@@ -99,14 +97,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.startLocation;
+                return this._startLocation;
             }
 
             set
             {
-                if (value != this.startLocation)
+                if (value != this._startLocation)
                 {
-                    this.startLocation = value;
+                    this._startLocation = value;
                     this.RaisePropertyChanged("StartLocation");
                 }
             }
@@ -116,14 +114,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.endLocation;
+                return this._endLocation;
             }
 
             set
             {
-                if (value != this.endLocation)
+                if (value != this._endLocation)
                 {
-                    this.endLocation = value;
+                    this._endLocation = value;
                     this.RaisePropertyChanged("EndLocation");
                 }
             }
@@ -133,14 +131,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.mapView;
+                return this._mapView;
             }
 
             set
             {
-                if (value != this.mapView)
+                if (value != this._mapView)
                 {
-                    this.mapView = value;
+                    this._mapView = value;
                     this.RaisePropertyChanged("MapView");
                 }
             }
@@ -150,14 +148,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.travelDuration;
+                return this._travelDuration;
             }
 
             set
             {
-                if (value != this.travelDuration)
+                if (value != this._travelDuration)
                 {
-                    this.travelDuration = value;
+                    this._travelDuration = value;
                     this.RaisePropertyChanged("TravelDuration");
                 }
             }
@@ -167,14 +165,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.arrivalTime;
+                return this._arrivalTime;
             }
 
             set
             {
-                if (value != this.arrivalTime)
+                if (value != this._arrivalTime)
                 {
-                    this.arrivalTime = value;
+                    this._arrivalTime = value;
                     this.RaisePropertyChanged("ArrivalTime");
                 }
             }
@@ -184,14 +182,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.departureTime;
+                return this._departureTime;
             }
 
             set
             {
-                if (value != this.departureTime)
+                if (value != this._departureTime)
                 {
-                    this.departureTime = value;
+                    this._departureTime = value;
                     this.RaisePropertyChanged("DepartureTime");
                 }
             }
@@ -201,14 +199,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.itinerarySteps;
+                return this._itinerarySteps;
             }
 
             set
             {
-                if (value != this.itinerarySteps)
+                if (value != this._itinerarySteps)
                 {
-                    this.itinerarySteps = value;
+                    this._itinerarySteps = value;
                     this.RaisePropertyChanged("ItinerarySteps");
                 }
             }
@@ -218,14 +216,14 @@ namespace TransitWP7
         {
             get
             {
-                return this.pathPoints;
+                return this._pathPoints;
             }
 
             set
             {
-                if (value != this.pathPoints)
+                if (value != this._pathPoints)
                 {
-                    this.pathPoints = value;
+                    this._pathPoints = value;
                     this.RaisePropertyChanged("PathPoints");
                 }
             }

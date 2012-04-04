@@ -1,9 +1,9 @@
-using System.Diagnostics;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
-
 namespace BingApisLib.BingMapsRestApi
 {
+    using System.Diagnostics;
+    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// Represents a BingMaps ItineraryItem field as defined in http://msdn.microsoft.com/en-us/library/ff701718.aspx
     /// </summary>

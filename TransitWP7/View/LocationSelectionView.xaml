@@ -29,7 +29,7 @@
                      Width="444"
                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                      VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                     SelectionChanged="ResultsList_SelectionChanged"
+                     SelectionChanged="ResultsListSelectionChanged"
                      ItemsSource="{Binding Path=LocationDescriptions}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
