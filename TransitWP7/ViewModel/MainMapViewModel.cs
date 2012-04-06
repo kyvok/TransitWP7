@@ -174,6 +174,11 @@
                 if (value != this._selectedStartLocation)
                 {
                     this._selectedStartLocation = value;
+                    if (value != null && value.GeoCoordinate != null)
+                    {
+                        this._isStartLocationStale = false;
+                    }
+
                     this.RaisePropertyChanged("SelectedStartLocation");
                 }
             }
@@ -191,6 +196,11 @@
                 if (value != this._selectedEndLocation)
                 {
                     this._selectedEndLocation = value;
+                    if (value != null && value.GeoCoordinate != null)
+                    {
+                        this._isEndLocationStale = false;
+                    }
+
                     this.RaisePropertyChanged("SelectedEndLocation");
                 }
             }
@@ -292,6 +302,14 @@
             }
         }
 
+        public ObservableCollection<LocationDescription> AutoCompleteData
+        {
+            get
+            {
+                return AutoCompleteDataManager.AutoCompleteData;
+            }
+        }
+
         public void DoServiceChecks()
         {
             CheckNetwork();
@@ -371,6 +389,9 @@
             // Trim whitespace from the start/end locations
             this.StartLocationText = this.StartLocationText.Trim();
             this.EndLocationText = this.EndLocationText.Trim();
+
+            AutoCompleteDataManager.AddSearchStringEntry(this.StartLocationText);
+            AutoCompleteDataManager.AddSearchStringEntry(this.EndLocationText);
 
             this.CoreCalculateTransit();
         }
@@ -565,6 +586,8 @@
             DispatcherHelper.UIDispatcher.BeginInvoke(
                     () =>
                     {
+                        AutoCompleteDataManager.AddLocationEntry(location);
+
                         if (endpoint == "start")
                         {
                             this.StartLocationText = location.DisplayName;

@@ -90,6 +90,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AutoCompleteDataManager.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\TransitTypeToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeToTimeConverter.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Converters\TimeConditionToIntConverter.cs" />
     <Compile Include="Converters\TravelDurationConverter.cs" />
     <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
+    <Compile Include="IsolatedStorageHelper.cs" />
     <Compile Include="LittleWatson.cs" />
     <Compile Include="PersistedInfo.cs" />
     <Compile Include="Resources\SR.Designer.cs">

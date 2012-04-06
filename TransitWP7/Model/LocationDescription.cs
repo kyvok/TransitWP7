@@ -172,6 +172,15 @@
             }
         }
 
+        /// <summary>
+        /// Overriding ToString to show the DisplayName, this is to behave nicely with the AutoCompleteBox
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return this.DisplayName;
+        }
+
         private void RaisePropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)

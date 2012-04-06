@@ -255,8 +255,10 @@
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
+                             ItemsSource="{Binding AutoCompleteData}"
                              GotFocus="InputBoxGotFocus"
                              LostFocus="InputBoxLostFocus"
+                             SelectionChanged="InputBoxAutoCompleteSelectionChanged"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource StartEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>
@@ -275,8 +277,10 @@
                              VerticalAlignment="Center"
                              Background="{StaticResource TransparentBrush}"
                              Foreground="{StaticResource PhoneForegroundBrush}"
+                             ItemsSource="{Binding AutoCompleteData}"
                              GotFocus="InputBoxGotFocus"
                              LostFocus="InputBoxLostFocus"
+                             SelectionChanged="InputBoxAutoCompleteSelectionChanged"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource EndEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>
@@ -289,7 +293,7 @@
                         Foreground="{StaticResource PhoneForegroundBrush}"
                         SizeChanged="ListPickerSizeChanged"
                         BorderThickness="0"
-                        Margin="0,3"
+                        Margin="0,4"
                         SelectedIndex="{Binding Path=TimeType, Mode=TwoWay, Converter={StaticResource TimeConditionToIntConverter}, FallbackValue=0}">
                         <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Right"/>
                         <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Right"/>

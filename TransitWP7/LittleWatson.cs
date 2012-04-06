@@ -23,7 +23,7 @@
             {
                 using (var store = IsolatedStorageFile.GetUserStoreForApplication())
                 {
-                    SafeDeleteFile(store);
+                    IsolatedStorageHelper.SafeDeleteFile(store, ErrorReportFileName);
 
                     using (var output = new StreamWriter(store.CreateFile(ErrorReportFileName)))
                     {
@@ -64,7 +64,7 @@
                             contents = reader.ReadToEnd();
                         }
 
-                        SafeDeleteFile(store);
+                        IsolatedStorageHelper.SafeDeleteFile(store, ErrorReportFileName);
                     }
                 }
 
@@ -79,7 +79,7 @@
                                 email.To = Globals.SupportEmailAddress;
                                 email.Subject = string.Format("Transitive v{0} crash report", System.Reflection.Assembly.GetExecutingAssembly().FullName.Split('=')[1].Split(',')[0]);
                                 email.Body = contents;
-                                SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication());
+                                IsolatedStorageHelper.SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication(), ErrorReportFileName);
                                 email.Show();
                             }
                         }));
@@ -90,18 +90,7 @@
             }
             finally
             {
-                SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication());
-            }
-        }
-
-        private static void SafeDeleteFile(IsolatedStorageFile store)
-        {
-            try
-            {
-                store.DeleteFile(ErrorReportFileName);
-            }
-            catch (Exception)
-            {
+                IsolatedStorageHelper.SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication(), ErrorReportFileName);
             }
         }
     }

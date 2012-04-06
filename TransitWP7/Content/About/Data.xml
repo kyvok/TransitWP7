@@ -43,6 +43,10 @@
     </Item>
     <Item Title="history"
            Type="text">
+      0.8.0.0
+      Added autocomplete functionality.
+      UI Polishing
+      
       0.7.0.0
       Initial release.
     </Item>

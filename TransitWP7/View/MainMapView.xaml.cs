@@ -14,6 +14,8 @@
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Controls.Maps;
     using Microsoft.Phone.Shell;
+
+    using TransitWP7.Model;
     using TransitWP7.Resources;
     using TransitWP7.ViewModel;
 
@@ -28,9 +30,6 @@
             this._viewModel = ViewModelLocator.MainMapViewModelStatic;
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
-
-            this.startingInput.ItemsSource = new ObservableCollection<string> { SR.MyCurrentLocationText };
-            this.endingInput.ItemsSource = new ObservableCollection<string> { SR.MyCurrentLocationText };
 
             this.RegisterNotifications();
             this.RegisterForNotification(
@@ -135,6 +134,8 @@
         {
             if (string.IsNullOrEmpty(ViewModelLocator.SettingsViewModelStatic.FirstLaunchSetting))
             {
+                this._viewModel.StartOver();
+                AutoCompleteDataManager.ResetData();
                 var result = MessageBox.Show(SR.FirstRunAuthorizeLocationDesc, SR.FirstRunAuthorizeLocationTitle, MessageBoxButton.OKCancel);
                 ViewModelLocator.SettingsViewModelStatic.UseLocationSetting = result == MessageBoxResult.OK;
                 ViewModelLocator.SettingsViewModelStatic.FirstLaunchSetting = "set";
@@ -282,6 +283,57 @@
         {
             var inputBox = (AutoCompleteBox)sender;
             inputBox.MinimumPrefixLength = -1;
+        }
+
+        ////private void InputBoxDropDownClosing(object sender, RoutedPropertyChangingEventArgs<bool> e)
+        ////{
+        ////    var inputBox = (AutoCompleteBox)sender;
+        ////    var locationDescription = (LocationDescription)inputBox.SelectedItem;
+        ////    if (inputBox.Name.Contains("start"))
+        ////    {
+        ////        this._viewModel.StartLocationText = locationDescription.DisplayName;
+        ////        this._viewModel.SelectedStartLocation = locationDescription;
+        ////    }
+        ////    else
+        ////    {
+        ////        this._viewModel.EndLocationText = locationDescription.DisplayName;
+        ////        this._viewModel.SelectedEndLocation = locationDescription;
+        ////    }
+        ////}
+
+        ////private void InputBoxDropDownClosed(object sender, RoutedPropertyChangedEventArgs<bool> e)
+        ////{
+        ////    var inputBox = (AutoCompleteBox)sender;
+        ////    var locationDescription = (LocationDescription)inputBox.SelectedItem;
+        ////    if (inputBox.Name.Contains("start"))
+        ////    {
+        ////        this._viewModel.StartLocationText = locationDescription.DisplayName;
+        ////        this._viewModel.SelectedStartLocation = locationDescription;
+        ////    }
+        ////    else
+        ////    {
+        ////        this._viewModel.EndLocationText = locationDescription.DisplayName;
+        ////        this._viewModel.SelectedEndLocation = locationDescription;
+        ////    }
+        ////}
+
+        private void InputBoxAutoCompleteSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var inputBox = (AutoCompleteBox)sender;
+            if (e.AddedItems.Count > 0)
+            {
+                var locationDescription = (LocationDescription)e.AddedItems[0];
+                if (inputBox.Name.Contains("start"))
+                {
+                    this._viewModel.StartLocationText = locationDescription.DisplayName;
+                    this._viewModel.SelectedStartLocation = locationDescription;
+                }
+                else
+                {
+                    this._viewModel.EndLocationText = locationDescription.DisplayName;
+                    this._viewModel.SelectedEndLocation = locationDescription;
+                }
+            }
         }
 
         private void SwapEndpoints(object sender, System.Windows.Input.GestureEventArgs e)
