@@ -75,7 +75,6 @@
         private enum AppBarMenuItemOrder
         {
             Directions = 0,
-            TransitOptions,
             ClearMap,
             Settings,
             About
@@ -260,7 +259,6 @@
 
         private void InputBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            this.ApplicationBar.IsVisible = false;
             var inputBox = (AutoCompleteBox)sender;
             inputBox.MinimumPrefixLength = 1;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
@@ -284,10 +282,6 @@
         {
             var inputBox = (AutoCompleteBox)sender;
             inputBox.MinimumPrefixLength = -1;
-            if (this.bottomGridTranslate.Y != 0)
-            {
-                this.ApplicationBar.IsVisible = true;
-            }
         }
 
         private void SwapEndpoints(object sender, System.Windows.Input.GestureEventArgs e)
@@ -295,17 +289,6 @@
             var temp = this.startingInput.Text;
             this.startingInput.Text = this.endingInput.Text;
             this.endingInput.Text = temp;
-        }
-
-        private void ApplicationBarLocateMeClick(object sender, EventArgs e)
-        {
-            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
-            this._viewModel.CenterMapGeoSet = false;
-        }
-
-        private void ApplicationBarDirectionsListClick(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
         }
 
         private void SetProgressBarState(string message, bool state)
@@ -327,46 +310,10 @@
             this.directionsStepView.SelectedItem = ((int)pushpin.Content) - 1;
         }
 
-        private void ApplicationBarShowTransitOptionsClick(object sender, EventArgs e)
-        {
-            this.ShowTransitTripsList();
-        }
-
-        private void ApplicationBarClearMapClick(object sender, EventArgs e)
-        {
-            this._viewModel.StartOver();
-            this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
-            this.mainMap.SetView(this._viewModel.UserGeoCoordinate ?? this._viewModel.CenterMapGeoCoordinate, Globals.LocateMeZoomLevel);
-            this.directionsStepView.SelectedItem = -1;
-
-            // the following is a workaround for the appbar preventing the update of binding for textbox
-            this.startingInput.Text += " ";
-            this.endingInput.Text += " ";
-            this.startingInput.Text = this.startingInput.Text.TrimEnd();
-            this.endingInput.Text = this.endingInput.Text.TrimEnd();
-
-            this.startingInput.Focus();
-        }
-
         private void ListPickerSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var listPicker = (ListPicker)sender;
             listPicker.Background = new SolidColorBrush(Colors.Transparent);
-        }
-
-        private void ApplicationBarSettingsClick(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri(PhonePageUri.SettingsView, UriKind.Relative));
-        }
-
-        private void ContentControlTap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            this._viewModel.BeginCalculateTransit();
-        }
-
-        private void ApplicationBarAboutClick(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/YourLastAboutDialog;component/AboutPage.xaml", UriKind.Relative));
         }
 
         private void SetUIVisibility(UIViewState uiState)
@@ -396,13 +343,13 @@
 
                     break;
                 case UIViewState.TransitOptionsView:
+                    this.ApplicationBar.IsVisible = false;
                     this.bottomGrid.Height = 800 - this.topGrid.ActualHeight - 32;
                     this.TransitOptionsViewAnimation.Begin();
-                    this.ApplicationBar.IsVisible = false;
                     break;
                 case UIViewState.OnlyStartEndInputsView:
-                    this.OnlyStartEndInputViewAnimation.Begin();
                     this.ApplicationBar.IsVisible = false;
+                    this.OnlyStartEndInputViewAnimation.Begin();
                     break;
                 case UIViewState.MapViewOnly:
                     this.MapViewOnlyAnimation.Begin();
@@ -412,10 +359,6 @@
 
             var appbarmenuDirections = (ApplicationBarMenuItem)this.ApplicationBar.MenuItems[(int)AppBarMenuItemOrder.Directions];
             appbarmenuDirections.IsEnabled = this._viewModel.SelectedTransitTrip != null;
-
-            var appbarmenuTrips = (ApplicationBarMenuItem)this.ApplicationBar.MenuItems[(int)AppBarMenuItemOrder.TransitOptions];
-            appbarmenuTrips.IsEnabled = this._viewModel.TransitDescriptionCollection != null
-                                     && this._viewModel.TransitDescriptionCollection.Count != 0;
 
             var appbariconResults = (ApplicationBarIconButton)this.ApplicationBar.Buttons[(int)AppBarIconOrder.Results];
             appbariconResults.IsEnabled = this._viewModel.TransitDescriptionCollection != null
@@ -440,9 +383,60 @@
 
         private void ApplicationBarTransitSearchClick(object sender, EventArgs e)
         {
-            this.ApplicationBar.IsVisible = false;
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
             this.startingInput.Focus();
+        }
+
+        private void ApplicationBarSettingsClick(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri(PhonePageUri.SettingsView, UriKind.Relative));
+        }
+
+        private void ContentControlTap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            this._viewModel.BeginCalculateTransit();
+        }
+
+        private void ApplicationBarLocateMeClick(object sender, EventArgs e)
+        {
+            this.mainMap.SetView(this._viewModel.UserGeoCoordinate, Globals.LocateMeZoomLevel);
+            this._viewModel.CenterMapGeoSet = false;
+        }
+
+        private void ApplicationBarDirectionsListClick(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri(PhonePageUri.DirectionsView, UriKind.Relative));
+        }
+
+        private void ApplicationBarShowTransitOptionsClick(object sender, EventArgs e)
+        {
+            this.ShowTransitTripsList();
+        }
+
+        private void ApplicationBarClearMapClick(object sender, EventArgs e)
+        {
+            this._viewModel.StartOver();
+            this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+            this.mainMap.SetView(this._viewModel.UserGeoCoordinate ?? this._viewModel.CenterMapGeoCoordinate, Globals.LocateMeZoomLevel);
+            this.directionsStepView.SelectedItem = -1;
+
+            // the following is a workaround for the appbar preventing the update of binding for textbox
+            this.startingInput.Text += " ";
+            this.endingInput.Text += " ";
+            this.startingInput.Text = this.startingInput.Text.TrimEnd();
+            this.endingInput.Text = this.endingInput.Text.TrimEnd();
+
+            this.startingInput.Focus();
+        }
+
+        private void ApplicationBarAboutClick(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/YourLastAboutDialog;component/AboutPage.xaml", UriKind.Relative));
+        }
+
+        private void ApplicationBarShowStepsClick(object sender, EventArgs e)
+        {
+            this.SetUIVisibility(UIViewState.ItineraryView);
         }
 
         private void MainMapTap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -456,11 +450,6 @@
         private void MainMapMapPan(object sender, MapDragEventArgs e)
         {
             this._viewModel.CenterMapGeoSet = true;
-        }
-
-        private void ApplicationBarShowStepsClick(object sender, EventArgs e)
-        {
-            this.SetUIVisibility(UIViewState.ItineraryView);
         }
     }
 }

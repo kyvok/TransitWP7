@@ -61,43 +61,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
-                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Ellipse Fill="Green" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            <ContentPresenter HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="4" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" Value="Black" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="FontWeight" Value="ExtraBold" />
-        </Style>
-
-        <Style TargetType="m:Pushpin" x:Key="TransitEndPointPushpinStyle">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="m:Pushpin">
-                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Ellipse Fill="Red" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            <ContentPresenter HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="4" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" Value="Black" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="FontWeight" Value="ExtraBold" />
-        </Style>
-
-        <Style TargetType="m:Pushpin" x:Key="TransitStartPointPushpinStyle2">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="m:Pushpin">
                         <Canvas VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Path Stroke="Black" StrokeThickness="2" Fill="Green" Data="M 0,0 L -36,6 A 16,16 0 1 1 -36,-6 Z" />
-                            <ContentPresenter Canvas.Left="-58" Canvas.Top="-16" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
+                            <Path Stroke="Black" StrokeThickness="2" Fill="Green" Data="M 0,2 L -24,6 A 16,16 0 1 1 -24,-6 L 0,-2 Z" />
+                            <ContentPresenter Canvas.Left="-46" Canvas.Top="-16" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
                         </Canvas>
                     </ControlTemplate>
                 </Setter.Value>
@@ -108,13 +74,13 @@
             <Setter Property="FontWeight" Value="ExtraBold" />
         </Style>
         
-        <Style TargetType="m:Pushpin" x:Key="TransitEndPointPushpinStyle2">
+        <Style TargetType="m:Pushpin" x:Key="TransitEndPointPushpinStyle">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
                         <Canvas VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Path Stroke="Black" StrokeThickness="2" Fill="Red" Data="M 0,0 L 36,6 A 16,16 0 1 0 36,-6 Z" />
-                            <ContentPresenter Canvas.Left="44" Canvas.Top="-16" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
+                            <Path Stroke="Black" StrokeThickness="2" Fill="Red" Data="M 0,2 L 24,6 A 16,16 0 1 0 24,-6 L 0,-2 Z" />
+                            <ContentPresenter Canvas.Left="32" Canvas.Top="-16" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
                         </Canvas>
                     </ControlTemplate>
                 </Setter.Value>

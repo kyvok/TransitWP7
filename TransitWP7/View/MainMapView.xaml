@@ -121,13 +121,13 @@
                 <maps:Pushpin Location="{Binding Path=SelectedStartLocation.GeoCoordinate}"
                               Visibility="{Binding Path=SelectedStartLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="A"
-                              Style="{StaticResource TransitStartPointPushpinStyle2}"
+                              Style="{StaticResource TransitStartPointPushpinStyle}"
                               PositionOrigin="Center"
                               />
                 <maps:Pushpin Location="{Binding Path=SelectedEndLocation.GeoCoordinate}"
                               Visibility="{Binding Path=SelectedEndLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="B"
-                              Style="{StaticResource TransitEndPointPushpinStyle2}"
+                              Style="{StaticResource TransitEndPointPushpinStyle}"
                               PositionOrigin="Center"
                               />
                 <maps:MapItemsControl ItemsSource="{Binding Path=SelectedTransitTrip.ItinerarySteps}">
@@ -282,33 +282,38 @@
                 </StackPanel>
 
                 <!-- Time selection picker -->
-                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal">
-                    <toolkit:ListPicker
-                        Width="100"
+                <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <toolkit:ListPicker Name="listpickertohack"
+                        Width="96"
                         Background="{StaticResource TransparentBrush}"
                         Foreground="{StaticResource PhoneForegroundBrush}"
                         SizeChanged="ListPickerSizeChanged"
                         BorderThickness="0"
-                        Margin="0,0,0,0"
+                        Margin="0,3"
                         SelectedIndex="{Binding Path=TimeType, Mode=TwoWay, Converter={StaticResource TimeConditionToIntConverter}, FallbackValue=0}">
-                        <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Center" />
-                        <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Center"/>
-                        <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Center"/>
+                        <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Right"/>
+                        <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Right"/>
+                        <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Right"/>
                         <!--<toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Center" />-->
                     </toolkit:ListPicker>
                     <toolkit:DatePicker Name="datePicker"
+                                        Margin="-12,0"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=datePicker}"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"
                                         ValueStringFormat="{}{0:m}"/>
                     <toolkit:TimePicker Name="timePicker"
+                                        Margin="-12,0"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=timePicker}"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"/>
-                    <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top" Width="50" Height="50" Tap="ContentControlTap">
-                        <Rectangle StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}" Margin="0" Width="50" Height="50">
+                    <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top"
+                                    Margin="12,12,18,0"
+                                    Tap="ContentControlTap">
+                        <Rectangle Margin="0" Width="50" Height="50"
+                                   StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">
                             <Rectangle.OpacityMask>
                                 <ImageBrush ImageSource="/Images/appbar.transit.depart.png"/>
                             </Rectangle.OpacityMask>
@@ -328,7 +333,6 @@
             <shell:ApplicationBarIconButton IconUri="/Images/appbar.transit.connection.png" Text="Steps" Click="ApplicationBarShowStepsClick" IsEnabled="False"/>
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="directions list" Click="ApplicationBarDirectionsListClick"/>
-                <shell:ApplicationBarMenuItem Text="show transit options" Click="ApplicationBarShowTransitOptionsClick"/>
                 <shell:ApplicationBarMenuItem Text="clear map" Click="ApplicationBarClearMapClick"/>
                 <shell:ApplicationBarMenuItem Text="settings" Click="ApplicationBarSettingsClick" />
                 <shell:ApplicationBarMenuItem Text="about" Click="ApplicationBarAboutClick" />

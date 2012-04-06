@@ -55,9 +55,8 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="3" Grid.Column="0"
+                                <TextBlock Text="&#9664;" Grid.Column="0"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       FontFamily="Webdings" FontWeight="Bold"
                                        Visibility="{Binding ShowLeftArrow, ElementName=DirectionStepViewControl, Converter={StaticResource VisibilityScrollConverter}}"/>
                                 <Grid Grid.Column="1">
                                     <Grid.ColumnDefinitions>
@@ -95,7 +94,9 @@
                                         <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Width="310"/>
                                     </Grid>
                                 </Grid>
-                                <TextBlock Text="4" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontFamily="Webdings" Visibility="{Binding ShowRightArrow, ElementName=DirectionStepViewControl, Converter={StaticResource VisibilityScrollConverter}}"/>
+                                <TextBlock Text="&#9654;" Grid.Column="2"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Visibility="{Binding ShowRightArrow, ElementName=DirectionStepViewControl, Converter={StaticResource VisibilityScrollConverter}}"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
