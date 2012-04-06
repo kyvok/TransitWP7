@@ -5,6 +5,7 @@
     using System.Net;
     using System.Text;
     using System.Xml.Serialization;
+    using SharpGIS;
 
     /// <summary>
     /// Helper class to query BingMaps resources.
@@ -113,7 +114,7 @@
 
         private static void ExecuteQuery(Uri queryUri, Action<BingMapsQueryResult> callback, object userState)
         {
-            var httpRequest = (HttpWebRequest)WebRequest.Create(queryUri);
+            var httpRequest = WebRequestCreator.GZip.Create(queryUri);
             var context = new BingMapsRequestContext(httpRequest, new BingMapsQueryAsyncCallback(callback, userState));
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
@@ -155,13 +156,13 @@
 
         private class BingMapsRequestContext
         {
-            public BingMapsRequestContext(HttpWebRequest httpRequest, BingMapsQueryAsyncCallback callback)
+            public BingMapsRequestContext(WebRequest httpRequest, BingMapsQueryAsyncCallback callback)
             {
                 this.HttpRequest = httpRequest;
                 this.AsyncCallback = callback;
             }
 
-            public HttpWebRequest HttpRequest { get; private set; }
+            public WebRequest HttpRequest { get; private set; }
 
             public BingMapsQueryAsyncCallback AsyncCallback { get; private set; }
         }

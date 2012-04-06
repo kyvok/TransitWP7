@@ -5,6 +5,7 @@
     using System.Net;
     using System.Text;
     using Newtonsoft.Json;
+    using SharpGIS;
 
     public enum AdultOption
     {
@@ -104,7 +105,7 @@
 
         private static void ExecuteQuery(Uri queryUri, Action<BingSearchQueryResult> callback, object userState)
         {
-            var httpRequest = (HttpWebRequest)WebRequest.Create(queryUri);
+            var httpRequest = WebRequestCreator.GZip.Create(queryUri);
             var context = new BingSearchRequestContext(httpRequest, new BingSearchQueryAsyncCallback(callback, userState));
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
@@ -153,13 +154,13 @@
 
         private class BingSearchRequestContext
         {
-            public BingSearchRequestContext(HttpWebRequest httpRequest, BingSearchQueryAsyncCallback callback)
+            public BingSearchRequestContext(WebRequest httpRequest, BingSearchQueryAsyncCallback callback)
             {
                 this.HttpRequest = httpRequest;
                 this.AsyncCallback = callback;
             }
 
-            public HttpWebRequest HttpRequest { get; private set; }
+            public WebRequest HttpRequest { get; private set; }
 
             public BingSearchQueryAsyncCallback AsyncCallback { get; private set; }
         }
