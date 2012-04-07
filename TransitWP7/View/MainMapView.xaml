@@ -182,7 +182,7 @@
                             <Border.BorderBrush>
                                 <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
                             </Border.BorderBrush>
-                            <Grid Height="106">
+                            <Grid Height="120">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="10"/>
@@ -196,8 +196,8 @@
                                 <Line Margin="5,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="50" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" Grid.Column="1"/>
                                 <Grid Grid.Column="2">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="25" />
-                                        <RowDefinition Height="81"/>
+                                        <RowDefinition Height="24" />
+                                        <RowDefinition Height="96"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock FontSize="18.667" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" FontWeight="Bold" Visibility="{Binding Path=TransitType, Converter={StaticResource TransitTypeToVisibilityConverter}}">
                                         <TextBlock.Inlines>
@@ -209,12 +209,12 @@
                                     <ItemsControl ItemsSource="{Binding Path=ItinerarySteps, Converter={StaticResource ItineraryStepsCollapseWalkConverter}}" Margin="0,4,0,0" VerticalAlignment="Center" Grid.Row="1">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True"/>
+                                                <toolkit:WrapPanel Orientation="Horizontal"/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <StackPanel Orientation="Horizontal">
+                                                <StackPanel Orientation="Horizontal" Margin="6">
                                                     <ContentControl Height="32" Width="32" VerticalAlignment="Center" Margin="15 0 0 0">
                                                         <Rectangle Height="32" Width="32" StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">
                                                             <Rectangle.OpacityMask>
