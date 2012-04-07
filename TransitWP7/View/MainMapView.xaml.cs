@@ -488,7 +488,14 @@
 
         private void ApplicationBarShowStepsClick(object sender, EventArgs e)
         {
-            this.SetUIVisibility(UIViewState.ItineraryView);
+            if (this.CurrentViewState == UIViewState.ItineraryView)
+            {
+                this.SetUIVisibility(UIViewState.MapViewOnly);
+            }
+            else
+            {
+                this.SetUIVisibility(UIViewState.ItineraryView);
+            }
         }
 
         private void MainMapTap(object sender, System.Windows.Input.GestureEventArgs e)
