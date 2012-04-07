@@ -126,6 +126,16 @@
             ((DoubleAnimation)this.snapScrollViewer.Children[0]).To = 480 * this.SelectedItem;
             this.snapScrollViewer.Begin();
         }
+
+        private void LeftArrow_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            this.SelectedItem = this.SelectedItem - 1;
+        }
+
+        private void RightArrow_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            this.SelectedItem = this.SelectedItem + 1;
+        }
     }
 
     // technique from: http://blogs.msdn.com/b/delay/archive/2009/08/04/scrolling-so-smooth-like-the-butter-on-a-muffin-how-to-animate-the-horizontal-verticaloffset-properties-of-a-scrollviewer.aspx
