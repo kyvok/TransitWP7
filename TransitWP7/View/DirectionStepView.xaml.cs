@@ -167,18 +167,18 @@
             set { SetValue(HorizontalOffsetProperty, value); }
         }
 
-        public static void OnHorizontalOffsetChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        public static void OnHorizontalOffsetChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var mediator = (ScrollViewerOffsetMediator)o;
+            var mediator = (ScrollViewerOffsetMediator)dependencyObject;
             if (null != mediator.ScrollViewer)
             {
                 mediator.ScrollViewer.ScrollToHorizontalOffset((double)e.NewValue);
             }
         }
 
-        private static void OnScrollViewerChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        private static void OnScrollViewerChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var mediator = (ScrollViewerOffsetMediator)o;
+            var mediator = (ScrollViewerOffsetMediator)dependencyObject;
             var scrollViewer = (ScrollViewer)e.NewValue;
             if (null != scrollViewer)
             {

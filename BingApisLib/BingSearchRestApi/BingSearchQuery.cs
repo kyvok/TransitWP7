@@ -54,6 +54,11 @@
         /// <param name="userState">An object to pass to the callback</param>
         public static void GetBusinessInfo(string query, GeoCoordinate userLocation, Action<BingSearchQueryResult> callback, object userState)
         {
+            if (userLocation == null)
+            {
+                throw new ArgumentNullException("userLocation");
+            }
+
             var request = new PhonebookRequest
             {
                 Query = query,
@@ -111,6 +116,7 @@
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must provide exception back to the user thread.")]
         private static void HttpRequestCompleted(IAsyncResult asyncResult)
         {
             var context = (BingSearchRequestContext)asyncResult.AsyncState;

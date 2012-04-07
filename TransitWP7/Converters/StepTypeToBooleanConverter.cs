@@ -17,6 +17,11 @@
         /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException("parameter");
+            }
+
             var stepType = value as ItineraryStep.ItineraryStepType?;
             var stepTypeMatch = Enum.Parse(typeof(ItineraryStep.ItineraryStepType), parameter.ToString(), true) as ItineraryStep.ItineraryStepType?;
             return stepType == stepTypeMatch;

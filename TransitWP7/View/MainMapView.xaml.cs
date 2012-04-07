@@ -1,7 +1,7 @@
 ﻿namespace TransitWP7.View
 {
     using System;
-    using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Device.Location;
     using System.Globalization;
     using System.Threading;
@@ -15,7 +15,6 @@
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Controls.Maps;
     using Microsoft.Phone.Shell;
-
     using TransitWP7.Model;
     using TransitWP7.Resources;
     using TransitWP7.ViewModel;
@@ -110,7 +109,7 @@
             ThreadPool.QueueUserWorkItem(_ => DispatcherHelper.UIDispatcher.BeginInvoke(this.FirstRunCheck));
         }
 
-        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        protected override void OnBackKeyPress(CancelEventArgs e)
         {
             switch (this.CurrentViewState)
             {

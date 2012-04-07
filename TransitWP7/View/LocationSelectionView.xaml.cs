@@ -1,7 +1,7 @@
 ﻿namespace TransitWP7.View
 {
     using System.Globalization;
-
+    using System.Windows.Navigation;
     using Microsoft.Phone.Controls;
     using TransitWP7.ViewModel;
 
@@ -16,9 +16,9 @@
             this._viewModel = ViewModelLocator.LocationSelectionViewModelStatic;
         }
 
-        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs arg)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(arg);
+            base.OnNavigatedTo(e);
             this._viewModel.EndpointName = this.NavigationContext.QueryString["endpoint"];
             this.PageTitle.Text = string.Format(CultureInfo.InvariantCulture, PageTitleStringFormat, this.NavigationContext.QueryString["query"]);
         }

@@ -119,6 +119,7 @@
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must provide exception back to the user thread.")]
         private static void HttpRequestCompleted(IAsyncResult asyncResult)
         {
             var context = (BingMapsRequestContext)asyncResult.AsyncState;

@@ -1,5 +1,6 @@
 ﻿namespace TransitWP7.Model
 {
+    using System;
     using System.ComponentModel;
     using System.Device.Location;
     using System.Globalization;
@@ -23,6 +24,11 @@
 
         public LocationDescription(Location result)
         {
+            if (result == null)
+            {
+                throw new ArgumentNullException("result");
+            }
+
             this.DisplayName = result.Name;
             this.GeoCoordinate = result.Point.AsGeoCoordinate();
             this.PostalCode = result.Address.PostalCode;
@@ -34,6 +40,11 @@
 
         public LocationDescription(PhonebookResult result)
         {
+            if (result == null)
+            {
+                throw new ArgumentNullException("result");
+            }
+
             this.DisplayName = result.Title;
             this.GeoCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
             this.PostalCode = result.PostalCode;

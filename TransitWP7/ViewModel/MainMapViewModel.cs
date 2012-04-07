@@ -224,9 +224,14 @@
                 if (value != this._userGeoCoordinate)
                 {
                     this._userGeoCoordinate = value;
-                    this.UncertaintyCirclePoints = this.DrawACircle(
-                        this._userGeoCoordinate,
-                        (value.HorizontalAccuracy + value.VerticalAccuracy) / 2);
+
+                    if (value != null)
+                    {
+                        this.UncertaintyCirclePoints = this.DrawACircle(
+                            this._userGeoCoordinate,
+                            (value.HorizontalAccuracy + value.VerticalAccuracy) / 2);
+                    }
+
                     this.RaisePropertyChanged("UserGeoCoordinate");
                 }
             }

@@ -26,6 +26,7 @@
             AutoCompleteDataManager.SaveData();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Do not fail restoring info, this is best effort only.")]
         public static void Load()
         {
             using (var storage = IsolatedStorageFile.GetUserStoreForApplication())

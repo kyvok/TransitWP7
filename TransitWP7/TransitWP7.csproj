@@ -41,7 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\CodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -106,6 +106,7 @@
     <Compile Include="Converters\TimeConditionToIntConverter.cs" />
     <Compile Include="Converters\TravelDurationConverter.cs" />
     <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IsolatedStorageHelper.cs" />
     <Compile Include="LittleWatson.cs" />
     <Compile Include="PersistedInfo.cs" />

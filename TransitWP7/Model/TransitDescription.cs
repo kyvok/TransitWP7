@@ -25,6 +25,11 @@
 
         public TransitDescription(Route route, DirectionType transitType)
         {
+            if (route == null)
+            {
+                throw new ArgumentNullException("route");
+            }
+
             this.TransitType = transitType;
             this.StartLocation = route.RouteLegs[0].ActualStart.AsGeoCoordinate();
             this.EndLocation = route.RouteLegs[0].ActualEnd.AsGeoCoordinate();

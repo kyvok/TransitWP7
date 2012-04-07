@@ -28,6 +28,11 @@
 
         public ItineraryStep(ItineraryItem item, int stepNumber)
         {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
             this.GeoCoordinate = item.ManeuverPoint.AsGeoCoordinate();
             this.Instruction = item.Instruction.Value;
             this.TravelMode = item.Detail.Mode ?? string.Empty;

@@ -14,10 +14,11 @@
     // http://blogs.msdn.com/b/andypennell/archive/2010/11/01/error-reporting-on-windows-phone-7.aspx
     // Can also be transformed as a http reporting service here:
     // http://bjorn.kuiper.nu/2011/10/02/wp7-littlewatson-extended-error-reporting-to-http-endpoint/
-    public class LittleWatson
+    public static class LittleWatson
     {
         private const string ErrorReportFileName = "LittleWatson.txt";
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must never fail the error reporting tool.")]
         internal static void ReportException(Exception ex, string extra)
         {
             try
@@ -51,6 +52,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must never fail the error reporting tool.")]
         internal static void CheckForPreviousException()
         {
             try

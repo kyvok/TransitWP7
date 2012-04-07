@@ -24,13 +24,23 @@
             }
         }
 
-        public static void AddSearchStringEntry(string searchString)
+        public static void AddSearchStringEntry(string searchTerm)
         {
-            AddLocationEntry(new LocationDescription { DisplayName = searchString.ToLower(CultureInfo.CurrentCulture) });
+            if (searchTerm == null)
+            {
+                throw new ArgumentNullException("searchTerm");
+            }
+
+            AddLocationEntry(new LocationDescription { DisplayName = searchTerm.ToLower(CultureInfo.CurrentCulture) });
         }
 
         public static void AddLocationEntry(LocationDescription location)
         {
+            if (location == null)
+            {
+                throw new ArgumentNullException("location");
+            }
+
             if (location.DisplayName.Equals(SR.MyCurrentLocationText, StringComparison.OrdinalIgnoreCase))
             {
                 return;
@@ -74,6 +84,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must not fail, best effort only.")]
         public static void RestoreData()
         {
             using (var storage = IsolatedStorageFile.GetUserStoreForApplication())
@@ -116,6 +127,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must not fail, best effort only.")]
         public static void SaveData()
         {
             using (var storage = IsolatedStorageFile.GetUserStoreForApplication())
