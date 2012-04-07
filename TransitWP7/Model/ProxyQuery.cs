@@ -4,6 +4,7 @@ namespace TransitWP7.Model
     using System;
     using System.Collections.Generic;
     using System.Device.Location;
+    using System.Globalization;
     using System.Linq;
     using BingApisLib.BingMapsRestApi;
     using BingApisLib.BingSearchRestApi;
@@ -146,7 +147,7 @@ namespace TransitWP7.Model
             }
             else
             {
-                proxyQueryResult.Error = new Exception(string.Format("Could not locate a result for {0}.", queryState.Query));
+                proxyQueryResult.Error = new Exception(string.Format(CultureInfo.InvariantCulture, "Could not locate a result for {0}.", queryState.Query));
             }
 
             queryState.UserCallback(proxyQueryResult);

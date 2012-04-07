@@ -3,6 +3,7 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Device.Location;
+    using System.Globalization;
     using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
@@ -227,7 +228,7 @@
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () => NavigationService.Navigate(
                         new Uri(
-                            string.Format("{0}?endpoint={1}&query={2}", PhonePageUri.LocationSelectionView, notificationMessage.Notification, notificationMessage.Content),
+                            string.Format(CultureInfo.InvariantCulture, "{0}?endpoint={1}&query={2}", PhonePageUri.LocationSelectionView, notificationMessage.Notification, notificationMessage.Content),
                             UriKind.Relative))));
 
             Messenger.Default.Register<NotificationMessage>(

@@ -2,6 +2,8 @@
 {
     using System.ComponentModel;
     using System.Device.Location;
+    using System.Globalization;
+
     using BingApisLib.BingMapsRestApi;
     using BingApisLib.BingSearchRestApi;
 
@@ -36,6 +38,7 @@
             this.GeoCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
             this.PostalCode = result.PostalCode;
             this.FormattedAddress = string.Format(
+                        CultureInfo.InvariantCulture,
                         "{0}, {1}, {2}, {3}",
                         result.Address,
                         result.City,

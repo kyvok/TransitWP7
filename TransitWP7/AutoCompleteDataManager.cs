@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Globalization;
     using System.IO;
     using System.IO.IsolatedStorage;
     using System.Linq;
@@ -25,7 +26,7 @@
 
         public static void AddSearchStringEntry(string searchString)
         {
-            AddLocationEntry(new LocationDescription { DisplayName = searchString.ToLower() });
+            AddLocationEntry(new LocationDescription { DisplayName = searchString.ToLower(CultureInfo.CurrentCulture) });
         }
 
         public static void AddLocationEntry(LocationDescription location)

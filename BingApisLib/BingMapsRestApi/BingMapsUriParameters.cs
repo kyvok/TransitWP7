@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Device.Location;
+    using System.Globalization;
     using System.Text;
     using Microsoft.Phone.Controls.Maps;
 
@@ -186,7 +187,7 @@
                         builder.Append(",");
                     }
 
-                    builder.Append(this.Tolerances[i].ToString("G9"));
+                    builder.Append(this.Tolerances[i].ToString("G9", CultureInfo.InvariantCulture));
                     moreThanOne = true;
                 }
             }
@@ -358,7 +359,7 @@
 
         public override string ToString()
         {
-            return string.Format("&key={0}", this.Key);
+            return string.Format(CultureInfo.InvariantCulture, "&key={0}", this.Key);
         }
     }
 }

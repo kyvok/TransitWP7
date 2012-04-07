@@ -2,6 +2,7 @@
 {
     using System;
     using System.Device.Location;
+    using System.Globalization;
     using System.Net;
     using System.Text;
     using Newtonsoft.Json;
@@ -231,19 +232,19 @@
             if (this.Latitude.HasValue)
             {
                 builder.Append("&Latitude=");
-                builder.Append(this.Latitude.Value.ToString("G9"));
+                builder.Append(this.Latitude.Value.ToString("G9", CultureInfo.InvariantCulture));
             }
 
             if (this.Longitude.HasValue)
             {
                 builder.Append("&Longitude=");
-                builder.Append(this.Longitude.Value.ToString("G9"));
+                builder.Append(this.Longitude.Value.ToString("G9", CultureInfo.InvariantCulture));
             }
 
             if (this.Radius.HasValue)
             {
                 builder.Append("&Radius=");
-                builder.Append(this.Radius.Value.ToString("G9"));
+                builder.Append(this.Radius.Value.ToString("G9", CultureInfo.InvariantCulture));
             }
 
             // TODO: insert SearchOption

@@ -1,6 +1,7 @@
 ﻿namespace TransitWP7
 {
     using System;
+    using System.Globalization;
     using System.IO;
     using System.IO.IsolatedStorage;
     using System.Threading;
@@ -77,7 +78,7 @@
                             {
                                 var email = new EmailComposeTask();
                                 email.To = Globals.SupportEmailAddress;
-                                email.Subject = string.Format("Transitive v{0} crash report", System.Reflection.Assembly.GetExecutingAssembly().FullName.Split('=')[1].Split(',')[0]);
+                                email.Subject = string.Format(CultureInfo.InvariantCulture, "Transitive v{0} crash report", System.Reflection.Assembly.GetExecutingAssembly().FullName.Split('=')[1].Split(',')[0]);
                                 email.Body = contents;
                                 IsolatedStorageHelper.SafeDeleteFile(IsolatedStorageFile.GetUserStoreForApplication(), ErrorReportFileName);
                                 email.Show();

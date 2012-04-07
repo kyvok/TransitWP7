@@ -1,5 +1,7 @@
 ﻿namespace TransitWP7.View
 {
+    using System.Globalization;
+
     using Microsoft.Phone.Controls;
     using TransitWP7.ViewModel;
 
@@ -18,7 +20,7 @@
         {
             base.OnNavigatedTo(arg);
             this._viewModel.EndpointName = this.NavigationContext.QueryString["endpoint"];
-            this.PageTitle.Text = string.Format(PageTitleStringFormat, this.NavigationContext.QueryString["query"]);
+            this.PageTitle.Text = string.Format(CultureInfo.InvariantCulture, PageTitleStringFormat, this.NavigationContext.QueryString["query"]);
         }
 
         private void ResultsListSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

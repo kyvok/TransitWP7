@@ -1,6 +1,7 @@
 namespace BingApisLib.BingMapsRestApi
 {
     using System.Diagnostics;
+    using System.Globalization;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -33,11 +34,12 @@ namespace BingApisLib.BingMapsRestApi
         public override string ToString()
         {
             return string.Format(
+                CultureInfo.InvariantCulture,
                 "{0},{1},{2},{3}",
-                this.SouthLatitude.ToString("G9"),
-                this.WestLongitude.ToString("G9"),
-                this.NorthLatitude.ToString("G9"),
-                this.EastLongitude.ToString("G9"));
+                this.SouthLatitude.ToString("G9", CultureInfo.InvariantCulture),
+                this.WestLongitude.ToString("G9", CultureInfo.InvariantCulture),
+                this.NorthLatitude.ToString("G9", CultureInfo.InvariantCulture),
+                this.EastLongitude.ToString("G9", CultureInfo.InvariantCulture));
         }
     }
 }

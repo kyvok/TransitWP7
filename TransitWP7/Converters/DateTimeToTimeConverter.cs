@@ -9,7 +9,7 @@
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var datetime = (DateTime?)value;
-            return datetime.Value == DateTime.MinValue ? string.Empty : datetime.Value.ToString("t");
+            return datetime.Value == DateTime.MinValue ? string.Empty : datetime.Value.ToString("t", culture);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

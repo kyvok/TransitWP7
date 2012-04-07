@@ -4,6 +4,8 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Device.Location;
+    using System.Globalization;
+
     using BingApisLib.BingMapsRestApi;
 
     public class ItineraryStep : INotifyPropertyChanged
@@ -30,7 +32,7 @@
             this.Instruction = item.Instruction.Value;
             this.TravelMode = item.Detail.Mode ?? string.Empty;
             this.BusNumber = item.TransitLine != null ? item.TransitLine.AbbreviatedName : string.Empty;
-            this.IconType = item.IconType.ToString().StartsWith("N") ? string.Empty : item.IconType.ToString();
+            this.IconType = item.IconType.ToString().StartsWith("N", StringComparison.Ordinal) ? string.Empty : item.IconType.ToString();
             this.StartTime = item.Time;
             this.EndTime = item.Time;
 
