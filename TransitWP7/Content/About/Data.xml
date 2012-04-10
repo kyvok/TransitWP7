@@ -44,8 +44,10 @@
     <Item Title="history"
            Type="text">
       0.8.0.0
-      Added autocomplete functionality.
-      UI Polishing
+      Added autocomplete location history.
+      More efficient http calls.
+      Fixed issue when using non en-US locale.
+      UI Polishing.
       
       0.7.0.0
       Initial release.

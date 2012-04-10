@@ -395,6 +395,18 @@
             this.StartLocationText = this.StartLocationText.Trim();
             this.EndLocationText = this.EndLocationText.Trim();
 
+            if (this.StartLocationText == SR.MyCurrentLocationText)
+            {
+                this._isStartLocationStale = true;
+                this.SelectedStartLocation = null;
+            }
+
+            if (this.EndLocationText == SR.MyCurrentLocationText)
+            {
+                this._isEndLocationStale = true;
+                this.SelectedEndLocation = null;
+            }
+
             AutoCompleteDataManager.AddSearchStringEntry(this.StartLocationText);
             AutoCompleteDataManager.AddSearchStringEntry(this.EndLocationText);
 

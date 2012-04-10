@@ -258,7 +258,7 @@
                              ItemsSource="{Binding AutoCompleteData}"
                              GotFocus="InputBoxGotFocus"
                              LostFocus="InputBoxLostFocus"
-                             SelectionChanged="InputBoxAutoCompleteSelectionChanged"
+                             DropDownClosing="InputBoxDropDownClosing"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource StartEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>
@@ -280,7 +280,7 @@
                              ItemsSource="{Binding AutoCompleteData}"
                              GotFocus="InputBoxGotFocus"
                              LostFocus="InputBoxLostFocus"
-                             SelectionChanged="InputBoxAutoCompleteSelectionChanged"
+                             DropDownClosing="InputBoxDropDownClosing"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource EndEndpointInputAutoCompleteBoxStyle}"/>
                 </StackPanel>

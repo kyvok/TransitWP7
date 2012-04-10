@@ -285,44 +285,12 @@
             inputBox.MinimumPrefixLength = -1;
         }
 
-        ////private void InputBoxDropDownClosing(object sender, RoutedPropertyChangingEventArgs<bool> e)
-        ////{
-        ////    var inputBox = (AutoCompleteBox)sender;
-        ////    var locationDescription = (LocationDescription)inputBox.SelectedItem;
-        ////    if (inputBox.Name.Contains("start"))
-        ////    {
-        ////        this._viewModel.StartLocationText = locationDescription.DisplayName;
-        ////        this._viewModel.SelectedStartLocation = locationDescription;
-        ////    }
-        ////    else
-        ////    {
-        ////        this._viewModel.EndLocationText = locationDescription.DisplayName;
-        ////        this._viewModel.SelectedEndLocation = locationDescription;
-        ////    }
-        ////}
-
-        ////private void InputBoxDropDownClosed(object sender, RoutedPropertyChangedEventArgs<bool> e)
-        ////{
-        ////    var inputBox = (AutoCompleteBox)sender;
-        ////    var locationDescription = (LocationDescription)inputBox.SelectedItem;
-        ////    if (inputBox.Name.Contains("start"))
-        ////    {
-        ////        this._viewModel.StartLocationText = locationDescription.DisplayName;
-        ////        this._viewModel.SelectedStartLocation = locationDescription;
-        ////    }
-        ////    else
-        ////    {
-        ////        this._viewModel.EndLocationText = locationDescription.DisplayName;
-        ////        this._viewModel.SelectedEndLocation = locationDescription;
-        ////    }
-        ////}
-
-        private void InputBoxAutoCompleteSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void InputBoxDropDownClosing(object sender, RoutedPropertyChangingEventArgs<bool> e)
         {
             var inputBox = (AutoCompleteBox)sender;
-            if (e.AddedItems.Count > 0)
+            var locationDescription = (LocationDescription)inputBox.SelectedItem;
+            if (locationDescription != null)
             {
-                var locationDescription = (LocationDescription)e.AddedItems[0];
                 if (inputBox.Name.Contains("start"))
                 {
                     this._viewModel.StartLocationText = locationDescription.DisplayName;
