@@ -10,7 +10,7 @@
     {
         private const string MainMapViewModelSavedInfo = "MainMapVM.xml";
         private const string DirectionsViewModelSavedInfo = "DirectionsVM.xml";
-        private const string LocationSelectionViewModelSavedInfo = "LocationSelectionVM.xml";
+        ////private const string LocationSelectionViewModelSavedInfo = "LocationSelectionVM.xml";
         ////private const string SettingsViewModelSavedInfo = "SettingsVM.xml";
 
         public static void Save()
@@ -19,7 +19,7 @@
             {
                 SaveViewModel(storage, MainMapViewModelSavedInfo, ViewModelLocator.MainMapViewModelStatic);
                 SaveViewModel(storage, DirectionsViewModelSavedInfo, ViewModelLocator.DirectionsViewModelStatic);
-                SaveViewModel(storage, LocationSelectionViewModelSavedInfo, ViewModelLocator.LocationSelectionViewModelStatic);
+                ////SaveViewModel(storage, LocationSelectionViewModelSavedInfo, ViewModelLocator.LocationSelectionViewModelStatic);
                 ////SaveViewModel(storage, SettingsViewModelSavedInfo, ViewModelLocator.SettingsViewModelStatic);
             }
 
@@ -33,14 +33,14 @@
             {
                 if (storage.FileExists(MainMapViewModelSavedInfo)
                     && storage.FileExists(DirectionsViewModelSavedInfo)
-                    && storage.FileExists(LocationSelectionViewModelSavedInfo)
+                    /*&& storage.FileExists(LocationSelectionViewModelSavedInfo)*/
                     /*&& storage.FileExists(SettingsViewModelSavedInfo)*/)
                 {
                     try
                     {
                         ViewModelLocator.MainMapViewModelStatic = LoadViewModel<MainMapViewModel>(storage, MainMapViewModelSavedInfo);
                         ViewModelLocator.DirectionsViewModelStatic = LoadViewModel<DirectionsViewModel>(storage, DirectionsViewModelSavedInfo);
-                        ViewModelLocator.LocationSelectionViewModelStatic = LoadViewModel<LocationSelectionViewModel>(storage, LocationSelectionViewModelSavedInfo);
+                        ////ViewModelLocator.LocationSelectionViewModelStatic = LoadViewModel<LocationSelectionViewModel>(storage, LocationSelectionViewModelSavedInfo);
                         ////ViewModelLocator.SettingsViewModelStatic = LoadViewModel<SettingsViewModel>(storage, SettingsViewModelSavedInfo);
                     }
                     catch (Exception)
@@ -50,7 +50,7 @@
                     {
                         IsolatedStorageHelper.SafeDeleteFile(storage, MainMapViewModelSavedInfo);
                         IsolatedStorageHelper.SafeDeleteFile(storage, DirectionsViewModelSavedInfo);
-                        IsolatedStorageHelper.SafeDeleteFile(storage, LocationSelectionViewModelSavedInfo);
+                        ////IsolatedStorageHelper.SafeDeleteFile(storage, LocationSelectionViewModelSavedInfo);
                         ////SafeDeleteFile(storage, SettingsViewModelStatic);
                     }
                 }
