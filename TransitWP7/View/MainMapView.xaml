@@ -105,55 +105,49 @@
 
         <maps:Map Name="mainMap" ScaleVisibility="Visible"
                   Center="{Binding CenterMapGeoCoordinate, Mode=TwoWay}"
+                  ZoomLevel="{Binding MapZoomLevel, Mode=TwoWay}"
                   MapPan="MainMapMapPan"
                   Tap="MainMapTap">
-            <maps:MapLayer>
-                <maps:MapPolyline StrokeLineJoin="Round"
+            <maps:Pushpin Location="{Binding Path=UserGeoCoordinate}"
+                          PositionOrigin="Center"
+                          Visibility="{Binding ElementName=meIndicator, Path=Visibility}"
+                          Style="{StaticResource UncertaintyCircleShadow}" />
+            <maps:MapPolyline StrokeLineJoin="Round"
                                 Stroke="MediumBlue"
                                 StrokeThickness="8"
                                 StrokeStartLineCap="Round"
                                 StrokeEndLineCap="Round"
                                 Locations="{Binding Path=SelectedTransitTrip.PathPoints}"
                                 Opacity="0.5" />
-            </maps:MapLayer>
-            <maps:MapLayer>
-                <!-- TODO add the tap back that select steps. -->
-                <maps:Pushpin Location="{Binding Path=SelectedStartLocation.GeoCoordinate}"
+            <!-- TODO add the tap back that select steps. -->
+            <maps:Pushpin Location="{Binding Path=SelectedStartLocation.GeoCoordinate}"
                               Visibility="{Binding Path=SelectedStartLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="A"
                               Style="{StaticResource TransitStartPointPushpinStyle}"
                               PositionOrigin="Center"
                               />
-                <maps:Pushpin Location="{Binding Path=SelectedEndLocation.GeoCoordinate}"
+            <maps:Pushpin Location="{Binding Path=SelectedEndLocation.GeoCoordinate}"
                               Visibility="{Binding Path=SelectedEndLocation, Converter={StaticResource NullValueToVisibilityConverter}}"
                               Content="B"
                               Style="{StaticResource TransitEndPointPushpinStyle}"
                               PositionOrigin="Center"
                               />
-                <maps:MapItemsControl ItemsSource="{Binding Path=SelectedTransitTrip.ItinerarySteps}">
-                    <maps:MapItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <maps:Pushpin Location="{Binding GeoCoordinate}"
+            <maps:MapItemsControl ItemsSource="{Binding Path=SelectedTransitTrip.ItinerarySteps}">
+                <maps:MapItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <maps:Pushpin Location="{Binding GeoCoordinate}"
                                       Content="{Binding StepNumber}"
                                       Style="{StaticResource TransitStepPushpinStyle}"
                                       PositionOrigin="Center"
                                       Tap="PushpinTap"/>
-                        </DataTemplate>
-                    </maps:MapItemsControl.ItemTemplate>
-                </maps:MapItemsControl>
-            </maps:MapLayer>
-            <maps:MapLayer>
-                <!--<maps:MapPolygon Stroke="Black" StrokeThickness="2" Locations="{Binding Path=UncertaintyCirclePoints}">
-                    <maps:MapPolygon.Fill>
-                        <SolidColorBrush Color="Gray" Opacity="0.5"/>
-                    </maps:MapPolygon.Fill>
-                </maps:MapPolygon>-->
-                <maps:Pushpin Name="meIndicator"
-                              Location="{Binding Path=UserGeoCoordinate}"
-                              PositionOrigin="Center"
-                              Visibility="Collapsed"
-                              Style="{StaticResource CurrentLocationPushpinStyle}" />
-            </maps:MapLayer>
+                    </DataTemplate>
+                </maps:MapItemsControl.ItemTemplate>
+            </maps:MapItemsControl>
+            <maps:Pushpin Name="meIndicator"
+                          Location="{Binding Path=UserGeoCoordinate}"
+                          PositionOrigin="Center"
+                          Visibility="Collapsed"
+                          Style="{StaticResource CurrentLocationPushpinStyle}" />
         </maps:Map>
 
         <Grid Name="directionsGrid" Margin="0,32,0,0" Background="{StaticResource GridTransparencyBrush}" VerticalAlignment="Top">
@@ -250,11 +244,7 @@
                                HorizontalAlignment="Left" VerticalAlignment="Stretch"
                                Tap="SwapEndpoints"/>
                     <toolkit:AutoCompleteBox Name="startingInput"
-                             Width="400"
                              Text="{Binding Path=StartLocationText, Mode=TwoWay}"
-                             VerticalAlignment="Center"
-                             Background="{StaticResource TransparentBrush}"
-                             Foreground="{StaticResource PhoneForegroundBrush}"
                              ItemsSource="{Binding AutoCompleteData}"
                              GotFocus="InputBoxGotFocus"
                              LostFocus="InputBoxLostFocus"
@@ -272,11 +262,7 @@
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
                            Tap="SwapEndpoints"/>
                     <toolkit:AutoCompleteBox Name="endingInput"
-                             Width="400"
                              Text="{Binding Path=EndLocationText, Mode=TwoWay}"
-                             VerticalAlignment="Center"
-                             Background="{StaticResource TransparentBrush}"
-                             Foreground="{StaticResource PhoneForegroundBrush}"
                              ItemsSource="{Binding AutoCompleteData}"
                              GotFocus="InputBoxGotFocus"
                              LostFocus="InputBoxLostFocus"
@@ -287,7 +273,7 @@
 
                 <!-- Time selection picker -->
                 <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <toolkit:ListPicker Name="listpickertohack"
+                    <toolkit:ListPicker Name="timeConditionPicker"
                         Width="96"
                         Background="{StaticResource TransparentBrush}"
                         Foreground="{StaticResource PhoneForegroundBrush}"
@@ -298,23 +284,23 @@
                         <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Right"/>
                         <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Right"/>
                         <toolkit:ListPickerItem Content="Arrive" HorizontalContentAlignment="Right"/>
-                        <!--<toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Center" />-->
+                        <!--<toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Right" />-->
                     </toolkit:ListPicker>
                     <toolkit:DatePicker Name="datePicker"
                                         Margin="-12,0"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
-                                        IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=datePicker}"
+                                        Tap="DateTimePickersTap"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"
                                         ValueStringFormat="{}{0:m}"/>
                     <toolkit:TimePicker Name="timePicker"
                                         Margin="-12,0"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
-                                        IsEnabled="{Binding Path=TimeType, Converter={StaticResource TimeConditionToDateTimePickerEnabledConverter}, ConverterParameter=timePicker}"
+                                        Tap="DateTimePickersTap"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"/>
                     <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top"
-                                    Margin="12,12,18,0"
+                                    Margin="12,8,18,0"
                                     Tap="ContentControlTap">
                         <Rectangle Margin="0" Width="50" Height="50"
                                    StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">

@@ -8,8 +8,6 @@
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Messaging;
     using GalaSoft.MvvmLight.Threading;
-    using Microsoft.Phone.Controls.Maps;
-    using Microsoft.Phone.Controls.Maps.Platform;
     using Microsoft.Phone.Net.NetworkInformation;
     using TransitWP7.Model;
     using TransitWP7.Resources;
@@ -28,9 +26,10 @@
         private DateTime _dateTime;
         private TimeCondition _timeType;
         private GeoCoordinate _userGeoCoordinate;
-        private LocationCollection _uncertaintyCirclePoints = new LocationCollection();
         private GeoCoordinate _centerMapGeoCoordinate;
         private bool _centerMapGeoSet;
+        private double _zoomLevel;
+        private int _pixelWidth;
 
         public MainMapViewModel()
         {
@@ -227,9 +226,7 @@
 
                     if (value != null)
                     {
-                        this.UncertaintyCirclePoints = this.DrawACircle(
-                            this._userGeoCoordinate,
-                            (value.HorizontalAccuracy + value.VerticalAccuracy) / 2);
+                        this.UpdatePixelWidth();
                     }
 
                     this.RaisePropertyChanged("UserGeoCoordinate");
@@ -237,25 +234,37 @@
             }
         }
 
-        public LocationCollection UncertaintyCirclePoints
+        public double MapZoomLevel
         {
             get
             {
-                if (ViewModelLocator.SettingsViewModelStatic.UseLocationSetting)
-                {
-                    return this._uncertaintyCirclePoints;
-                }
-
-                // We don't know where the user is at all
-                return null;
+                return this._zoomLevel;
             }
 
             set
             {
-                if (value != this._uncertaintyCirclePoints)
+                if (!this._zoomLevel.Equals(value))
                 {
-                    this._uncertaintyCirclePoints = value;
-                    this.RaisePropertyChanged("UncertaintyCirclePoints");
+                    this._zoomLevel = value;
+                    this.UpdatePixelWidth();
+                    this.RaisePropertyChanged("MapZoomLevel");
+                }
+            }
+        }
+
+        public int PixelWidth
+        {
+            get
+            {
+                return this._pixelWidth;
+            }
+
+            set
+            {
+                if (value != this._pixelWidth)
+                {
+                    this._pixelWidth = value;
+                    this.RaisePropertyChanged("PixelWidth");
                 }
             }
         }
@@ -335,7 +344,7 @@
             {
                 if (this._geoCoordinateWatcher == null)
                 {
-                    this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = Globals.MovementThreshold };
+                    this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = /*Globals.MovementThreshold*/0 };
                     this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcherPositionChanged;
                     this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcherStatusChanged;
                     this._geoCoordinateWatcher.Start();
@@ -360,7 +369,6 @@
         public override void Cleanup()
         {
             this.DisposeGeoCoordinateWatcher();
-
             base.Cleanup();
         }
 
@@ -478,33 +486,17 @@
             }
         }
 
-        private LocationCollection DrawACircle(Location location, double radiusInMeters)
+        private void UpdatePixelWidth()
         {
-            const double EarthRadiusInKilometers = 6367.0;
-            var locations = new LocationCollection();
-            Func<double, double> toRadian = val => val * (Math.PI / 180);
+            // Mathematics for this are obtained from http://msdn.microsoft.com/en-us/library/aa940990.aspx
+            var onScreenFactor = 156543.04 /*meters/pixel*/ * Math.Abs(Math.Cos(this.UserGeoCoordinate.Latitude)) / Math.Pow(2, this.MapZoomLevel);
+            var radiusInMeters = this.UserGeoCoordinate.HorizontalAccuracy;
+            var onScreenPixels = (int)Math.Ceiling(radiusInMeters / onScreenFactor);
 
-            // coordinates in radians
-            var lat = toRadian(location.Latitude);
-            var lon = toRadian(location.Longitude);
-
-            // angular distance covered on earths surface. normalized to km.
-            var angularDist = radiusInMeters / 1000 / EarthRadiusInKilometers;
-            for (var x = 0; x <= 360; x++)
-            {
-                // radians
-                var radX = toRadian(x);
-                var circlePtLatRad = Math.Asin((Math.Sin(lat) * Math.Cos(angularDist)) + (Math.Cos(lat) * Math.Sin(angularDist) * Math.Cos(radX)));
-                var circlePtLngRad = lon + Math.Atan2(Math.Sin(radX) * Math.Cos(lat) * Math.Sin(angularDist), Math.Cos(angularDist) - (Math.Sin(lat) * Math.Sin(circlePtLatRad)));
-                locations.Add(
-                    new GeoCoordinate
-                    {
-                        Longitude = 180.0 * circlePtLngRad / Math.PI,
-                        Latitude = 180.0 * circlePtLatRad / Math.PI
-                    });
-            }
-
-            return locations;
+            // Do not show the uncertainty circle under a certain threshold
+            const int OnScreenPxThreshold = 52;
+            const int AccuracyThreshold = 20;
+            this.PixelWidth = (onScreenPixels < OnScreenPxThreshold || radiusInMeters < AccuracyThreshold) ? 0 : onScreenPixels;
         }
 
         private void CoreCalculateTransit()

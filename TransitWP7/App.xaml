@@ -20,20 +20,36 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
-                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <!--<Ellipse Stroke="Black" StrokeThickness="2"
-                                     Width="50" Height="50">
-                                <Ellipse.Fill>
-                                    <SolidColorBrush Color="Gray" Opacity="0.5"/>
-                                </Ellipse.Fill>
-                            </Ellipse>-->
-                            <!--Width="{Binding Path=UserGeoCoordinate.VerticalAccuracy}" Height="{Binding Path=UserGeoCoordinate.VerticalAccuracy}"/>-->
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Height="2000" Width="2000">
+                            <Ellipse Stroke="White" StrokeThickness="6"
+                                     Width="{Binding Path=PixelWidth}" Height="{Binding Path=PixelWidth}"
+                                     Fill="Transparent" />
+                            <Ellipse Stroke="Black" StrokeThickness="3"
+                                     Width="{Binding Path=PixelWidth}" Height="{Binding Path=PixelWidth}"
+                                     Fill="Transparent" />
                             <Rectangle Fill="Black" Stroke="White" StrokeThickness="2" Width="26" Height="26" RenderTransformOrigin="0.5,0.5">
                                 <Rectangle.RenderTransform>
                                     <RotateTransform Angle="45" />
                                 </Rectangle.RenderTransform>
                             </Rectangle>
                             <Ellipse Fill="{StaticResource PhoneAccentBrush}" Width="14" Height="14" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="m:Pushpin" x:Key="UncertaintyCircleShadow">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="m:Pushpin">
+                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Height="2000" Width="2000">
+                            <Ellipse StrokeThickness="0"
+                                     Width="{Binding Path=PixelWidth}" Height="{Binding Path=PixelWidth}">
+                                <Ellipse.Fill>
+                                    <SolidColorBrush Color="Gray" Opacity="0.5"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -62,8 +78,16 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
                         <Canvas VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Path Stroke="Black" StrokeThickness="2" Fill="Green" Data="M 0,2 L -24,6 A 16,16 0 1 1 -24,-6 L 0,-2 Z" />
-                            <ContentPresenter Canvas.Left="-46" Canvas.Top="-16" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
+                            <Path Stroke="Black" StrokeThickness="2" Fill="White" Data="M -4,0 V -22 L -16,-32 V -48 L -4,-58 H 4 L 16,-48 V -32 L 4,-22 V 0 A 4,2 0 0 1 -4,0 Z" />
+                            <Path Stroke="Green" StrokeThickness="0" Data="M -3,-25 L -13,-33 V -47 L -3,-55 H 3 L 13,-47 V -33 L 3,-25 Z">
+                                <Path.Fill>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="Green" Offset="1.0" />
+                                        <GradientStop Color="DarkGreen" Offset="0.0" />
+                                    </LinearGradientBrush>
+                                </Path.Fill>
+                            </Path>
+                            <ContentPresenter Canvas.Left="-7" Canvas.Top="-56" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
                         </Canvas>
                     </ControlTemplate>
                 </Setter.Value>
@@ -73,14 +97,22 @@
             <Setter Property="FontSize" Value="20" />
             <Setter Property="FontWeight" Value="ExtraBold" />
         </Style>
-        
+
         <Style TargetType="m:Pushpin" x:Key="TransitEndPointPushpinStyle">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
                         <Canvas VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Path Stroke="Black" StrokeThickness="2" Fill="Red" Data="M 0,2 L 24,6 A 16,16 0 1 0 24,-6 L 0,-2 Z" />
-                            <ContentPresenter Canvas.Left="32" Canvas.Top="-16" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
+                            <Path Stroke="Black" StrokeThickness="2" Fill="White" Data="M -4,0 V -22 L -16,-32 V -48 L -4,-58 H 4 L 16,-48 V -32 L 4,-22 V 0 A 4,2 0 0 1 -4,0 Z" />
+                            <Path Stroke="Red" StrokeThickness="0" Data="M -3,-25 L -13,-33 V -47 L -3,-55 H 3 L 13,-47 V -33 L 3,-25 Z">
+                                <Path.Fill>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="Red" Offset="0.0" />
+                                        <GradientStop Color="DarkRed" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Path.Fill>
+                            </Path>
+                            <ContentPresenter Canvas.Left="-6" Canvas.Top="-56" HorizontalAlignment="Center" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="0" />
                         </Canvas>
                     </ControlTemplate>
                 </Setter.Value>
@@ -95,7 +127,7 @@
         <!-- Hack: Cannot share CaretBrush otherwise they get in a bad state. So create one for each tile needed. -->
         <SolidColorBrush x:Key="StartEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
         <SolidColorBrush x:Key="EndEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
-        
+
         <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" x:Key="UnderliningBorderBrush">
             <GradientStop Color="Transparent" Offset="0.0"/>
             <GradientStop Color="Transparent" Offset="0.94"/>
@@ -104,10 +136,15 @@
         </LinearGradientBrush>
 
         <Style TargetType="toolkit:AutoCompleteBox" x:Key="StartEndpointInputAutoCompleteBoxStyle">
+            <Setter Property="Width" Value="400" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{StaticResource TransparentBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
             <Setter Property="InputScope" Value="Maps"/>
             <Setter Property="MinimumPrefixLength" Value="-1" />
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="{StaticResource UnderliningBorderBrush}"/>
+            <Setter Property="MaxDropDownHeight" Value="250"/>
             <Setter Property="TextBoxStyle">
                 <Setter.Value>
                     <Style TargetType="TextBox">
@@ -120,7 +157,7 @@
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style TargetType="ListBoxItem">
-                        <Setter Property="Background" Value="White"/> 
+                        <Setter Property="Background" Value="White"/>
                         <Setter Property="Foreground" Value="Black"/>
                     </Style>
                 </Setter.Value>
@@ -129,8 +166,8 @@
                 <Setter.Value>
                     <DataTemplate>
                         <StackPanel Margin="12,6">
-                            <TextBlock Text="{Binding Path=DisplayName}" FontSize="24"/>
-                            <TextBlock Text="{Binding Path=FormattedAddress}" FontSize="18" Foreground="Gray"/>
+                            <TextBlock Text="{Binding Path=DisplayName}" FontSize="{StaticResource PhoneFontSizeMedium}"/>
+                            <TextBlock Text="{Binding Path=FormattedAddress}" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="Gray"/>
                         </StackPanel>
                     </DataTemplate>
                 </Setter.Value>

@@ -31,6 +31,11 @@
             this.mainMap.CredentialsProvider = new ApplicationIdCredentialsProvider(ApiKeys.BingMapsKey);
             this.mainMap.SetView(new GeoCoordinate(39.450, -98.908), 3.3);
 
+            // The following is simply to have the timeConditionPicker text aligned.
+            var temp = this._viewModel.TimeType;
+            this._viewModel.TimeType = TimeCondition.LastArrivalTime;
+            this._viewModel.TimeType = temp;
+
             this.RegisterNotifications();
             this.RegisterForNotification(
                 "SelectedItem",
@@ -39,6 +44,7 @@
                 {
                     if (this._viewModel.SelectedTransitTrip != null)
                     {
+                        this._viewModel.CenterMapGeoSet = true;
                         this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem == -1 ? 0 : directionsStepView.SelectedItem].GeoCoordinate, Globals.LocateMeZoomLevel);
                     }
                 });
@@ -477,6 +483,14 @@
         private void MainMapMapPan(object sender, MapDragEventArgs e)
         {
             this._viewModel.CenterMapGeoSet = true;
+        }
+
+        private void DateTimePickersTap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (this._viewModel.TimeType == TimeCondition.Now)
+            {
+                this._viewModel.TimeType = TimeCondition.DepartingAt;
+            }
         }
     }
 }
