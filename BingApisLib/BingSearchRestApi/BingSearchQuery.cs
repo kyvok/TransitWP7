@@ -61,12 +61,12 @@
 
             var request = new PhonebookRequest
             {
-                Query = query,
+                Query = Uri.EscapeDataString(query),
                 Latitude = userLocation.Latitude,
                 Longitude = userLocation.Longitude,
                 Radius = 80,
-                Count = 20,
-                SortBy = PhonebookSortOption.Distance,
+                Count = 25,
+                SortBy = PhonebookSortOption.Relevance,
                 Sources = new[] { SourceType.PhoneBook },
                 AppId = ApiKeys.BingSearchKey
             };
@@ -84,7 +84,7 @@
         {
             var request = new SpellRequest
             {
-                Query = query,
+                Query = Uri.EscapeDataString(query),
                 Sources = new[] { SourceType.Spell },
                 AppId = ApiKeys.BingSearchKey
             };

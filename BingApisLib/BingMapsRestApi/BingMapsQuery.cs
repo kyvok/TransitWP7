@@ -40,7 +40,7 @@
         {
             var queryUri = ConstructQueryUri(
                 "Locations",
-                "q=" + query + (userContext != null ? userContext.ToString() : string.Empty));
+                "q=" + Uri.EscapeDataString(query) + (userContext != null ? userContext.ToString() : string.Empty));
             ExecuteQuery(queryUri, callback, userState);
         }
 

@@ -166,13 +166,18 @@ namespace TransitWP7.Model
             }
 
             // orderby is a stable sort
-            // the result is we get locations ordered by name, and then by distance
+            // the result preserves the original sort (likely relevance), but moves item more then 80 miles to the bottom
             var sorted = locations.ToDictionary(k => k, v => v.GeoCoordinate.GetDistanceTo(center))
-                        .OrderBy(kvp => kvp.Value)
                         .Where(kvp => kvp.Value <= MaxRange)
                         .Select(items => items.Key)
-                        .OrderBy(loc => loc.DisplayName)
                         .ToList();
+
+            var outsideOfRange = locations.ToDictionary(k => k, v => v.GeoCoordinate.GetDistanceTo(center))
+                                .Where(kvp => kvp.Value > MaxRange)
+                                .Select(items => items.Key)
+                                .ToList();
+
+            sorted.AddRange(outsideOfRange);
             return sorted;
         }
 

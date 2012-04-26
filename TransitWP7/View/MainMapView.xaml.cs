@@ -233,7 +233,7 @@
                 notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
                     () => NavigationService.Navigate(
                         new Uri(
-                            string.Format(CultureInfo.InvariantCulture, "{0}?endpoint={1}&query={2}", PhonePageUri.LocationSelectionView, notificationMessage.Notification, notificationMessage.Content),
+                            string.Format(CultureInfo.InvariantCulture, "{0}?endpoint={1}&query={2}", PhonePageUri.LocationSelectionView, notificationMessage.Notification, Uri.EscapeDataString(notificationMessage.Content)),
                             UriKind.Relative))));
 
             Messenger.Default.Register<NotificationMessage>(
