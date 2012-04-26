@@ -46,7 +46,15 @@
             }
 
             this.DisplayName = result.Title;
-            this.GeoCoordinate = new GeoCoordinate(result.Latitude, result.Longitude);
+            this.GeoCoordinate = new GeoCoordinate(result.Latitude, result.Longitude)
+            {
+                // Setting these value to zero to improve deserialization perf.
+                Altitude = 0,
+                Course = 0,
+                HorizontalAccuracy = 0,
+                VerticalAccuracy = 0,
+                Speed = 0
+            };
             this.PostalCode = result.PostalCode;
             this.FormattedAddress = string.Format(
                         CultureInfo.InvariantCulture,

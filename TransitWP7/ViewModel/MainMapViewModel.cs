@@ -488,6 +488,11 @@
 
         private void UpdatePixelWidth()
         {
+            if (this.UserGeoCoordinate == null)
+            {
+                return;
+            }
+
             // Mathematics for this are obtained from http://msdn.microsoft.com/en-us/library/aa940990.aspx
             var onScreenFactor = 156543.04 /*meters/pixel*/ * Math.Abs(Math.Cos(this.UserGeoCoordinate.Latitude)) / Math.Pow(2, this.MapZoomLevel);
             var radiusInMeters = this.UserGeoCoordinate.HorizontalAccuracy;

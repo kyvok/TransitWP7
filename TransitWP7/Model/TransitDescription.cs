@@ -17,7 +17,7 @@
         private string _arrivalTime;
         private string _departureTime;
         private ObservableCollection<ItineraryStep> _itinerarySteps;
-        private LocationCollection _pathPoints;
+        private Point[] _pathPoints;
 
         public TransitDescription()
         {
@@ -64,11 +64,7 @@
             this.ItinerarySteps[0].StepType = ItineraryStep.ItineraryStepType.FirstStep;
             this.ItinerarySteps[this.ItinerarySteps.Count - 1].StepType = ItineraryStep.ItineraryStepType.LastStep;
 
-            this.PathPoints = new LocationCollection();
-            foreach (var pathPoint in route.RoutePaths[0].Line)
-            {
-                this.PathPoints.Add(pathPoint.AsGeoCoordinate());
-            }
+            this.PathPoints = route.RoutePaths[0].Line;
 
             this.MapView = route.BoundingBox.AsLocationRect();
         }
@@ -217,7 +213,7 @@
             }
         }
 
-        public LocationCollection PathPoints
+        public Point[] PathPoints
         {
             get
             {

@@ -33,7 +33,7 @@
 
             // The following is simply to have the timeConditionPicker text aligned.
             var temp = this._viewModel.TimeType;
-            this._viewModel.TimeType = TimeCondition.LastArrivalTime;
+            this._viewModel.TimeType = TimeCondition.ArrivingAt;
             this._viewModel.TimeType = temp;
 
             this.RegisterNotifications();
@@ -452,7 +452,7 @@
             this.startingInput.Text = this.startingInput.Text.TrimEnd();
             this.endingInput.Text = this.endingInput.Text.TrimEnd();
 
-            this.startingInput.Focus();
+            this.endingInput.Focus();
         }
 
         private void ApplicationBarAboutClick(object sender, EventArgs e)
@@ -491,6 +491,38 @@
             {
                 this._viewModel.TimeType = TimeCondition.DepartingAt;
             }
+        }
+
+        private void FastTimeChangeClick(object sender, RoutedEventArgs e)
+        {
+            var button = (HyperlinkButton)sender;
+            var condition = (string)button.Content;
+
+            switch (condition)
+            {
+                case "<<15min":
+                    this._viewModel.DateTime = this._viewModel.DateTime.Subtract(TimeSpan.FromMinutes(15));
+                    break;
+                case "<5min":
+                    this._viewModel.DateTime = this._viewModel.DateTime.Subtract(TimeSpan.FromMinutes(5));
+                    break;
+                case "now":
+                    this._viewModel.DateTime = DateTime.Now;
+                    break;
+                case "5min>":
+                    this._viewModel.DateTime = this._viewModel.DateTime.Add(TimeSpan.FromMinutes(5));
+                    break;
+                case "15min>>":
+                    this._viewModel.DateTime = this._viewModel.DateTime.Add(TimeSpan.FromMinutes(15));
+                    break;
+            }
+
+            if (this._viewModel.TimeType == TimeCondition.Now)
+            {
+                this._viewModel.TimeType = TimeCondition.DepartingAt;
+            }
+
+            this._viewModel.BeginCalculateTransit();
         }
     }
 }

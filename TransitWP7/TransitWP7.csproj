@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="AutoCompleteDataManager.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\PathPointsToLocationCollectionConverter.cs" />
     <Compile Include="Converters\TransitTypeToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeToTimeConverter.cs" />
     <Compile Include="Converters\NegateBoolConverter.cs" />

@@ -16,7 +16,12 @@
                 throw new ArgumentNullException("bb");
             }
 
-            return new LocationRect(bb.NorthLatitude, bb.WestLongitude, bb.SouthLatitude, bb.EastLongitude);
+            var locRect = new LocationRect(bb.NorthLatitude, bb.WestLongitude, bb.SouthLatitude, bb.EastLongitude);
+            locRect.Northeast = FixGeoCoordinate(locRect.Northeast);
+            locRect.Northwest = FixGeoCoordinate(locRect.Northwest);
+            locRect.Southeast = FixGeoCoordinate(locRect.Southeast);
+            locRect.Southwest = FixGeoCoordinate(locRect.Southwest);
+            return locRect;
         }
 
         public static GeoCoordinate AsGeoCoordinate(this Point point)
@@ -26,7 +31,7 @@
                 throw new ArgumentNullException("point");
             }
 
-            return new GeoCoordinate(point.Latitude, point.Longitude);
+            return FixGeoCoordinate(new GeoCoordinate(point.Latitude, point.Longitude));
         }
 
         public static IEnumerable<Route> GetRoutes(this Response response)
@@ -47,6 +52,17 @@
             }
 
             return response.ResourceSets[0].Resources.OfType<Location>().AsEnumerable();
+        }
+
+        // This is to reduce the number of NaN in the serialized file which degrades deserialization perf.
+        private static GeoCoordinate FixGeoCoordinate(GeoCoordinate geoCoordinate)
+        {
+            geoCoordinate.Altitude = 0;
+            geoCoordinate.Course = 0;
+            geoCoordinate.HorizontalAccuracy = 0;
+            geoCoordinate.Speed = 0;
+            geoCoordinate.VerticalAccuracy = 0;
+            return geoCoordinate;
         }
     }
 }
