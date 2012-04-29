@@ -192,6 +192,9 @@ You can change your preferences in the settings page.</value>
   <data name="ProgressBarSearchingTrips" xml:space="preserve">
     <value>Searching transit trips...</value>
   </data>
+  <data name="TimeUnit" xml:space="preserve">
+    <value>MINUTES</value>
+  </data>
   <data name="ViewSettingsSetting1HelpText" xml:space="preserve">
     <value>Enable location services to help find more relevant local business information.
                        

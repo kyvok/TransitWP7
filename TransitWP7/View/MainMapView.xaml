@@ -199,7 +199,7 @@
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0">
                                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="64" FontWeight="ExtraBold" Text="{Binding TravelDuration, Converter={StaticResource TravelDurationConverter}}"/>
                                     <Line VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="50" Y1="0" Y2="0" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" />
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Text="MINUTES" />
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Text="{Binding Path=SR.TimeUnit, Source={StaticResource SR}}" />
                                 </StackPanel>
                                 <Line Margin="5,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Center" X1="0" X2="0" Y1="0" Y2="50" Stroke="{StaticResource PhoneForegroundBrush}" StrokeThickness="1" Grid.Column="1"/>
                                 <Grid Grid.Column="2">
