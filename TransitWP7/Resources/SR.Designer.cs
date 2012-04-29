@@ -61,6 +61,15 @@ namespace TransitWP7.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Destination Location.
+        /// </summary>
+        public static string DestinationLocation {
+            get {
+                return ResourceManager.GetString("DestinationLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Where do you want to go?.
         /// </summary>
         public static string ErrorMsgDescEndPointNotSet {
@@ -261,6 +270,15 @@ namespace TransitWP7.Resources {
         public static string ProgressBarSearchingTrips {
             get {
                 return ResourceManager.GetString("ProgressBarSearchingTrips", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source Location.
+        /// </summary>
+        public static string SourceLocation {
+            get {
+                return ResourceManager.GetString("SourceLocation", resourceCulture);
             }
         }
         
