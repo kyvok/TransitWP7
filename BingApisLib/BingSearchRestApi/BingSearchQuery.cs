@@ -1,6 +1,7 @@
 ﻿namespace BingApisLib.BingSearchRestApi
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Device.Location;
     using System.Globalization;
     using System.Net;
@@ -45,6 +46,8 @@
     /// </summary>
     public static class BingSearchQuery
     {
+        private static readonly ConcurrentDictionary<string, SearchResponse> BingSearchQueryInMemoryCache = new ConcurrentDictionary<string, SearchResponse>();
+
         /// <summary>
         /// Takes a latitude/longitude location and query for the information related to this location.
         /// </summary>
@@ -111,6 +114,12 @@
 
         private static void ExecuteQuery(Uri queryUri, Action<BingSearchQueryResult> callback, object userState)
         {
+            if (BingSearchQueryInMemoryCache.ContainsKey(queryUri.ToString()))
+            {
+                callback(new BingSearchQueryResult(BingSearchQueryInMemoryCache[queryUri.ToString()], userState));
+                return;
+            }
+
             var httpRequest = WebRequestCreator.GZip.Create(queryUri);
             var context = new BingSearchRequestContext(httpRequest, new BingSearchQueryAsyncCallback(callback, userState));
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
@@ -150,6 +159,7 @@
                 }
                 else
                 {
+                    BingSearchQueryInMemoryCache.TryAdd(context.HttpRequest.RequestUri.ToString(), response);
                     context.AsyncCallback.Notify(response);
                 }
             }

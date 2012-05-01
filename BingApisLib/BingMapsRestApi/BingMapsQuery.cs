@@ -1,6 +1,8 @@
 ﻿namespace BingApisLib.BingMapsRestApi
 {
     using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Device.Location;
     using System.Net;
     using System.Text;
@@ -15,6 +17,8 @@
         private static readonly OutputParameters DefaultOutputParameters = new OutputParameters(OutputFormat.Xml, suppressStatus: true);
         private static readonly KeyParameter DefaultKeyParameter = new KeyParameter(ApiKeys.BingMapsKey);
         private static readonly XmlSerializer BingMapsResponseSerializer = new XmlSerializer(typeof(Response));
+
+        private static readonly ConcurrentDictionary<string, Response> BingMapsQueryInMemoryCache = new ConcurrentDictionary<string, Response>();
 
         /// <summary>
         /// Takes a latitude/longitude location and query for the information related to this location.
@@ -69,8 +73,8 @@
         {
             string rqp = new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint(), time, timeType)
                              {
-                                MaxSolutions = 5,
-                                RoutePathOutput = RoutePathOutput.Points
+                                 MaxSolutions = 5,
+                                 RoutePathOutput = RoutePathOutput.Points
                              }.ToString();
             var queryUri = ConstructQueryUri("Routes/Transit", rqp);
             ExecuteQuery(queryUri, callback, userState);
@@ -114,6 +118,12 @@
 
         private static void ExecuteQuery(Uri queryUri, Action<BingMapsQueryResult> callback, object userState)
         {
+            if (BingMapsQueryInMemoryCache.ContainsKey(queryUri.ToString()))
+            {
+                callback(new BingMapsQueryResult(BingMapsQueryInMemoryCache[queryUri.ToString()], userState));
+                return;
+            }
+
             var httpRequest = WebRequestCreator.GZip.Create(queryUri);
             var context = new BingMapsRequestContext(httpRequest, new BingMapsQueryAsyncCallback(callback, userState));
             httpRequest.BeginGetResponse(HttpRequestCompleted, context);
@@ -146,6 +156,7 @@
                 }
                 else
                 {
+                    BingMapsQueryInMemoryCache.TryAdd(context.HttpRequest.RequestUri.ToString(), response);
                     context.AsyncCallback.Notify(response);
                 }
             }
