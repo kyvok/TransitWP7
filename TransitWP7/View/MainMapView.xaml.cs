@@ -1,9 +1,11 @@
 ﻿namespace TransitWP7.View
 {
     using System;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Device.Location;
     using System.Globalization;
+    using System.Linq;
     using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
@@ -15,6 +17,8 @@
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Controls.Maps;
     using Microsoft.Phone.Shell;
+    using Microsoft.Phone.UserData;
+
     using TransitWP7.Model;
     using TransitWP7.Resources;
     using TransitWP7.ViewModel;
@@ -46,6 +50,7 @@
                     {
                         this._viewModel.CenterMapGeoSet = true;
                         this.mainMap.SetView(this._viewModel.SelectedTransitTrip.ItinerarySteps[this.directionsStepView.SelectedItem == -1 ? 0 : directionsStepView.SelectedItem].GeoCoordinate, Globals.LocateMeZoomLevel);
+                        this.SetUIVisibility(UIViewState.ItineraryView);
                     }
                 });
 
@@ -112,7 +117,7 @@
             this.SetUIVisibility(this.CurrentViewState);
 
             // Use background thread for this.
-            ThreadPool.QueueUserWorkItem(_ => DispatcherHelper.UIDispatcher.BeginInvoke(this.FirstRunCheck));
+            ThreadPool.QueueUserWorkItem(_ => DispatcherHelper.CheckBeginInvokeOnUI(this.FirstRunCheck));
         }
 
         protected override void OnBackKeyPress(CancelEventArgs e)
@@ -169,7 +174,7 @@
             Messenger.Default.Register<DialogMessage>(
                 this,
                 MessengerToken.ErrorPopup,
-                dialogMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                dialogMessage => DispatcherHelper.CheckBeginInvokeOnUI(
                     () =>
                     {
                         var result = MessageBox.Show(dialogMessage.Content, dialogMessage.Caption, dialogMessage.Button);
@@ -179,7 +184,7 @@
             Messenger.Default.Register<NotificationMessage<int>>(
                this,
                MessengerToken.TripStepSelection,
-               notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+               notificationMessage => DispatcherHelper.CheckBeginInvokeOnUI(
                    () =>
                    {
                        this.directionsStepView.SelectedItem = notificationMessage.Content;
@@ -188,7 +193,7 @@
             Messenger.Default.Register<NotificationMessage<bool>>(
                 this,
                 MessengerToken.MainMapProgressIndicator,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                notificationMessage => DispatcherHelper.CheckBeginInvokeOnUI(
                     () =>
                     {
                         if (!NavigationService.CurrentSource.OriginalString.Contains("MainMapView"))
@@ -202,7 +207,7 @@
             Messenger.Default.Register<NotificationMessage<bool>>(
                 this,
                 MessengerToken.LockUiIndicator,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                notificationMessage => DispatcherHelper.CheckBeginInvokeOnUI(
                     () =>
                     {
                         this.IsEnabled = notificationMessage.Content;
@@ -212,7 +217,7 @@
             Messenger.Default.Register<NotificationMessage<bool>>(
                 this,
                 MessengerToken.EnableLocationButtonIndicator,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                notificationMessage => DispatcherHelper.CheckBeginInvokeOnUI(
                     () =>
                     {
                         if (!NavigationService.CurrentSource.OriginalString.Contains("MainMapView"))
@@ -220,9 +225,7 @@
                             return;
                         }
 
-                        // TODO: possibly pass a small string to indicate a third state for the meIndicator.
                         this.meIndicator.Visibility = notificationMessage.Content ? Visibility.Visible : Visibility.Collapsed;
-
                         var locateMeButton = (ApplicationBarIconButton)this.ApplicationBar.Buttons[(int)AppBarIconOrder.LocateMe];
                         locateMeButton.IsEnabled = notificationMessage.Content;
                     }));
@@ -230,7 +233,7 @@
             Messenger.Default.Register<NotificationMessage<string>>(
                 this,
                 MessengerToken.EndpointResolutionPopup,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                notificationMessage => DispatcherHelper.CheckBeginInvokeOnUI(
                     () => NavigationService.Navigate(
                         new Uri(
                             string.Format(CultureInfo.InvariantCulture, "{0}?endpoint={1}&query={2}", PhonePageUri.LocationSelectionView, notificationMessage.Notification, Uri.EscapeDataString(notificationMessage.Content)),
@@ -239,7 +242,7 @@
             Messenger.Default.Register<NotificationMessage>(
                 this,
                 MessengerToken.TransitTripsReady,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(this.ShowTransitTripsList));
+                notificationMessage => DispatcherHelper.CheckBeginInvokeOnUI(this.ShowTransitTripsList));
         }
 
         private void ShowTransitTripsList()
@@ -269,7 +272,6 @@
             var inputBox = (AutoCompleteBox)sender;
             inputBox.MinimumPrefixLength = 1;
             inputBox.Background = new SolidColorBrush(Colors.Transparent);
-            inputBox.BorderBrush = Application.Current.Resources["UnderliningBorderBrush"] as Brush;
 
             // Need to traverse the DependencyObject tree to fetch the TextBox.
             // First layer is Grid, which contains as a first child the TextBox.
@@ -319,7 +321,8 @@
 
         private void SetProgressBarState(string message, bool state)
         {
-            // TODO: remove this Workaround for agressive check location status progress bar message. Real fix needs to preserve history of progress messages.
+            // TODO: remove this Workaround for agressive check location status progress bar message.
+            // Real fix needs to preserve history of progress messages.
             if (message == SR.ProgressBarAcquiringLocation && message != SystemTray.ProgressIndicator.Text)
             {
                 return;
@@ -357,7 +360,6 @@
                     this.ApplicationBar.IsVisible = true;
                     if (this._viewModel.SelectedTransitTrip != null)
                     {
-                        // TODO does the following ever is true?
                         if (this.directionsStepView.SelectedItem == -1)
                         {
                             this.mainMap.SetView(this._viewModel.SelectedTransitTrip.MapView);
@@ -375,6 +377,7 @@
                     break;
                 case UIViewState.OnlyStartEndInputsView:
                     this.ApplicationBar.IsVisible = false;
+                    this.OnlyStartEndInputViewAnimation.Completed += (s, a) => this.endingInput.Focus();
                     this.OnlyStartEndInputViewAnimation.Begin();
                     break;
                 case UIViewState.MapViewOnly:
@@ -410,7 +413,6 @@
         private void ApplicationBarTransitSearchClick(object sender, EventArgs e)
         {
             this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
-            this.startingInput.Focus();
         }
 
         private void ApplicationBarSettingsClick(object sender, EventArgs e)
@@ -478,11 +480,67 @@
             {
                 this.SetUIVisibility(UIViewState.MapViewOnly);
             }
+
+            this.selectedPoint.Visibility = Visibility.Collapsed;
         }
 
         private void MainMapMapPan(object sender, MapDragEventArgs e)
         {
             this._viewModel.CenterMapGeoSet = true;
+        }
+
+        private void MainMapHold(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            var map = (Map)sender;
+            var point = e.GetPosition(map);
+            this.selectedPoint.Visibility = Visibility.Visible;
+
+            this.selectedPoint.Location = map.ViewportPointToLocation(point);
+        }
+
+        private void SelectedOnMapActionTap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            var pushpin = (Pushpin)sender;
+            var point = e.GetPosition(pushpin);
+            var startZone = point.X > 8 && point.X < 72 && point.Y < -16 && point.Y > -42;
+            var endZone = point.X < -8 && point.X > -72 && point.Y > 16 && point.Y < 42;
+            if (startZone || endZone)
+            {
+                this.SetUIVisibility(UIViewState.OnlyStartEndInputsView);
+                pushpin.Visibility = Visibility.Collapsed;
+
+                this.IsEnabled = false;
+
+                ProxyQuery.GetLocationAddress(
+                    pushpin.Location,
+                    result => DispatcherHelper.CheckBeginInvokeOnUI(
+                        () =>
+                            {
+                                var displayName = "Unknown location";
+                                if (result.LocationDescriptions != null && result.LocationDescriptions.Count > 0)
+                                {
+                                    displayName = result.LocationDescriptions[0].DisplayName;
+                                }
+
+                                var loc = new LocationDescription(pushpin.Location)
+                                    { DisplayName = displayName };
+                                if (startZone)
+                                {
+                                    this._viewModel.StartLocationText = displayName;
+                                    this._viewModel.SelectedStartLocation = loc;
+                                }
+                                else
+                                {
+                                    this._viewModel.EndLocationText = displayName;
+                                    this._viewModel.SelectedEndLocation = loc;
+                                }
+
+                                this.IsEnabled = true;
+                            }),
+                    null);
+            }
+
+            e.Handled = true;
         }
 
         private void DateTimePickersTap(object sender, System.Windows.Input.GestureEventArgs e)

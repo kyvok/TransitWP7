@@ -95,6 +95,7 @@
     <Compile Include="AutoCompleteDataManager.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\PathPointsToLocationCollectionConverter.cs" />
+    <Compile Include="Converters\ToCanvasCenterConverter.cs" />
     <Compile Include="Converters\TransitTypeToVisibilityConverter.cs" />
     <Compile Include="Converters\DateTimeToTimeConverter.cs" />
     <Compile Include="Converters\NegateBoolConverter.cs" />
@@ -198,6 +199,7 @@
     <Content Include="Images\appbar.list.png" />
     <Content Include="Images\appbar.transit.connection.png" />
     <Content Include="Images\appbar.transit.depart.png" />
+    <Content Include="Images\appbar.user.png" />
     <Content Include="Images\light\bus.100x100.png" />
     <Content Include="Images\light\ferry.100x100.png" />
     <Content Include="Images\light\rail.100x100.png" />

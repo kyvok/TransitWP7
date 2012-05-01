@@ -17,7 +17,7 @@
             Messenger.Default.Register<NotificationMessage<List<LocationDescription>>>(
                 this,
                 MessengerToken.EndpointResolutionPopup,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                notificationMessage => DispatcherHelper.CheckBeginInvokeOnUI(
                     () =>
                     {
                         this._locationDescriptions = new ObservableCollection<LocationDescription>(notificationMessage.Content);

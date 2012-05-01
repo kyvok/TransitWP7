@@ -519,7 +519,7 @@
                     System.Threading.ThreadPool.QueueUserWorkItem(_ =>
                         {
                             System.Threading.Thread.Sleep(1000);
-                            DispatcherHelper.UIDispatcher.BeginInvoke(this.CoreCalculateTransit);
+                            DispatcherHelper.CheckBeginInvokeOnUI(this.CoreCalculateTransit);
                         });
                     return;
                 }
@@ -597,7 +597,7 @@
 
         private void UpdateLocation(string endpoint, LocationDescription location)
         {
-            DispatcherHelper.UIDispatcher.BeginInvoke(
+            DispatcherHelper.CheckBeginInvokeOnUI(
                     () =>
                     {
                         AutoCompleteDataManager.AddLocationEntry(location);
@@ -631,7 +631,7 @@
                 return;
             }
 
-            DispatcherHelper.UIDispatcher.BeginInvoke(
+            DispatcherHelper.CheckBeginInvokeOnUI(
                 () =>
                 {
                     this.TransitDescriptionCollection.Clear();

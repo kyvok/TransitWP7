@@ -9,9 +9,12 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:ViewModel="clr-namespace:TransitWP7.ViewModel"
              xmlns:res="clr-namespace:TransitWP7.Resources"
+             xmlns:converters="clr-namespace:TransitWP7.Converters"
              mc:Ignorable="d">
     <!--Application Resources-->
     <Application.Resources>
+
+        <converters:ToCanvasCenterConverter x:Key="ToCanvasCenterConverter"/>
 
         <System:Double x:Key="GridOpacityValue">0.75</System:Double>
         <SolidColorBrush Color="{StaticResource PhoneBackgroundColor}" Opacity="{StaticResource GridOpacityValue}" x:Key="GridTransparencyBrush"/>
@@ -20,20 +23,45 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
-                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Height="2000" Width="2000">
-                            <Ellipse Stroke="White" StrokeThickness="6"
+                        <Canvas Height="2000" Width="2000" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Ellipse Stroke="White" StrokeThickness="3"
                                      Width="{Binding Path=PixelWidth}" Height="{Binding Path=PixelWidth}"
-                                     Fill="Transparent" />
-                            <Ellipse Stroke="Black" StrokeThickness="3"
+                                     Fill="Transparent"
+                                     Canvas.Top="{Binding Path=PixelWidth,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"
+                                     Canvas.Left="{Binding Path=PixelWidth,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"/>
+                            <Ellipse Stroke="Black" StrokeThickness="1.5"
                                      Width="{Binding Path=PixelWidth}" Height="{Binding Path=PixelWidth}"
-                                     Fill="Transparent" />
-                            <Rectangle Fill="Black" Stroke="White" StrokeThickness="2" Width="26" Height="26" RenderTransformOrigin="0.5,0.5">
+                                     Fill="Transparent"
+                                     Canvas.Top="{Binding Path=PixelWidth,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"
+                                     Canvas.Left="{Binding Path=PixelWidth,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"/>
+                            <Rectangle Fill="Black" Stroke="White" StrokeThickness="2" Width="26" Height="26"
+                                     Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=Height,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"
+                                     Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=Width,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"
+                                     RenderTransformOrigin="0.5,0.5">
                                 <Rectangle.RenderTransform>
                                     <RotateTransform Angle="45" />
                                 </Rectangle.RenderTransform>
                             </Rectangle>
-                            <Ellipse Fill="{StaticResource PhoneAccentBrush}" Width="14" Height="14" />
-                        </Grid>
+                            <Ellipse Fill="{StaticResource PhoneAccentBrush}" Width="14" Height="14"
+                                     Canvas.Top="{Binding RelativeSource={RelativeSource Self}, Path=Height,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"
+                                     Canvas.Left="{Binding RelativeSource={RelativeSource Self}, Path=Width,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"/>
+                        </Canvas>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -43,14 +71,35 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="m:Pushpin">
-                        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Height="2000" Width="2000">
+                        <Canvas VerticalAlignment="Center" HorizontalAlignment="Center" Height="2000" Width="2000">
                             <Ellipse StrokeThickness="0"
-                                     Width="{Binding Path=PixelWidth}" Height="{Binding Path=PixelWidth}">
+                                     Width="{Binding Path=PixelWidth}" Height="{Binding Path=PixelWidth}"
+                                     Canvas.Top="{Binding Path=PixelWidth,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}"
+                                     Canvas.Left="{Binding Path=PixelWidth,
+                                                        Converter={StaticResource ToCanvasCenterConverter},
+                                                        ConverterParameter=2000}">
                                 <Ellipse.Fill>
                                     <SolidColorBrush Color="Gray" Opacity="0.5"/>
                                 </Ellipse.Fill>
                             </Ellipse>
-                        </Grid>
+                        </Canvas>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="m:Pushpin" x:Key="SelectedPointPushpinStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="m:Pushpin">
+                        <Canvas VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Path Stroke="Green" StrokeThickness="0" Fill="Green" Data="M 0,-1 V -42 H 72 V -16 H 12 Z" />
+                            <Path Stroke="Red" StrokeThickness="0" Fill="Red" Data="M 0,1 V 42 H -72 V 16 H -12 Z" />
+                            <TextBlock Text="Start" FontWeight="Bold" Canvas.Top="-42" Canvas.Left="18"/>
+                            <TextBlock Text="End" FontWeight="Bold" Canvas.Top="16" Canvas.Left="-52"/>
+                        </Canvas>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -128,13 +177,6 @@
         <SolidColorBrush x:Key="StartEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
         <SolidColorBrush x:Key="EndEndpointCaretBrush" Color="{StaticResource PhoneForegroundColor}" />
 
-        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" x:Key="UnderliningBorderBrush">
-            <GradientStop Color="Transparent" Offset="0.0"/>
-            <GradientStop Color="Transparent" Offset="0.94"/>
-            <GradientStop Color="{StaticResource PhoneForegroundColor}" Offset="0.97"/>
-            <GradientStop Color="{StaticResource PhoneForegroundColor}" Offset="1.0"/>
-        </LinearGradientBrush>
-
         <Style TargetType="toolkit:AutoCompleteBox" x:Key="StartEndpointInputAutoCompleteBoxStyle">
             <Setter Property="Width" Value="400" />
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -142,8 +184,8 @@
             <Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
             <Setter Property="InputScope" Value="Maps"/>
             <Setter Property="MinimumPrefixLength" Value="-1" />
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="BorderBrush" Value="{StaticResource UnderliningBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PhoneForegroundColor}"/>
             <Setter Property="MaxDropDownHeight" Value="250"/>
             <Setter Property="TextBoxStyle">
                 <Setter.Value>

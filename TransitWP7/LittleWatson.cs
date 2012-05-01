@@ -73,7 +73,7 @@
 
                 if (contents != null)
                 {
-                    ThreadPool.QueueUserWorkItem(_ => DispatcherHelper.UIDispatcher.BeginInvoke(() =>
+                    ThreadPool.QueueUserWorkItem(_ => DispatcherHelper.CheckBeginInvokeOnUI(() =>
                         {
                             var result = MessageBox.Show(SR.LittleWatsonDialogDesc, SR.LittleWatsonDialogTitle, MessageBoxButton.OKCancel);
                             if (result == MessageBoxResult.OK)

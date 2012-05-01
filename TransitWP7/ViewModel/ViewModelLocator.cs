@@ -12,18 +12,19 @@
   See http://www.galasoft.ch/mvvm
 */
 
-#if DEBUG
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Xml.Serialization;
-using BingApisLib.BingMapsRestApi;
-using BingApisLib.BingSearchRestApi;
-using GalaSoft.MvvmLight;
-#endif
-
 namespace TransitWP7.ViewModel
 {
+#if DEBUG
+    using System;
+    using System.Collections.ObjectModel;
+    using System.IO;
+    using System.Xml.Serialization;
+    using BingApisLib.BingMapsRestApi;
+    using BingApisLib.BingSearchRestApi;
+    using GalaSoft.MvvmLight;
+    using TransitWP7.Model;
+#endif
+
     /// <summary>
     /// This class contains static references to all the view models in the
     /// application and provides an entry point for the bindings.

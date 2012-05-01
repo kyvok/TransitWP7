@@ -14,7 +14,7 @@
             Messenger.Default.Register<NotificationMessage<TransitDescription>>(
                 this,
                 MessengerToken.SelectedTransitTrip,
-                notificationMessage => DispatcherHelper.UIDispatcher.BeginInvoke(
+                notificationMessage => DispatcherHelper.CheckBeginInvokeOnUI(
                     () =>
                     {
                         this.TransitDescription = notificationMessage.Content;
