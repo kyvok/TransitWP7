@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DestinationLocation" xml:space="preserve">
+    <value>Destination Location</value>
+  </data>
   <data name="ErrorMsgDescEndPointNotSet" xml:space="preserve">
     <value>Where do you want to go?</value>
   </data>
@@ -191,6 +194,12 @@ You can change your preferences in the settings page.</value>
   </data>
   <data name="ProgressBarSearchingTrips" xml:space="preserve">
     <value>Searching transit trips...</value>
+  </data>
+  <data name="SourceLocation" xml:space="preserve">
+    <value>Source Location</value>
+  </data>
+  <data name="TimeUnit" xml:space="preserve">
+    <value>MINUTES</value>
   </data>
   <data name="ViewSettingsSetting1HelpText" xml:space="preserve">
     <value>Enable location services to help find more relevant local business information.

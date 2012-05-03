@@ -6,6 +6,8 @@
     using System.Device.Location;
     using BingApisLib.BingMapsRestApi;
     using Microsoft.Phone.Controls.Maps;
+    using TransitWP7.Resources;
+    using TransitWP7.ViewModel;
 
     public class TransitDescription : INotifyPropertyChanged
     {
@@ -63,6 +65,11 @@
 
             this.ItinerarySteps[0].StepType = ItineraryStep.ItineraryStepType.FirstStep;
             this.ItinerarySteps[this.ItinerarySteps.Count - 1].StepType = ItineraryStep.ItineraryStepType.LastStep;
+
+            // check the first and last step for generic strings to replace
+            // TODO: need a better place to put this
+            this.ItinerarySteps[0].Instruction = this.ItinerarySteps[0].Instruction.Replace(SR.SourceLocation, ViewModelLocator.MainMapViewModelStatic.StartLocationText);
+            this.ItinerarySteps[this.ItinerarySteps.Count - 1].Instruction = this.ItinerarySteps[this.ItinerarySteps.Count - 1].Instruction.Replace(SR.DestinationLocation, ViewModelLocator.MainMapViewModelStatic.EndLocationText);
 
             this.PathPoints = route.RoutePaths[0].Line;
 
