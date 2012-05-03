@@ -175,12 +175,12 @@
             </Grid.RenderTransform>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4,6,4,18">
-                <HyperlinkButton Content="&#60;&#60;15min" Click="FastTimeChangeClick" Foreground="{StaticResource PhoneAccentBrush}"/>
-                <HyperlinkButton Content="&#60;5min" Click="FastTimeChangeClick" Foreground="{StaticResource PhoneAccentBrush}"/>
+                <HyperlinkButton Content="&#60;&#60;15min" Click="FastTimeChangeClick" Foreground="{StaticResource PhoneAccentBrush}" FontWeight="Bold"/>
+                <HyperlinkButton Content="&#60;5min" Click="FastTimeChangeClick" Foreground="{StaticResource PhoneAccentBrush}" FontWeight="Bold"/>
                 <!--<HyperlinkButton Content="now" Click="FastTimeChangeClick"/>-->
-                <Rectangle Width="64" StrokeThickness="0" />
-                <HyperlinkButton Content="5min&#62;" Click="FastTimeChangeClick" Foreground="{StaticResource PhoneAccentBrush}"/>
-                <HyperlinkButton Content="15min&#62;&#62;" Click="FastTimeChangeClick" Foreground="{StaticResource PhoneAccentBrush}"/>
+                <Rectangle Width="48" StrokeThickness="0" />
+                <HyperlinkButton Content="5min&#62;" Click="FastTimeChangeClick" Foreground="{StaticResource PhoneAccentBrush}" FontWeight="Bold"/>
+                <HyperlinkButton Content="15min&#62;&#62;" Click="FastTimeChangeClick" Foreground="{StaticResource PhoneAccentBrush}" FontWeight="Bold"/>
             </StackPanel>
 
             <ListBox Grid.Row="1" Name="TransitTripsList" Margin="6" Width="468"
@@ -262,12 +262,26 @@
                                HorizontalAlignment="Left" VerticalAlignment="Stretch"
                                Tap="SwapEndpoints"/>
                     <toolkit:AutoCompleteBox Name="startingInput"
+                                             ItemsSource="{Binding AutoCompleteData}"
                              Text="{Binding Path=StartLocationText, Mode=TwoWay}"
                              GotFocus="InputBoxGotFocus"
                              LostFocus="InputBoxLostFocus"
                              DropDownClosing="InputBoxDropDownClosing"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource StartEndpointInputAutoCompleteBoxStyle}"/>
+                    <Button Margin="-50,0,0,0" Width="50" Padding="0" BorderThickness="0"
+                            Tag="start"
+                            Tap="GetContactAddressButtonTap">
+                        <Grid>
+                            <Ellipse Width="24" Height="24" StrokeThickness="2" Stroke="{StaticResource PhoneForegroundBrush}" />
+                            <Rectangle Width="24" Height="24"
+                                   StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">
+                                <Rectangle.OpacityMask>
+                                    <ImageBrush ImageSource="/Images/appbar.user.png"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Grid>
+                    </Button>
                 </StackPanel>
                 <!-- End section -->
                 <StackPanel Orientation="Horizontal">
@@ -279,23 +293,38 @@
                            HorizontalAlignment="Left" VerticalAlignment="Stretch"
                            Tap="SwapEndpoints"/>
                     <toolkit:AutoCompleteBox Name="endingInput"
+                                             ItemsSource="{Binding AutoCompleteData}"
                              Text="{Binding Path=EndLocationText, Mode=TwoWay}"
                              GotFocus="InputBoxGotFocus"
                              LostFocus="InputBoxLostFocus"
                              DropDownClosing="InputBoxDropDownClosing"
                              KeyUp="TextBoxKeyUp"
                              Style="{StaticResource EndEndpointInputAutoCompleteBoxStyle}"/>
+                    <Button Margin="-50,0,0,0" Width="50" Padding="0" BorderThickness="0"
+                            Tag="end"
+                            Tap="GetContactAddressButtonTap">
+                        <Grid>
+                            <Ellipse Width="24" Height="24" StrokeThickness="2" Stroke="{StaticResource PhoneForegroundBrush}" />
+                            <Rectangle Width="24" Height="24"
+                                   StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">
+                                <Rectangle.OpacityMask>
+                                    <ImageBrush ImageSource="/Images/appbar.user.png"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Grid>
+                    </Button>
                 </StackPanel>
 
                 <!-- Time selection picker -->
                 <StackPanel Name="dateTimeStackPanel" Orientation="Horizontal" HorizontalAlignment="Right">
                     <toolkit:ListPicker Name="timeConditionPicker"
-                        Width="96"
+                        Width="102"
+                        FontWeight="Bold"
                         Background="{StaticResource TransparentBrush}"
                         Foreground="{StaticResource PhoneForegroundBrush}"
                         SizeChanged="ListPickerSizeChanged"
-                        BorderThickness="0"
-                        Margin="0,4"
+                        BorderThickness="0,0,4,0"
+                        Margin="6,4"
                         SelectedIndex="{Binding Path=TimeType, Mode=TwoWay, Converter={StaticResource TimeConditionToIntConverter}, FallbackValue=0}">
                         <toolkit:ListPickerItem Content="Now" HorizontalContentAlignment="Right"/>
                         <toolkit:ListPickerItem Content="Depart" HorizontalContentAlignment="Right"/>
@@ -303,7 +332,7 @@
                         <!--<toolkit:ListPickerItem Content="Last" HorizontalContentAlignment="Right" />-->
                     </toolkit:ListPicker>
                     <toolkit:DatePicker Name="datePicker"
-                                        Margin="-12,0"
+                                        Margin="-6,0"
                                         Background="{StaticResource TransparentBrush}"
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         Tap="DateTimePickersTap"
@@ -315,16 +344,21 @@
                                         Foreground="{StaticResource PhoneForegroundBrush}"
                                         Tap="DateTimePickersTap"
                                         Value="{Binding Path=DateTime, Mode=TwoWay}"/>
-                    <ContentControl HorizontalAlignment="Center" VerticalAlignment="Top"
-                                    Margin="12,8,18,0"
-                                    Tap="ContentControlTap">
-                        <Rectangle Margin="0" Width="50" Height="50"
+                    <Button VerticalAlignment="Top"
+                            BorderThickness="0"
+                            Height="72"
+                            Padding="0" Margin="6,0,12,0"
+                            Tap="ContentControlTap">
+                        <Grid>
+                            <Ellipse Width="48" Height="48" StrokeThickness="3" Stroke="{StaticResource PhoneForegroundBrush}" Fill="{StaticResource PhoneAccentBrush}" />
+                            <Rectangle Width="48" Height="48"
                                    StrokeThickness="0" Fill="{StaticResource PhoneForegroundBrush}">
-                            <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="/Images/appbar.transit.depart.png"/>
-                            </Rectangle.OpacityMask>
-                        </Rectangle>
-                    </ContentControl>
+                                <Rectangle.OpacityMask>
+                                    <ImageBrush ImageSource="/Images/appbar.transit.depart.png"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Grid>
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </Grid>

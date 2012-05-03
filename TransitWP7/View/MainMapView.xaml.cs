@@ -1,11 +1,9 @@
 ﻿namespace TransitWP7.View
 {
     using System;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Device.Location;
     using System.Globalization;
-    using System.Linq;
     using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
@@ -17,8 +15,7 @@
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Controls.Maps;
     using Microsoft.Phone.Shell;
-    using Microsoft.Phone.UserData;
-
+    using Microsoft.Phone.Tasks;
     using TransitWP7.Model;
     using TransitWP7.Resources;
     using TransitWP7.ViewModel;
@@ -37,7 +34,7 @@
 
             // The following is simply to have the timeConditionPicker text aligned.
             var temp = this._viewModel.TimeType;
-            this._viewModel.TimeType = TimeCondition.ArrivingAt;
+            this._viewModel.TimeType = TimeCondition.LastArrivalTime;
             this._viewModel.TimeType = temp;
 
             this.RegisterNotifications();
@@ -581,6 +578,26 @@
             }
 
             this._viewModel.BeginCalculateTransit();
+        }
+
+        private void GetContactAddressButtonTap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            var addressChooserTask = new AddressChooserTask();
+            addressChooserTask.Completed += (s, r) =>
+                {
+                    if (r.TaskResult == TaskResult.OK)
+                    {
+                        if (((Button)sender).Tag.Equals("start"))
+                        {
+                            this.startingInput.Text = r.Address;
+                        }
+                        else
+                        {
+                            this.endingInput.Text = r.Address;
+                        }
+                    }
+                };
+            addressChooserTask.Show();
         }
     }
 }

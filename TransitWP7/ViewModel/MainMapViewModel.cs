@@ -344,7 +344,7 @@
             {
                 if (this._geoCoordinateWatcher == null)
                 {
-                    this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = /*Globals.MovementThreshold*/0 };
+                    this._geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.High) { MovementThreshold = 0 };
                     this._geoCoordinateWatcher.PositionChanged += this.GeoCoordinateWatcherPositionChanged;
                     this._geoCoordinateWatcher.StatusChanged += this.GeoCoordinateWatcherStatusChanged;
                     this._geoCoordinateWatcher.Start();
@@ -656,10 +656,16 @@
             {
                 this.CenterMapGeoCoordinate = this.UserGeoCoordinate;
             }
+
+            if (this.UserGeoCoordinate.HorizontalAccuracy < 4)
+            {
+                this.GeoCoordinateWatcher.MovementThreshold = Globals.MovementThreshold;
+            }
         }
 
         private void GeoCoordinateWatcherStatusChanged(object sender, GeoPositionStatusChangedEventArgs e)
         {
+            this.GeoCoordinateWatcher.MovementThreshold = 0;
             CheckLocationService(e.Status);
         }
     }

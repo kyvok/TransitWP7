@@ -81,7 +81,7 @@
                                                         Converter={StaticResource ToCanvasCenterConverter},
                                                         ConverterParameter=2000}">
                                 <Ellipse.Fill>
-                                    <SolidColorBrush Color="Gray" Opacity="0.5"/>
+                                    <SolidColorBrush Color="Gray" Opacity="0.25"/>
                                 </Ellipse.Fill>
                             </Ellipse>
                         </Canvas>

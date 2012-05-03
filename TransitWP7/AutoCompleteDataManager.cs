@@ -31,7 +31,7 @@
                 throw new ArgumentNullException("searchTerm");
             }
 
-            AddLocationEntry(new LocationDescription { DisplayName = searchTerm.ToLower(CultureInfo.CurrentCulture) });
+            AddLocationEntry(new LocationDescription { DisplayName = searchTerm });
         }
 
         public static void AddLocationEntry(LocationDescription location)

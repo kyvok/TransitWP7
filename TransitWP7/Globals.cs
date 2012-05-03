@@ -17,7 +17,7 @@
     {
         public const double LocateMeZoomLevel = 17;
         public const string SupportEmailAddress = "TransitiveWP7@live.com";
-        public const int MovementThreshold = 20; // recommended to be 20m to avoid noise.
+        public const int MovementThreshold = 2; // recommended to be 20m to avoid noise, but using 2m for better responsivity
     }
 
     public static class PhonePageUri
