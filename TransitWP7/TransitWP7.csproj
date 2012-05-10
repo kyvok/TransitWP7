@@ -97,14 +97,12 @@
     <Compile Include="Converters\PathPointsToLocationCollectionConverter.cs" />
     <Compile Include="Converters\ToCanvasCenterConverter.cs" />
     <Compile Include="Converters\TransitTypeToVisibilityConverter.cs" />
-    <Compile Include="Converters\DateTimeToTimeConverter.cs" />
     <Compile Include="Converters\NegateBoolConverter.cs" />
     <Compile Include="Converters\NullValueToVisibilityConverter.cs" />
     <Compile Include="Converters\SequentialValueConverter .cs" />
     <Compile Include="Converters\StepTypeToBooleanConverter.cs" />
     <Compile Include="Converters\ItineraryStepsCollapseWalkConverter.cs" />
     <Compile Include="Converters\ItineraryStepsToImageConverter.cs" />
-    <Compile Include="Converters\TimeConditionToDateTimePickerEnabledConverter.cs" />
     <Compile Include="Converters\TimeConditionToIntConverter.cs" />
     <Compile Include="Converters\TravelDurationConverter.cs" />
     <Compile Include="Converters\VisibilityToBooleanConverter.cs" />

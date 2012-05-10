@@ -25,7 +25,6 @@
                 <converters:BooleanToVisibilityConverter/>
             </converters:SequentialValueConverter>
             <converters:ItineraryStepsToImageConverter x:Key="ItineraryStepsToImageConverter"/>
-            <converters:DateTimeToTimeConverter x:Key="DateTimeToTimeConverter"/>
             <Storyboard x:Name="snapScrollViewer" >
                 <DoubleAnimation x:Name="innerAnim" Duration="0:0:00.5"
                                  Storyboard.TargetName="Mediator"
@@ -90,9 +89,9 @@
                                             <RowDefinition Height="46"/>
                                         </Grid.RowDefinitions>
                                         <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                            <TextBlock Text="{Binding StartTime, Converter={StaticResource DateTimeToTimeConverter}}" FontStyle="Normal" FontSize="18.667"/>
+                                            <TextBlock Text="{Binding StartTime, StringFormat=\{0:t\},TargetNullValue=''}" FontStyle="Normal" FontSize="18.667"/>
                                             <TextBlock Text="-" FontStyle="Normal" FontSize="18.667"/>
-                                            <TextBlock Text="{Binding EndTime, Converter={StaticResource DateTimeToTimeConverter}}" FontStyle="Normal" FontSize="18.667"/>
+                                            <TextBlock Text="{Binding EndTime, StringFormat=\{0:t\},TargetNullValue=''}" FontStyle="Normal" FontSize="18.667"/>
                                         </StackPanel>
                                         <TextBlock Text="{Binding Instruction}" FontSize="18.667" TextWrapping="Wrap" Margin="0" FontFamily="Calibri" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Width="310"/>
                                     </Grid>
