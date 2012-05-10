@@ -17,7 +17,9 @@
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:maps="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
     xmlns:converters="clr-namespace:TransitWP7.Converters"
-    xmlns:view="clr-namespace:TransitWP7.View">
+    xmlns:view="clr-namespace:TransitWP7.View"
+    xmlns:transitwp7="clr-namespace:TransitWP7"
+    transitwp7:TiltEffect.IsTiltEnabled="True">
 
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsVisible="False" IsIndeterminate="False" Text="" />

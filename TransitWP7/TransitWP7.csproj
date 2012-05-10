@@ -123,6 +123,7 @@
       <DependentUpon>SR.es-ES.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\SRHelper.cs" />
+    <Compile Include="TiltEffect.cs" />
     <Compile Include="ViewModel\LocationSelectionViewModel.cs" />
     <Compile Include="ViewModel\DirectionsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
