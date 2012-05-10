@@ -431,6 +431,23 @@
             Messenger.Default.Send(notificationMessage, MessengerToken.SelectedTransitTrip);
         }
 
+        public void SwapEndPoints()
+        {
+            bool newStartLocationStale = this._isEndLocationStale;
+            bool newEndLocationStale = this._isStartLocationStale;
+
+            string temp = this.EndLocationText;
+            this.EndLocationText = this.StartLocationText;
+            this.StartLocationText = temp;
+
+            LocationDescription tempLocation = this.SelectedEndLocation;
+            this.SelectedEndLocation = this.SelectedStartLocation;
+            this.SelectedStartLocation = tempLocation;
+
+            this._isStartLocationStale = newStartLocationStale;
+            this._isEndLocationStale = newEndLocationStale;
+        }
+
         internal void StartOver()
         {
             this.StartLocationText = SR.MyCurrentLocationText;

@@ -311,9 +311,7 @@
 
         private void SwapEndpoints(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            var temp = this.startingInput.Text;
-            this.startingInput.Text = this.endingInput.Text;
-            this.endingInput.Text = temp;
+            this._viewModel.SwapEndPoints();
         }
 
         private void SetProgressBarState(string message, bool state)
