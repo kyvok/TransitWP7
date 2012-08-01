@@ -105,8 +105,14 @@ namespace TransitWP7.Model
                 queryState.SavedException = result.Error;
             }
 
-            // chain querying for business
-            BingSearchQuery.GetBusinessInfo(
+            ////// chain querying for business
+            ////BingSearchQuery.GetBusinessInfo(
+            ////    queryState.Query,
+            ////    queryState.UserLocation,
+            ////    GetBusinessFromQueryCallback,
+            ////    queryState);
+            
+            GoogleApisLib.GooglePlacesApi.GooglePlacesQuery.GetBusinessInfo(
                 queryState.Query,
                 queryState.UserLocation,
                 GetBusinessFromQueryCallback,
@@ -122,6 +128,46 @@ namespace TransitWP7.Model
                 if (result.Response.Phonebook != null)
                 {
                     foreach (var phonebookResult in result.Response.Phonebook.Results)
+                    {
+                        if (queryState.LocationDescriptions == null)
+                        {
+                            queryState.LocationDescriptions = new List<LocationDescription>();
+                        }
+
+                        queryState.LocationDescriptions.Add(new LocationDescription(phonebookResult));
+                    }
+                }
+            }
+            else
+            {
+                queryState.SavedException = result.Error;
+            }
+
+            queryState.LocationDescriptions = SortLocationDescriptionsByDistance(queryState.LocationDescriptions, queryState.UserLocation);
+
+            // call user callback
+            var proxyQueryResult = new ProxyQueryResult { UserState = queryState.UserState };
+            if (queryState.LocationDescriptions != null && queryState.LocationDescriptions.Count > 0)
+            {
+                proxyQueryResult.LocationDescriptions = queryState.LocationDescriptions;
+            }
+            else
+            {
+                proxyQueryResult.Error = new Exception(string.Format(CultureInfo.InvariantCulture, "Could not locate a result for {0}.", queryState.Query));
+            }
+
+            queryState.UserCallback(proxyQueryResult);
+        }
+
+        private static void GetBusinessFromQueryCallback(GoogleApisLib.GooglePlacesApi.GooglePlacesQueryResult result)
+        {
+            var queryState = (QueryState)result.UserState;
+
+            if (result.Error == null)
+            {
+                if (result.Response.results != null)
+                {
+                    foreach (var phonebookResult in result.Response.results)
                     {
                         if (queryState.LocationDescriptions == null)
                         {

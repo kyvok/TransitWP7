@@ -105,7 +105,6 @@
     <Compile Include="Converters\ItineraryStepsToImageConverter.cs" />
     <Compile Include="Converters\TimeConditionToIntConverter.cs" />
     <Compile Include="Converters\TravelDurationConverter.cs" />
-    <Compile Include="Converters\VisibilityToBooleanConverter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IsolatedStorageHelper.cs" />
     <Compile Include="LittleWatson.cs" />
@@ -232,6 +231,10 @@
     <ProjectReference Include="..\BingApisLib\BingApisLib.csproj">
       <Project>{D35A5A96-B30E-4847-A80F-80ED718D9188}</Project>
       <Name>BingApisLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GoogleApisLib\GoogleApisLib.csproj">
+      <Project>{F1550742-4D81-41D9-8191-B3CF83E49DF3}</Project>
+      <Name>GoogleApisLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

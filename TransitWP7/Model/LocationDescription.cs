@@ -5,8 +5,10 @@
     using System.Device.Location;
     using System.Globalization;
 
-    using BingApisLib.BingMapsRestApi;
     using BingApisLib.BingSearchRestApi;
+
+    using BingMapsLocation = BingApisLib.BingMapsRestApi.Location;
+    using GooglePlacesLocation = GoogleApisLib.GooglePlacesApi.TextSearchResult;
 
     public class LocationDescription : INotifyPropertyChanged
     {
@@ -22,7 +24,7 @@
         {
         }
 
-        public LocationDescription(Location result)
+        public LocationDescription(BingMapsLocation result)
         {
             if (result == null)
             {
@@ -36,6 +38,21 @@
             this.City = result.Address.Locality;
             this.Confidence = result.Confidence.ToString();
             this.StateOrProvince = result.Address.AdminDistrict;
+        }
+
+        public LocationDescription(GooglePlacesLocation result)
+        {
+            this.DisplayName = result.name;
+            this.FormattedAddress = result.formatted_address;
+            this.GeoCoordinate = new GeoCoordinate(result.geometry.location.lat, result.geometry.location.lng)
+            {
+                // Setting these value to zero to improve deserialization perf.
+                Altitude = 0,
+                Course = 0,
+                HorizontalAccuracy = 0,
+                VerticalAccuracy = 0,
+                Speed = 0
+            };
         }
 
         public LocationDescription(PhonebookResult result)
