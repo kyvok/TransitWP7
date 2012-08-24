@@ -204,6 +204,8 @@
     <Content Include="Images\light\taxi.100x100.png" />
     <Content Include="Images\light\train.100x100.png" />
     <Content Include="Images\light\walk.100x100.png" />
+    <Content Include="Images\powered-by-google-on-non-white.png" />
+    <Content Include="Images\powered-by-google-on-white.png" />
     <Content Include="TestData\bingmapslocations.xml" />
     <Content Include="TestData\bingservicephonebook.xml" />
     <Content Include="TestData\bingmapstransit.xml" />

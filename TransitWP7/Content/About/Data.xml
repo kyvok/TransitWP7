@@ -43,13 +43,16 @@
     </Item>
     <Item Title="history"
            Type="text">
-      0.8.0.0
+      0.9
+      Use Google API after Bing API was retired.
+      
+      0.8
       Added autocomplete location history.
       More efficient http calls.
       Fixed issue when using non en-US locale.
       UI Polishing.
       
-      0.7.0.0
+      0.7
       Initial release.
     </Item>
   </Items>
