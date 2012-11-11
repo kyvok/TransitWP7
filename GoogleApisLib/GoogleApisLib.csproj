@@ -43,8 +43,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\sl4-windowsphone71\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.10\lib\sl4-windowsphone71\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpGIS.GZipWebClient">
       <HintPath>..\packages\SharpGIS.GZipWebClient.1.2\lib\sl40-wp71\SharpGIS.GZipWebClient.dll</HintPath>
@@ -53,12 +54,9 @@
     <Reference Include="System.Threading.Tasks.WP71">
       <HintPath>..\packages\System.Threading.Tasks.3.0.1\lib\sl4-wp71\System.Threading.Tasks.WP71.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
-    <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiKeys.Designer.cs">
@@ -66,8 +64,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ApiKeys.resx</DependentUpon>
     </Compile>
+    <Compile Include="GoogleMapsApi\GoogleMapsTypes.cs" />
+    <Compile Include="GoogleMapsApi\GoogleMapsQuery.cs" />
+    <Compile Include="GoogleMapsApi\GoogleMapsQueryResult.cs" />
     <Compile Include="GooglePlacesApi\GooglePlacesQuery.cs" />
-    <Compile Include="GooglePlacesApi\GooglePlacesQueryAsyncCallback.cs" />
     <Compile Include="GooglePlacesApi\GooglePlacesQueryResult.cs" />
     <Compile Include="GooglePlacesApi\GooglePlacesTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

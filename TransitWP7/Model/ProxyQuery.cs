@@ -4,199 +4,169 @@ namespace TransitWP7.Model
     using System;
     using System.Collections.Generic;
     using System.Device.Location;
-    using System.Globalization;
     using System.Linq;
+    using System.Threading.Tasks;
     using BingApisLib.BingMapsRestApi;
-    using BingApisLib.BingSearchRestApi;
+    using GoogleApisLib.GoogleMapsApi;
 
     /// <summary>
     /// Calls REST APIs and isolate their type mapping by converting to transitive types.
     /// </summary>
     public static class ProxyQuery
     {
-        public static void GetLocationAddress(GeoCoordinate location, Action<ProxyQueryResult> callback, object userState)
+        public static Task<IEnumerable<LocationDescription>> GetLocationAddress(GeoCoordinate locationToQuery)
         {
-            var queryState = new QueryState
-            {
-                UserCallback = callback,
-                UserState = userState
-            };
+            return BingMapsQuery.GetLocationInfo(locationToQuery).ContinueWith(
+                continuation =>
+                {
+                    var result = continuation.Result;
 
-            BingMapsQuery.GetLocationInfo(location, GetLocationInfoCallback, queryState);
+                    if (result.Error == null)
+                    {
+                        return result.Response.GetLocations().Select(location => new LocationDescription(location));
+                    }
+
+                    return new List<LocationDescription>();
+                });
         }
 
-        public static void GetLocationsAndBusiness(string query, GeoCoordinate currentUserPosition, Action<ProxyQueryResult> callback, object userState)
+        public static Task<IEnumerable<LocationDescription>> GetLocationsAndBusiness(string query, GeoCoordinate currentUserPosition)
         {
-            var queryState = new QueryState
-            {
-                Query = query,
-                UserLocation = currentUserPosition,
-                UserState = userState,
-                UserCallback = callback
-            };
+            var locations = new List<LocationDescription>();
 
-            BingMapsQuery.GetLocationsFromQuery(
+            return GetBingLocations(query, currentUserPosition).ContinueWith(
+                bingContinuation =>
+                {
+                    return GetGooglePlaces(query, currentUserPosition).ContinueWith(
+                        googleContinuation =>
+                        {
+                            if (bingContinuation.IsCompleted)
+                            {
+                                locations.AddRange(bingContinuation.Result);
+                            }
+
+                            if (googleContinuation.IsCompleted)
+                            {
+                                locations.AddRange(googleContinuation.Result);
+                            }
+
+                            locations = SortLocationDescriptionsByDistance(locations, currentUserPosition);
+
+                            return locations.AsEnumerable();
+                        });
+                }).Unwrap();
+        }
+
+        public static Task<IEnumerable<TransitDescription>> GetTransitDirections(GeoCoordinate startPoint, GeoCoordinate endPoint, DateTime dateTime, TimeCondition timeType)
+        {
+            var transitDescriptions = new List<TransitDescription>();
+
+            return GetBingTransitDirections(startPoint, endPoint, dateTime, timeType).ContinueWith(
+                googleContinuation =>
+                {
+                    return GetBingWalkingDirections(startPoint, endPoint).ContinueWith(
+                        bingContinuation =>
+                        {
+                            if (googleContinuation.IsCompleted)
+                            {
+                                transitDescriptions.AddRange(googleContinuation.Result);
+                            }
+
+                            if (bingContinuation.IsCompleted)
+                            {
+                                transitDescriptions.AddRange(bingContinuation.Result);
+                            }
+
+                            return transitDescriptions.AsEnumerable();
+                        });
+                }).Unwrap();
+        }
+
+        private static Task<IEnumerable<LocationDescription>> GetBingLocations(string query, GeoCoordinate currentUserPosition)
+        {
+            return BingMapsQuery.GetLocationsFromQuery(
+                query, new UserContextParameters(currentUserPosition))
+                .ContinueWith(
+                    continuation =>
+                    {
+                        var result = continuation.Result;
+
+                        if (result.Error == null)
+                        {
+                            return result.Response.GetLocations().Select(location => new LocationDescription(location));
+                        }
+
+                        return new List<LocationDescription>();
+                    });
+        }
+
+        private static Task<IEnumerable<LocationDescription>> GetGooglePlaces(string query, GeoCoordinate currentUserPosition)
+        {
+            return GoogleApisLib.GooglePlacesApi.GooglePlacesQuery.GetBusinessInfo(
                 query,
-                new UserContextParameters(currentUserPosition),
-                GetLocationsFromQueryCallback,
-                queryState);
-        }
-
-        public static void GetTransitDirections(GeoCoordinate startPoint, GeoCoordinate endPoint, DateTime dateTime, TimeCondition timeType, Action<ProxyQueryResult> callback, object userState)
-        {
-            var queryState = new QueryState
-            {
-                StartLocation = startPoint,
-                EndLocation = endPoint,
-                UserCallback = callback,
-                UserState = userState
-            };
-
-            timeType = timeType != TimeCondition.Now ? timeType : TimeCondition.DepartingAt;
-
-            BingMapsQuery.GetTransitRoute(startPoint, endPoint, dateTime, (TimeType)timeType, GetTransitDirectionsCallback, queryState);
-        }
-
-        private static void GetLocationInfoCallback(BingMapsQueryResult result)
-        {
-            var queryState = (QueryState)result.UserState;
-
-            var proxyQueryResult = new ProxyQueryResult { UserState = queryState.UserState };
-            if (result.Error == null)
-            {
-                foreach (var location in result.Response.GetLocations())
-                {
-                    if (proxyQueryResult.LocationDescriptions == null)
+                currentUserPosition).ContinueWith(continuation =>
                     {
-                        proxyQueryResult.LocationDescriptions = new List<LocationDescription>();
-                    }
+                        var result = continuation.Result;
 
-                    proxyQueryResult.LocationDescriptions.Add(new LocationDescription(location));
-                }
-            }
-            else
-            {
-                proxyQueryResult.Error = result.Error;
-            }
-
-            queryState.UserCallback(proxyQueryResult);
-        }
-
-        private static void GetLocationsFromQueryCallback(BingMapsQueryResult result)
-        {
-            var queryState = (QueryState)result.UserState;
-
-            if (result.Error == null)
-            {
-                foreach (var location in result.Response.GetLocations())
-                {
-                    var locationDescription = new LocationDescription(location);
-
-                    if (queryState.LocationDescriptions == null)
-                    {
-                        queryState.LocationDescriptions = new List<LocationDescription>();
-                    }
-
-                    queryState.LocationDescriptions.Add(locationDescription);
-                }
-            }
-            else
-            {
-                queryState.SavedException = result.Error;
-            }
-
-            ////// chain querying for business
-            ////BingSearchQuery.GetBusinessInfo(
-            ////    queryState.Query,
-            ////    queryState.UserLocation,
-            ////    GetBusinessFromQueryCallback,
-            ////    queryState);
-            
-            GoogleApisLib.GooglePlacesApi.GooglePlacesQuery.GetBusinessInfo(
-                queryState.Query,
-                queryState.UserLocation,
-                GetBusinessFromQueryCallback,
-                queryState);
-        }
-
-        private static void GetBusinessFromQueryCallback(BingSearchQueryResult result)
-        {
-            var queryState = (QueryState)result.UserState;
-
-            if (result.Error == null)
-            {
-                if (result.Response.Phonebook != null)
-                {
-                    foreach (var phonebookResult in result.Response.Phonebook.Results)
-                    {
-                        if (queryState.LocationDescriptions == null)
+                        if (result.Error == null && result.Response.results != null)
                         {
-                            queryState.LocationDescriptions = new List<LocationDescription>();
+                            return result.Response.results.Select(location => new LocationDescription(location));
                         }
 
-                        queryState.LocationDescriptions.Add(new LocationDescription(phonebookResult));
-                    }
-                }
-            }
-            else
-            {
-                queryState.SavedException = result.Error;
-            }
-
-            queryState.LocationDescriptions = SortLocationDescriptionsByDistance(queryState.LocationDescriptions, queryState.UserLocation);
-
-            // call user callback
-            var proxyQueryResult = new ProxyQueryResult { UserState = queryState.UserState };
-            if (queryState.LocationDescriptions != null && queryState.LocationDescriptions.Count > 0)
-            {
-                proxyQueryResult.LocationDescriptions = queryState.LocationDescriptions;
-            }
-            else
-            {
-                proxyQueryResult.Error = new Exception(string.Format(CultureInfo.InvariantCulture, "Could not locate a result for {0}.", queryState.Query));
-            }
-
-            queryState.UserCallback(proxyQueryResult);
+                        return new List<LocationDescription>();
+                    });
         }
 
-        private static void GetBusinessFromQueryCallback(GoogleApisLib.GooglePlacesApi.GooglePlacesQueryResult result)
+        private static Task<IEnumerable<TransitDescription>> GetBingTransitDirections(GeoCoordinate startPoint, GeoCoordinate endPoint, DateTime dateTime, TimeCondition timeType)
         {
-            var queryState = (QueryState)result.UserState;
-
-            if (result.Error == null)
-            {
-                if (result.Response.results != null)
+            timeType = timeType == TimeCondition.Now ? TimeCondition.DepartingAt : timeType;
+            return BingMapsQuery.GetTransitRoute(startPoint, endPoint, dateTime, (TimeType)timeType).ContinueWith(
+                continuation =>
                 {
-                    foreach (var phonebookResult in result.Response.results)
+                    var result = continuation.Result;
+                    if (result.Error == null)
                     {
-                        if (queryState.LocationDescriptions == null)
-                        {
-                            queryState.LocationDescriptions = new List<LocationDescription>();
-                        }
-
-                        queryState.LocationDescriptions.Add(new LocationDescription(phonebookResult));
+                        return result.Response.GetRoutes().Select(route => new TransitDescription(route, TransitDescription.DirectionType.Transit));
                     }
-                }
-            }
-            else
+
+                    return new List<TransitDescription>();
+                });
+        }
+
+        private static Task<IEnumerable<TransitDescription>> GetGoogleTransitDirections(GeoCoordinate startPoint, GeoCoordinate endPoint, DateTime dateTime, TimeCondition timeType)
+        {
+            bool isDepartureTime = timeType == TimeCondition.Now || timeType == TimeCondition.DepartingAt;
+            return GoogleMapsQuery.GetTransitRoute(startPoint, endPoint, dateTime, isDepartureTime).ContinueWith(
+                continuation =>
+                {
+                    var result = continuation.Result;
+                    if (result.Error == null)
+                    {
+                        return result.Response.routes.Select(route => new TransitDescription(route, TransitDescription.DirectionType.Transit));
+                    }
+
+                    return new List<TransitDescription>();
+                });
+        }
+
+        private static Task<IEnumerable<TransitDescription>> GetBingWalkingDirections(GeoCoordinate startPoint, GeoCoordinate endPoint)
+        {
+            if (startPoint.GetDistanceTo(endPoint) > 6000)
             {
-                queryState.SavedException = result.Error;
+                return Task.FromResult(new List<TransitDescription>().AsEnumerable());
             }
 
-            queryState.LocationDescriptions = SortLocationDescriptionsByDistance(queryState.LocationDescriptions, queryState.UserLocation);
+            return BingMapsQuery.GetWalkingRoute(startPoint, endPoint).ContinueWith(
+                continuation =>
+                {
+                    var result = continuation.Result;
+                    if (result.Error == null)
+                    {
+                        return result.Response.GetRoutes().Select(route => new TransitDescription(route, TransitDescription.DirectionType.Transit));
+                    }
 
-            // call user callback
-            var proxyQueryResult = new ProxyQueryResult { UserState = queryState.UserState };
-            if (queryState.LocationDescriptions != null && queryState.LocationDescriptions.Count > 0)
-            {
-                proxyQueryResult.LocationDescriptions = queryState.LocationDescriptions;
-            }
-            else
-            {
-                proxyQueryResult.Error = new Exception(string.Format(CultureInfo.InvariantCulture, "Could not locate a result for {0}.", queryState.Query));
-            }
-
-            queryState.UserCallback(proxyQueryResult);
+                    return new List<TransitDescription>();
+                });
         }
 
         private static List<LocationDescription> SortLocationDescriptionsByDistance(IEnumerable<LocationDescription> locations, GeoCoordinate center)
@@ -211,14 +181,16 @@ namespace TransitWP7.Model
                 return null;
             }
 
+            var locs = locations.ToDictionary(k => k, v => v.GeoCoordinate.GetDistanceTo(center));
+
             // orderby is a stable sort
             // the result preserves the original sort (likely relevance), but moves item more then 80 miles to the bottom
-            var sorted = locations.ToDictionary(k => k, v => v.GeoCoordinate.GetDistanceTo(center))
+            var sorted = locs
                         .Where(kvp => kvp.Value <= MaxRange)
                         .Select(items => items.Key)
                         .ToList();
 
-            var outsideOfRange = locations.ToDictionary(k => k, v => v.GeoCoordinate.GetDistanceTo(center))
+            var outsideOfRange = locs
                                 .Where(kvp => kvp.Value > MaxRange)
                                 .Select(items => items.Key)
                                 .ToList();
@@ -226,113 +198,5 @@ namespace TransitWP7.Model
             sorted.AddRange(outsideOfRange);
             return sorted;
         }
-
-        private static void GetTransitDirectionsCallback(BingMapsQueryResult result)
-        {
-            var queryState = (QueryState)result.UserState;
-
-            if (result.Error == null)
-            {
-                foreach (var route in result.Response.GetRoutes())
-                {
-                    if (queryState.TransitDescriptions == null)
-                    {
-                        queryState.TransitDescriptions = new List<TransitDescription>();
-                    }
-
-                    queryState.TransitDescriptions.Add(new TransitDescription(route, TransitDescription.DirectionType.Transit));
-                }
-            }
-            else
-            {
-                queryState.SavedException = result.Error;
-            }
-
-            // chain immediately to get walking directions
-            // but only if the walking distance is less than 6 miles.
-            if (queryState.StartLocation.GetDistanceTo(queryState.EndLocation) / 1600 <= 6)
-            {
-                BingMapsQuery.GetWalkingRoute(queryState.StartLocation, queryState.EndLocation, GetWalkingDirectionsCallback, queryState);
-            }
-            else
-            {
-                GetWalkingDirectionsCallback(new BingMapsQueryResult(new Exception("For walking, distance is over 6 miles."), queryState));
-            }
-        }
-
-        private static void GetWalkingDirectionsCallback(BingMapsQueryResult result)
-        {
-            var queryState = (QueryState)result.UserState;
-
-            if (result.Error == null)
-            {
-                foreach (var route in result.Response.GetRoutes())
-                {
-                    var transitDescription = new TransitDescription(route, TransitDescription.DirectionType.WalkOnly);
-
-                    // ignore more than 90 minute walks.
-                    if (transitDescription.TravelDuration > TimeSpan.FromMinutes(90).TotalSeconds)
-                    {
-                        continue;
-                    }
-
-                    if (queryState.TransitDescriptions == null)
-                    {
-                        queryState.TransitDescriptions = new List<TransitDescription>();
-                    }
-
-                    queryState.TransitDescriptions.Add(transitDescription);
-                }
-            }
-            else
-            {
-                queryState.SavedException = result.Error;
-            }
-
-            // call user callback
-            var proxyQueryResult = new ProxyQueryResult { UserState = queryState.UserState };
-            if (queryState.TransitDescriptions != null && queryState.TransitDescriptions.Count > 0)
-            {
-                proxyQueryResult.TransitDescriptions = queryState.TransitDescriptions;
-            }
-            else
-            {
-                proxyQueryResult.Error = new Exception("No transit or reasonable walking directions could be found.");
-            }
-
-            queryState.UserCallback(proxyQueryResult);
-        }
-
-        private class QueryState
-        {
-            public string Query { get; set; }
-
-            public GeoCoordinate UserLocation { get; set; }
-
-            public GeoCoordinate StartLocation { get; set; }
-            
-            public GeoCoordinate EndLocation { get; set; }
-            
-            public List<LocationDescription> LocationDescriptions { get; set; }
-            
-            public List<TransitDescription> TransitDescriptions { get; set; }
-            
-            public Exception SavedException { get; set; }
-            
-            public Action<ProxyQueryResult> UserCallback { get; set; }
-            
-            public object UserState { get; set; }
-        }
-    }
-
-    public class ProxyQueryResult
-    {
-        public object UserState { get; set; }
-
-        public List<LocationDescription> LocationDescriptions { get; set; }
-        
-        public List<TransitDescription> TransitDescriptions { get; set; }
-        
-        public Exception Error { get; set; }
     }
 }

@@ -6,6 +6,7 @@
     using System.Device.Location;
     using System.Net;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml.Serialization;
     using SharpGIS;
 
@@ -24,13 +25,11 @@
         /// Takes a latitude/longitude location and query for the information related to this location.
         /// </summary>
         /// <param name="point">Location on map.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        /// <param name="userState">An object to pass to the callback</param>
-        public static void GetLocationInfo(GeoCoordinate point, Action<BingMapsQueryResult> callback, object userState)
+        public static Task<BingMapsQueryResult> GetLocationInfo(GeoCoordinate point)
         {
             var queryUri = ConstructQueryUri(
                 "Locations/" + point.AsBingMapsPoint(), null);
-            ExecuteQuery(queryUri, callback, userState);
+            return ExecuteQuery(queryUri);
         }
 
         /// <summary>
@@ -38,14 +37,12 @@
         /// </summary>
         /// <param name="query">A query to submit</param>
         /// <param name="userContext">Information about the user context, like geographic coordinate and current map view port.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        /// <param name="userState">An object to pass to the callback.</param>
-        public static void GetLocationsFromQuery(string query, UserContextParameters userContext, Action<BingMapsQueryResult> callback, object userState)
+        public static Task<BingMapsQueryResult> GetLocationsFromQuery(string query, UserContextParameters userContext)
         {
             var queryUri = ConstructQueryUri(
                 "Locations",
                 "q=" + Uri.EscapeDataString(query) + (userContext != null ? userContext.ToString() : string.Empty));
-            ExecuteQuery(queryUri, callback, userState);
+            return ExecuteQuery(queryUri);
         }
 
         /// <summary>
@@ -53,11 +50,9 @@
         /// </summary>
         /// <param name="start">Start location.</param>
         /// <param name="end">End location.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        /// <param name="userState">An object to pass to the callback.</param>
-        public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback, object userState)
+        public static Task<BingMapsQueryResult> GetTransitRoute(GeoCoordinate start, GeoCoordinate end)
         {
-            GetTransitRoute(start, end, DateTime.Now, TimeType.Departure, callback, userState);
+            return GetTransitRoute(start, end, DateTime.Now, TimeType.Departure);
         }
 
         /// <summary>
@@ -67,9 +62,7 @@
         /// <param name="end">End location.</param>
         /// <param name="time">A time or date that relates to the route query.</param>
         /// <param name="timeType">The TimeType of the dateTime parameter.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        /// <param name="userState">An object to pass to the callback.</param>
-        public static void GetTransitRoute(GeoCoordinate start, GeoCoordinate end, DateTime time, TimeType timeType, Action<BingMapsQueryResult> callback, object userState)
+        public static Task<BingMapsQueryResult> GetTransitRoute(GeoCoordinate start, GeoCoordinate end, DateTime time, TimeType timeType)
         {
             string rqp = new TransitQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint(), time, timeType)
                              {
@@ -77,7 +70,7 @@
                                  RoutePathOutput = RoutePathOutput.Points
                              }.ToString();
             var queryUri = ConstructQueryUri("Routes/Transit", rqp);
-            ExecuteQuery(queryUri, callback, userState);
+            return ExecuteQuery(queryUri);
         }
 
         /// <summary>
@@ -85,14 +78,12 @@
         /// </summary>
         /// <param name="start">Start location.</param>
         /// <param name="end">End location.</param>
-        /// <param name="callback">Callback that will use the response result.</param>
-        /// <param name="userState">An object to pass to the callback.</param>
-        public static void GetWalkingRoute(GeoCoordinate start, GeoCoordinate end, Action<BingMapsQueryResult> callback, object userState)
+        public static Task<BingMapsQueryResult> GetWalkingRoute(GeoCoordinate start, GeoCoordinate end)
         {
             var queryUri = ConstructQueryUri(
                 "Routes/Walking",
-                new RouteQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint()) { RoutePathOutput = RoutePathOutput.Points, Tolerances = new System.Collections.Generic.List<double> { 0.0000005 } }.ToString());
-            ExecuteQuery(queryUri, callback, userState);
+                new RouteQueryParameters(start.AsBingMapsPoint(), end.AsBingMapsPoint()) { RoutePathOutput = RoutePathOutput.Points, Tolerances = new List<double> { 0.0000005 } }.ToString());
+            return ExecuteQuery(queryUri);
         }
 
         /// <summary>
@@ -116,67 +107,43 @@
             return new Uri(uri.ToString());
         }
 
-        private static void ExecuteQuery(Uri queryUri, Action<BingMapsQueryResult> callback, object userState)
+        private static Task<BingMapsQueryResult> ExecuteQuery(Uri queryUri)
         {
             if (BingMapsQueryInMemoryCache.ContainsKey(queryUri.ToString()))
             {
-                callback(new BingMapsQueryResult(BingMapsQueryInMemoryCache[queryUri.ToString()], userState));
-                return;
+                return Task.FromResult(new BingMapsQueryResult(BingMapsQueryInMemoryCache[queryUri.ToString()]));
             }
 
+            var tf = new TaskFactory();
             var httpRequest = WebRequestCreator.GZip.Create(queryUri);
-            var context = new BingMapsRequestContext(httpRequest, new BingMapsQueryAsyncCallback(callback, userState));
-            httpRequest.BeginGetResponse(HttpRequestCompleted, context);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must provide exception back to the user thread.")]
-        private static void HttpRequestCompleted(IAsyncResult asyncResult)
-        {
-            var context = (BingMapsRequestContext)asyncResult.AsyncState;
-            if (context.AsyncCallback == null)
-            {
-                throw new InvalidOperationException("Unexpected exception, no BingMapsQueryAsyncCallback!");
-            }
-
-            try
-            {
-                var httpResponse = context.HttpRequest.EndGetResponse(asyncResult);
-                var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
-                if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
+            return tf.FromAsync<WebResponse>(httpRequest.BeginGetResponse, httpRequest.EndGetResponse, null).ContinueWith(
+                asyncResult =>
                 {
-                    var exceptionMessage = new StringBuilder();
-                    exceptionMessage.AppendLine("One or more error were returned by the query:");
-                    foreach (var errorDetail in response.ErrorDetails)
+                    try
                     {
-                        exceptionMessage.Append("  ");
-                        exceptionMessage.AppendLine(errorDetail);
+                        var httpResponse = asyncResult.Result;
+                        var response = (Response)BingMapsResponseSerializer.Deserialize(httpResponse.GetResponseStream());
+                        if (response.ErrorDetails != null && response.ErrorDetails.Length > 0)
+                        {
+                            var exceptionMessage = new StringBuilder();
+                            exceptionMessage.AppendLine("One or more error were returned by the query:");
+                            foreach (var errorDetail in response.ErrorDetails)
+                            {
+                                exceptionMessage.Append("  ");
+                                exceptionMessage.AppendLine(errorDetail);
+                            }
+
+                            return new BingMapsQueryResult(new Exception(exceptionMessage.ToString()));
+                        }
+
+                        BingMapsQueryInMemoryCache.TryAdd(queryUri.ToString(), response);
+                        return new BingMapsQueryResult(response);
                     }
-
-                    context.AsyncCallback.Notify(new Exception(exceptionMessage.ToString()));
-                }
-                else
-                {
-                    BingMapsQueryInMemoryCache.TryAdd(context.HttpRequest.RequestUri.ToString(), response);
-                    context.AsyncCallback.Notify(response);
-                }
-            }
-            catch (Exception ex)
-            {
-                context.AsyncCallback.Notify(ex);
-            }
-        }
-
-        private class BingMapsRequestContext
-        {
-            public BingMapsRequestContext(WebRequest httpRequest, BingMapsQueryAsyncCallback callback)
-            {
-                this.HttpRequest = httpRequest;
-                this.AsyncCallback = callback;
-            }
-
-            public WebRequest HttpRequest { get; private set; }
-
-            public BingMapsQueryAsyncCallback AsyncCallback { get; private set; }
+                    catch (Exception ex)
+                    {
+                        return new BingMapsQueryResult(ex);
+                    }
+                });
         }
     }
 }

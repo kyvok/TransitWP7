@@ -14,6 +14,7 @@ using System.Resources;
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -34,4 +35,3 @@ using System.Resources;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("0.9.0.0")]
 [assembly: AssemblyFileVersion("0.9.0.0")]
-[assembly: NeutralResourcesLanguageAttribute("en-US")]

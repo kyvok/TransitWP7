@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Device.Location;
     using System.Globalization;
+    using System.Linq;
     using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
@@ -12,6 +13,7 @@
     using System.Windows.Media;
     using GalaSoft.MvvmLight.Messaging;
     using GalaSoft.MvvmLight.Threading;
+
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Controls.Maps;
     using Microsoft.Phone.Shell;
@@ -507,32 +509,34 @@
                 this.IsEnabled = false;
 
                 ProxyQuery.GetLocationAddress(
-                    pushpin.Location,
-                    result => DispatcherHelper.CheckBeginInvokeOnUI(
-                        () =>
-                            {
-                                var displayName = "Unknown location";
-                                if (result.LocationDescriptions != null && result.LocationDescriptions.Count > 0)
+                    pushpin.Location).ContinueWith(
+                        continuation =>
+                        {
+                            var result = continuation.Result.ToList();
+                            DispatcherHelper.CheckBeginInvokeOnUI(
+                                () =>
                                 {
-                                    displayName = result.LocationDescriptions[0].DisplayName;
-                                }
+                                    var displayName = "Unknown location";
+                                    if (result.Count > 0)
+                                    {
+                                        displayName = result[0].DisplayName;
+                                    }
 
-                                var loc = new LocationDescription(pushpin.Location)
-                                    { DisplayName = displayName };
-                                if (startZone)
-                                {
-                                    this._viewModel.StartLocationText = displayName;
-                                    this._viewModel.SelectedStartLocation = loc;
-                                }
-                                else
-                                {
-                                    this._viewModel.EndLocationText = displayName;
-                                    this._viewModel.SelectedEndLocation = loc;
-                                }
+                                    var loc = new LocationDescription(pushpin.Location) { DisplayName = displayName };
+                                    if (startZone)
+                                    {
+                                        this._viewModel.StartLocationText = displayName;
+                                        this._viewModel.SelectedStartLocation = loc;
+                                    }
+                                    else
+                                    {
+                                        this._viewModel.EndLocationText = displayName;
+                                        this._viewModel.SelectedEndLocation = loc;
+                                    }
 
-                                this.IsEnabled = true;
-                            }),
-                    null);
+                                    this.IsEnabled = true;
+                                });
+                        });
             }
 
             e.Handled = true;

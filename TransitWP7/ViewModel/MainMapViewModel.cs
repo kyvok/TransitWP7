@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Device.Location;
+    using System.Globalization;
+    using System.Linq;
     using System.Windows;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Messaging;
@@ -562,13 +564,15 @@
 
             if (this._isStartLocationStale)
             {
-                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate, this.GetLocationsAndBusinessCallback, new[] { "start", this.StartLocationText });
+                ProxyQuery.GetLocationsAndBusiness(this.StartLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate).ContinueWith(
+                    continuation => this.GetLocationsAndBusinessCallback(continuation.Result, "start", this.StartLocationText));
                 return;
             }
 
             if (this._isEndLocationStale)
             {
-                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate, this.GetLocationsAndBusinessCallback, new[] { "end", this.EndLocationText });
+                ProxyQuery.GetLocationsAndBusiness(this.EndLocationText, this.UserGeoCoordinate ?? this.CenterMapGeoCoordinate).ContinueWith(
+                    continuation => this.GetLocationsAndBusinessCallback(continuation.Result, "end", this.EndLocationText));
                 return;
             }
 
@@ -586,29 +590,53 @@
                 this._selectedStartLocation.GeoCoordinate,
                 this._selectedEndLocation.GeoCoordinate,
                 this.DateTime,
-                this.TimeType,
-                this.GetTransitDirectionsCallback,
-                null);
+                this.TimeType).ContinueWith(
+                continuation =>
+                {
+                    var transitDirections = continuation.Result.ToList();
+
+                    // Notify progress bar calcul is done
+                    Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
+                    Messenger.Default.Send(new NotificationMessage<bool>(true, "Unlocking UI"), MessengerToken.LockUiIndicator);
+
+                    if (transitDirections.Count == 0)
+                    {
+                        ProcessErrorMessage(SR.ErrorMsgTitleNoTransitFound, "No transit or reasonable walking directions could be found.");
+                        return;
+                    }
+
+                    DispatcherHelper.CheckBeginInvokeOnUI(
+                        () =>
+                        {
+                            this.TransitDescriptionCollection.Clear();
+                            foreach (var transit in transitDirections)
+                            {
+                                this.TransitDescriptionCollection.Add(transit);
+                            }
+                        });
+
+                    Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
+                });
         }
 
-        private void GetLocationsAndBusinessCallback(ProxyQueryResult result)
+        private void GetLocationsAndBusinessCallback(IEnumerable<LocationDescription> locations, string endpoint, string query)
         {
-            if (result.Error != null)
+            var locationDescriptions = locations.ToList();
+
+            if (locationDescriptions.Count == 0)
             {
-                ProcessErrorMessage(SR.ErrorMsgTitleLocationNotFound, result.Error.Message);
+                ProcessErrorMessage(SR.ErrorMsgTitleLocationNotFound, string.Format(CultureInfo.InvariantCulture, "Could not locate a result for {0}.", query));
                 return;
             }
 
-            var userState = (string[])result.UserState;
-
-            if (result.LocationDescriptions.Count == 1)
+            if (locationDescriptions.Count == 1)
             {
-                this.UpdateLocation(userState[0], result.LocationDescriptions[0]);
+                this.UpdateLocation(endpoint, locationDescriptions[0]);
             }
             else
             {
-                Messenger.Default.Send(new NotificationMessage<List<LocationDescription>>(result.LocationDescriptions, userState[0]), MessengerToken.EndpointResolutionPopup);
-                Messenger.Default.Send(new NotificationMessage<string>(userState[1], userState[0]), MessengerToken.EndpointResolutionPopup);
+                Messenger.Default.Send(new NotificationMessage<List<LocationDescription>>(locationDescriptions, endpoint), MessengerToken.EndpointResolutionPopup);
+                Messenger.Default.Send(new NotificationMessage<string>(query, endpoint), MessengerToken.EndpointResolutionPopup);
             }
         }
 
@@ -634,31 +662,6 @@
 
                         this.CoreCalculateTransit();
                     });
-        }
-
-        private void GetTransitDirectionsCallback(ProxyQueryResult result)
-        {
-            // Notify progress bar calcul is done
-            Messenger.Default.Send(new NotificationMessage<bool>(false, string.Empty), MessengerToken.MainMapProgressIndicator);
-            Messenger.Default.Send(new NotificationMessage<bool>(true, "Unlocking UI"), MessengerToken.LockUiIndicator);
-
-            if (result.Error != null)
-            {
-                ProcessErrorMessage(SR.ErrorMsgTitleNoTransitFound, result.Error.Message);
-                return;
-            }
-
-            DispatcherHelper.CheckBeginInvokeOnUI(
-                () =>
-                {
-                    this.TransitDescriptionCollection.Clear();
-                    foreach (var transit in result.TransitDescriptions)
-                    {
-                        this.TransitDescriptionCollection.Add(transit);
-                    }
-                });
-
-            Messenger.Default.Send(new NotificationMessage(string.Empty), MessengerToken.TransitTripsReady);
         }
 
         private void DeviceNetworkInformationNetworkAvailabilityChanged(object sender, NetworkNotificationEventArgs e)

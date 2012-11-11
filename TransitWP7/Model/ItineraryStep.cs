@@ -8,6 +8,8 @@
 
     using BingApisLib.BingMapsRestApi;
 
+    using Transitive2.Models;
+
     public class ItineraryStep : INotifyPropertyChanged
     {
         private GeoCoordinate _geoCoordinate;
@@ -62,6 +64,35 @@
                     this.ChildItinerarySteps.Add(new ItineraryStep(itemStep, 0));
                 }
             }
+        }
+
+        public ItineraryStep(GoogleApisLib.GoogleMapsApi.DirectionsStep item, int stepNumber)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item");
+            }
+
+            this.GeoCoordinate = item.start_location.AsGeoCoordinate();
+            this.Instruction = item.instructions ?? item.html_instructions;
+            this.TravelMode = item.travel_mode.ToString();
+            this.BusNumber = item.transit != null ? item.transit.headsign : string.Empty;
+            this.IconType = "bus";
+            //this.StartTime = item.Time;
+            //this.EndTime = item.Time;
+
+            this._stepNumber = stepNumber;
+
+            this.ChildItinerarySteps = new ObservableCollection<ItineraryStep>();
+            //if (item.ChildItineraryItems != null)
+            //{
+            //    this.StartTime = item.ChildItineraryItems[0].Time;
+            //    this.EndTime = item.ChildItineraryItems[item.ChildItineraryItems.Length - 1].Time;
+            //    foreach (var itemStep in item.ChildItineraryItems)
+            //    {
+            //        this.ChildItinerarySteps.Add(new ItineraryStep(itemStep, 0));
+            //    }
+            //}
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

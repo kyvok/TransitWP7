@@ -50,8 +50,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.0.7\lib\sl4-windowsphone71\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.10\lib\sl4-windowsphone71\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpGIS.GZipWebClient">
       <HintPath>..\packages\SharpGIS.GZipWebClient.1.2\lib\sl40-wp71\SharpGIS.GZipWebClient.dll</HintPath>
@@ -77,7 +78,6 @@
     <Compile Include="BingMapsRestApi\Address.cs" />
     <Compile Include="BingMapsRestApi\AuthenticationResultCode.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQuery.cs" />
-    <Compile Include="BingMapsRestApi\BingMapsQueryAsyncCallback.cs" />
     <Compile Include="BingMapsRestApi\BingMapsQueryResult.cs" />
     <Compile Include="BingMapsRestApi\SideOfStreet.cs" />
     <Compile Include="BingMapsRestApi\BingMapsUriParameters.cs" />
@@ -127,6 +127,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.targets" />
+  <!--<Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.targets" />-->
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>
